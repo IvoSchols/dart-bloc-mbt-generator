@@ -5,15 +5,24 @@
 // initial state (in states)
 // final set of states (exit)
 class FiniteStateMachine {
+  //Name
+  String name;
   //States
-  Set<String> states;
-  //Alphabet, what input type is supported (might need heavy parsing?)
-
-  //Transition function, which state can be reached directly with which input
-
+  Set<dynamic> states;
+  //Alphabet, events that trigger transitions
+  Set<dynamic> events;
   //Initial state
-  String initialState;
+  dynamic initialState;
+  //Final states
   Set<String> finalStates;
+  //Transition function, which state can be reached directly with which input
+  Map<Tuple, dynamic> transitionFunction;
 
-  FiniteStateMachine(this.states, this.initialState, this.finalStates);
+  FiniteStateMachine(this.name, this.states, this.events, this.initialState,
+      this.finalStates, this.transitionFunction);
+}
+
+class Tuple {
+  dynamic t1;
+  dynamic t2;
 }
