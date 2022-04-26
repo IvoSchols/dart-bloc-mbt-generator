@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
@@ -13,17 +11,14 @@ class CubitVisitor extends SimpleAstVisitor<void> {
   // Also provide a leg up on transition function
   FiniteStateMachineCubit? visitClassDeclaration(ClassDeclaration node) {
     String name = "";
-    Set<dynamic> states = Set();
-    Set<dynamic> events = Set();
-    Map<Tuple, dynamic> transitionFunction = Map();
+    Set<String> states = Set();
+    Set<String> events = Set();
+    Map<Tuple, String> transitionFunction = Map();
 
     if (node.extendsClause != null &&
         node.extendsClause!.superclass.name.toString() == "Cubit") {
       name = node.name.toString();
-      //Find name of FSM, by only removing 'Cubit' from class name if it is the last word
-      if (name.endsWith("Cubit")) {
-        name = name.substring(0, name.length - 5);
-      }
+
       //Find states
       //Return null if no state is found
       if (node.extendsClause!.superclass.typeArguments ==
@@ -44,19 +39,15 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     }
     //Check if variables are set, if not return null
     //If so, return FiniteStateMachineCubit
-    if (name == "" ||
-        states.length == 0 ||
-        events.length == 0 ||
-        transitionFunction.isEmpty) {
+    if (name == "" || states.length == 0 || events.length == 0) {
       return null;
     }
     return FiniteStateMachineCubit(
-        name, states, events, null, Set<String>(), transitionFunction);
+        name, states, events, transitionFunction, "initialState", Set());
   }
 
   @override
   String visitMethodDeclaration(MethodDeclaration node) {
     return node.name.name;
-    print(node.toString());
   }
 }

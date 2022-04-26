@@ -1,29 +1,25 @@
-import 'dart:io';
-
-import 'CubitParser.dart';
 import 'FiniteStateMachine.dart';
-import 'FiniteStateMachineParser.dart';
-
-//NOTE: obviously only has support for one bloc in a file, but it's a good start
-FiniteStateMachine parseFile() {
-  File file = new File('examples/counter/counter_cubit.dart');
-  FiniteStateMachineParser finiteStateMachineParser = CubitParser();
-
-  List<String> lines = file.readAsLinesSync();
-  for (String line in lines) {
-    if (line.contains("extends Cubit")) {
-      finiteStateMachineParser = CubitParser();
-      break;
-      //TODO: Skip the rest of the file?
-    } else if (line.contains("extends Bloc")) {
-      print("no match");
-      //print(line);
-    }
-  }
-  return finiteStateMachineParser.parse(lines);
-  throw UnimplementedError();
-}
+import 'FiniteStateMachineCubit.dart';
 
 void main(List<String> args) {
-  FiniteStateMachine finiteStateMachine = parseFile();
+  FiniteStateMachine finiteStateMachine = FiniteStateMachineCubit(
+    "FiniteStateMachineCubit",
+    Set.from(["initialState", "state1", "state2"]),
+    Set.from(["event1", "event2"]),
+    Map.fromIterable(
+      [
+        Tuple("initialState", "event1"),
+        Tuple("state1", "event2"),
+        Tuple("state2", "event1"),
+      ],
+      key: (e) => Tuple(e.t1, e.t2),
+      value: (e) => "state1",
+    ),
+    "initialState",
+    Set.from(["state1"]),
+  );
+  finiteStateMachine = finiteStateMachine.import("CounterCubit.json");
+
+  FiniteStateMachineCubit counterCubit =
+      finiteStateMachine as FiniteStateMachineCubit;
 }

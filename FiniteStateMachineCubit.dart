@@ -3,11 +3,17 @@ import 'FiniteStateMachine.dart';
 class FiniteStateMachineCubit extends FiniteStateMachine {
   FiniteStateMachineCubit(
     String name,
-    Set states,
-    Set events,
-    initialState,
+    Set<String> states,
+    Set<String> events,
+    Map<Tuple, String> transitionFunction,
+    String initialState,
     Set<String> finalStates,
-    Map<Tuple, dynamic> transitionFunction,
-  ) : super(name, states, events, initialState, finalStates,
-            transitionFunction);
+  ) : super(
+          name,
+          states,
+          events,
+          transitionFunction,
+          initialState,
+          finalStates,
+        );
 }

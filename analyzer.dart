@@ -74,7 +74,12 @@ String checkCompilationUnit(CompilationUnit unit) {
         childEntity.extendsClause != null &&
         childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
       visitor = CubitVisitor();
-      visitor.visitClassDeclaration(childEntity);
+      FiniteStateMachineCubit? fsmCubit =
+          visitor.visitClassDeclaration(childEntity);
+
+      if (fsmCubit != null) {
+        fsmCubit.export(fsmCubit.name + ".json");
+      }
     }
   });
 

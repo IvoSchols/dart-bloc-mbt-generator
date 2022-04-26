@@ -1,0 +1,4 @@
+{"name":"CounterCubit","states":["0","1","2","3","4","5"],"events":["increment","decrement"],"transitionFunction":{
+    "(0,increment)":1,
+    "(1,increment)":2
+},"initialState":"0","finalStates":["5"]}
