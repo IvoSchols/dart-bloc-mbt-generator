@@ -15,8 +15,8 @@ import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import 'CubitVisitor.dart';
-import 'FiniteStateMachineCubit.dart';
+import '../Visitor/CubitVisitor.dart';
+import '../FiniteStateMachine/FiniteStateMachineCubit.dart';
 
 void analyzeAllFiles(AnalysisContextCollection collection) {
   for (AnalysisContext context in collection.contexts) {

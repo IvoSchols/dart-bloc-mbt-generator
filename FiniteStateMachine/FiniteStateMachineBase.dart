@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-
+import 'FiniteStateMachine.dart';
 import 'FiniteStateMachineCubit.dart';
 
 // Formally a finite-state machine is a 5-tuple consisting of:
@@ -9,9 +9,9 @@ import 'FiniteStateMachineCubit.dart';
 // transition function: states x alphabet -> state
 // initial state (in states)
 // final set of states (exit)
-class FiniteStateMachine {
+class FiniteStateMachineBase extends FiniteStateMachine {
   //Name
-  final String name;
+  String name;
   //States
   final Set<String> states;
   //Alphabet, events that trigger transitions
@@ -23,8 +23,13 @@ class FiniteStateMachine {
   //Final states
   Set<String> finalStates;
 
-  FiniteStateMachine(this.name, this.states, this.events,
-      this.transitionFunction, this.initialState, this.finalStates);
+  FiniteStateMachineBase(
+      {required this.name,
+      required this.states,
+      required this.events,
+      required this.transitionFunction,
+      required this.initialState,
+      required this.finalStates});
 
   void export(String path) async {
     Map<String, dynamic> json = {
@@ -61,10 +66,20 @@ class FiniteStateMachine {
 
     if (name.contains("Cubit")) {
       return FiniteStateMachineCubit(
-          name, states, events, transitionFunction, initialState, finalStates);
+          name: name,
+          states: states,
+          events: events,
+          transitionFunction: transitionFunction,
+          initialState: initialState,
+          finalStates: finalStates);
     } else {
-      return FiniteStateMachine(
-          name, states, events, transitionFunction, initialState, finalStates);
+      return FiniteStateMachineBase(
+          name: name,
+          states: states,
+          events: events,
+          transitionFunction: transitionFunction,
+          initialState: initialState,
+          finalStates: finalStates);
     }
   }
 }

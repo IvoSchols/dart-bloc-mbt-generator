@@ -1,8 +1,8 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
-import 'FiniteStateMachine.dart';
-import 'FiniteStateMachineCubit.dart';
+import '../../FiniteStateMachine/FiniteStateMachine.dart';
+import '../../FiniteStateMachine/FiniteStateMachineCubit.dart';
 
 /// A visitor that visits the AST and returns a [FiniteStateMachineCubit]
 class CubitVisitor extends SimpleAstVisitor<void> {
