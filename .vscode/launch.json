@@ -8,7 +8,7 @@
             "name": "Dart & Flutter",
             "request": "launch",
             "type": "dart",
-            "program": "package:BachelorDossier/lib/main.dart",
+            "program": "main.dart",
         }
     ]
 }

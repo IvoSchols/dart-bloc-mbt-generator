@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 
-import '../../FiniteStateMachine/FiniteStateMachine.dart';
+import '../../FiniteStateMachine/FiniteStateMachineBase.dart';
 import '../../FiniteStateMachine/FiniteStateMachineCubit.dart';
 
 /// A visitor that visits the AST and returns a [FiniteStateMachineCubit]
@@ -11,8 +11,8 @@ class CubitVisitor extends SimpleAstVisitor<void> {
   // Also provide a leg up on transition function
   FiniteStateMachineCubit? visitClassDeclaration(ClassDeclaration node) {
     String name = "";
-    Set<String> states = Set();
-    Set<String> events = Set();
+    Set<State> states = Set();
+    List<String> events = [];
     Map<Tuple, String> transitionFunction = Map();
 
     if (node.extendsClause != null &&
@@ -27,7 +27,7 @@ class CubitVisitor extends SimpleAstVisitor<void> {
         return null;
       }
       states = node.extendsClause!.superclass.typeArguments!.arguments
-          .map((e) => e.toString())
+          .map((e) => State(e.toString()))
           .toSet();
 
       //Find events
@@ -43,7 +43,12 @@ class CubitVisitor extends SimpleAstVisitor<void> {
       return null;
     }
     return FiniteStateMachineCubit(
-        name, states, events, transitionFunction, "initialState", Set());
+        name: name,
+        states: states,
+        events: events,
+        transitionFunction: transitionFunction,
+        initialState: "initialState",
+        finalStates: Set());
   }
 
   @override

@@ -3,25 +3,25 @@ import 'dart:convert';
 import 'FiniteStateMachine.dart';
 import 'FiniteStateMachineCubit.dart';
 
-// Formally a finite-state machine is a 5-tuple consisting of:
-// states: finite set of states (non-empty)
+// A loose than formal defined finite-state machine is a 5-tuple consisting of:
+// states: finite list of states (non-empty)
 // alphabet: finite set of symbols, called the input alphabet (non-empty)
 // transition function: states x alphabet -> state
-// initial state (in states)
-// final set of states (exit)
+// initial state: element of states
+// finalStates: states set (element(s) of states)
 class FiniteStateMachineBase extends FiniteStateMachine {
   //Name
   String name;
   //States
-  final Set<String> states;
+  final Set<State> states;
   //Alphabet, events that trigger transitions
-  final Set<String> events;
+  final List<String> events;
   //Transition function, which state can be reached directly with which input
   Map<Tuple, String>? transitionFunction;
   //Initial state
-  final String initialState;
+  final State initialState;
   //Final states
-  Set<String> finalStates;
+  Set<State> finalStates;
 
   FiniteStateMachineBase(
       {required this.name,
@@ -49,38 +49,26 @@ class FiniteStateMachineBase extends FiniteStateMachine {
 
     Map<String, dynamic> json = jsonDecode(contents);
 
-    String name = json["name"];
-    Set<String> states = Set.from(json["states"]);
-    Set<String> events = Set.from(json["events"]);
-    Map<String, dynamic> transitionFunctionString = json["transitionFunction"];
     Map<Tuple, String> transitionFunction =
-        transitionFunctionString.map((key, value) {
+        (json["transitionFunction"] as Map).map((key, value) {
       key = key.substring(1, key.length - 1);
       List<String> keys = key.split(",");
       Tuple tuple = Tuple(keys[0], keys[1]);
       return MapEntry(tuple, value.toString());
     });
 
-    String initialState = json["initialState"];
-    Set<String> finalStates = Set.from(json["finalStates"]);
+    FiniteStateMachineBase finiteStateMachineBase = FiniteStateMachineBase(
+        name: json["name"],
+        states: json["states"].map<State>((e) => State(e)).toSet(),
+        events: List.from(json["events"]),
+        transitionFunction: transitionFunction,
+        initialState: State(json["initialState"]),
+        finalStates: json["finalStates"].map<State>((e) => State(e)).toSet());
 
     if (name.contains("Cubit")) {
-      return FiniteStateMachineCubit(
-          name: name,
-          states: states,
-          events: events,
-          transitionFunction: transitionFunction,
-          initialState: initialState,
-          finalStates: finalStates);
-    } else {
-      return FiniteStateMachineBase(
-          name: name,
-          states: states,
-          events: events,
-          transitionFunction: transitionFunction,
-          initialState: initialState,
-          finalStates: finalStates);
+      return finiteStateMachineBase as FiniteStateMachineCubit;
     }
+    return finiteStateMachineBase;
   }
 }
 
@@ -89,4 +77,10 @@ class Tuple {
   final dynamic t2;
 
   Tuple(this.t1, this.t2);
+}
+
+class State {
+  final String name;
+
+  State(this.name);
 }
