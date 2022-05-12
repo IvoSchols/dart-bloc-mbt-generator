@@ -1,8 +1,9 @@
 import '../FiniteStateMachine/FiniteStateMachineBase.dart';
 
 abstract class PathGenerator {
+  List<Paths> generateAllPaths(FiniteStateMachineBase finiteStateMachine);
   //TODO: update the variable type
-  dynamic generatePath(
+  Paths generatePaths(
       FiniteStateMachineBase finiteStateMachine, State finalState);
 }
 
@@ -19,6 +20,8 @@ class Path {
   List<Segment> segments;
 
   Path(this.segments);
+
+  Path copy() => Path(this.segments.map((segment) => segment.copy()).toList());
 }
 
 //Current state and which event will be triggered to get to the next state
@@ -27,6 +30,8 @@ class Segment {
   Event event;
 
   Segment(this.state, this.event);
+
+  Segment copy() => Segment(this.state, this.event);
 }
 
 //Transition

@@ -6,7 +6,7 @@ import 'FiniteStateMachineCubit.dart';
 // A loose than formal defined finite-state machine is a 5-tuple consisting of:
 // states: finite list of states (non-empty)
 // alphabet: finite set of symbols, called the input alphabet (non-empty)
-// transition function: states x alphabet -> state
+// transition function: states x alphabet -> state (implictly defined in states)
 // initial state: element of states
 // finalStates: states set (element(s) of states)
 class FiniteStateMachineBase extends FiniteStateMachine {
@@ -16,8 +16,6 @@ class FiniteStateMachineBase extends FiniteStateMachine {
   final Set<State> states;
   //Alphabet, events that trigger transitions
   final List<String> events;
-  //Transition function, which state can be reached directly with which input
-  Map<Tuple, String>? transitionFunction;
   //Initial state
   final State initialState;
   //Final states
@@ -27,22 +25,45 @@ class FiniteStateMachineBase extends FiniteStateMachine {
       {required this.name,
       required this.states,
       required this.events,
-      required this.transitionFunction,
       required this.initialState,
-      required this.finalStates});
+      required this.finalStates}) {
+    if (states.isEmpty) {
+      throw Exception("States cannot be empty");
+    }
+    if (events.isEmpty) {
+      throw Exception("Events cannot be empty");
+    }
+    // If any state contains an event that is not in events throw an exception
+    states.forEach((state) {
+      state.transitions.forEach((event, nextState) {
+        if (!events.contains(event)) {
+          throw Exception("Event $event not found in events");
+        }
+      });
+    });
 
+    if (!states.any((state) => state == initialState)) {
+      throw Exception(
+          "Initial state $initialState is not in the set of states");
+    }
+    if (finalStates.every((State state) => !states.contains(state))) {
+      throw Exception("Final states must be in states");
+    }
+  }
+
+  //TODO: write when finished
   void export(String path) async {
     Map<String, dynamic> json = {
       "name": name,
-      "states": states.toList(),
-      "events": events.toList(),
-      "transitionFunction": transitionFunction,
+      "states": states,
+      "events": events,
       "initialState": initialState,
       "finalStates": finalStates.toList()
     };
     var file = await File(path).writeAsString(jsonEncode(json));
   }
 
+  //TODO: write when finished
   FiniteStateMachine import(String path) {
     File file = File(path);
     String contents = file.readAsStringSync();
@@ -59,11 +80,13 @@ class FiniteStateMachineBase extends FiniteStateMachine {
 
     FiniteStateMachineBase finiteStateMachineBase = FiniteStateMachineBase(
         name: json["name"],
-        states: json["states"].map<State>((e) => State(e)).toSet(),
+        states: json["states"].map<State>((e) {
+          State foo = State(e["name"]);
+          // foo.addTransition(event, state)
+        }),
         events: List.from(json["events"]),
-        transitionFunction: transitionFunction,
-        initialState: State(json["initialState"]),
-        finalStates: json["finalStates"].map<State>((e) => State(e)).toSet());
+        initialState: json["initialState"],
+        finalStates: json["finalStates"].map<State>((e) => State(e["name"])));
 
     if (name.contains("Cubit")) {
       return finiteStateMachineBase as FiniteStateMachineCubit;
@@ -82,5 +105,13 @@ class Tuple {
 class State {
   final String name;
 
+  Map<String, State> transitions = Map();
+
   State(this.name);
+
+  addTransition(String event, State state) {
+    //Check if transition is already defined
+    if (transitions[event] != null) return;
+    transitions[event] = state;
+  }
 }

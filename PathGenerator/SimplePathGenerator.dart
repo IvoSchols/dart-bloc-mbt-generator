@@ -3,46 +3,56 @@ import 'PathGenerator.dart';
 
 class SimplePathGenerator implements PathGenerator {
   //Generarate simple paths from initial state to all states
-  List<dynamic> generatePaths(FiniteStateMachineBase finiteStateMachine) {
-    List<dynamic> paths = [];
-    finiteStateMachine.states.forEach((state) {
-      paths.add(this.generatePath(finiteStateMachine, state));
+  List<Paths> generateAllPaths(FiniteStateMachineBase finiteStateMachine) {
+    List<Paths> paths = [];
+    finiteStateMachine.states.forEach((State state) {
+      paths.add(this.generatePaths(finiteStateMachine, state));
     });
     return paths;
   }
 
   @override
-  dynamic generatePath(
+  Paths generatePaths(
       FiniteStateMachineBase finiteStateMachine, State finalState) {
-    Map<String, bool> visited = finiteStateMachine.states
-        .map((e) => MapEntry(e, false)) as Map<String, bool>;
-    List<dynamic> currentPath = [];
-    List<dynamic> simplePath = [];
+    //Initialize visited states map with false
+    Map<State, bool> visited = Map.fromIterable(finiteStateMachine.states,
+        key: (state) => state, value: (_) => false);
+    Path currentPath = Path([]);
+    Paths simplePaths = Paths(finalState, []);
+    _DFS(finiteStateMachine, finiteStateMachine.initialState, "", finalState,
+        visited, currentPath, simplePaths);
+    return simplePaths;
+  }
 
-    var DFS = (String startState, String endState) {
-      if (visited[startState] == null)
-        throw Exception("Start state not found");
-      else if (visited[startState] == true) return;
+  //Generate simple paths from initial state to target state
+  dynamic _DFS(
+      FiniteStateMachineBase finiteStateMachine,
+      State startState,
+      String lastTransition,
+      State endState,
+      Map<State, bool> visited,
+      Path currentPath,
+      Paths simplePaths) {
+    if (visited[startState] == null)
+      throw Exception("Start state not found");
+    else if (visited[startState] == true) return;
 
-      visited[startState] = true;
-      currentPath.add(startState);
-      if (startState == endState) {
-        simplePath = currentPath;
-        return;
-      }
-      for (var nextState
-          in finiteStateMachine.states[currentState].nextStates) {
-        if (!visited[nextState]) {
-          DFS(nextState);
-        }
-      }
-      currentPath.removeLast();
-    };
+    visited[startState] = true;
+    currentPath.segments.add(Segment(startState, Event(lastTransition)));
+    if (startState == endState) {
+      simplePaths.paths.add(currentPath.copy());
+      visited[startState] = false;
+      currentPath.segments.removeLast();
+      return;
+    }
 
-    DFS(
-      finiteStateMachine.initialState,
-    );
-
-    return simplePath;
+    //Iterate over all transitions from current state
+    for (MapEntry<String, State> transition in startState.transitions.entries) {
+      State nextState = transition.value;
+      if (nextState == startState) continue;
+      _DFS(finiteStateMachine, nextState, transition.key, endState, visited,
+          currentPath, simplePaths);
+    }
+    return simplePaths;
   }
 }

@@ -13,7 +13,6 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     String name = "";
     Set<State> states = Set();
     List<String> events = [];
-    Map<Tuple, String> transitionFunction = Map();
 
     if (node.extendsClause != null &&
         node.extendsClause!.superclass.name.toString() == "Cubit") {
@@ -26,11 +25,12 @@ class CubitVisitor extends SimpleAstVisitor<void> {
           node.extendsClause!.superclass.typeArguments!.arguments.isEmpty) {
         return null;
       }
+      //TODO: find a way to get the events -> remove null
       states = node.extendsClause!.superclass.typeArguments!.arguments
           .map((e) => State(e.toString()))
           .toSet();
 
-      //Find events
+      //Find events & create state
       node.childEntities.forEach((childEntity) {
         if (childEntity is MethodDeclaration) {
           events.add(visitMethodDeclaration(childEntity));
@@ -46,8 +46,8 @@ class CubitVisitor extends SimpleAstVisitor<void> {
         name: name,
         states: states,
         events: events,
-        transitionFunction: transitionFunction,
-        initialState: "initialState",
+        initialState:
+            states.first, // TODO: find a way to inference initialState
         finalStates: Set());
   }
 
