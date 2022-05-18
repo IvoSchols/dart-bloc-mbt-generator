@@ -1,16 +1,25 @@
 import 'FiniteStateMachineBase.dart';
 
 class FiniteStateMachineCubit extends FiniteStateMachineBase {
+  Map<String, Function(Map<String, dynamic> context)> functions;
+
   FiniteStateMachineCubit(
       {required String name,
       required Set<State> states,
-      required List<String> events,
       required State initialState,
-      required Set<State> finalStates})
-      : super(
+      required Set<State> finalStates,
+      required Map<String, dynamic> context,
+      required Map<String, Function(Map<String, dynamic> context)> functions})
+      : functions = functions,
+        super(
             name: name,
             states: states,
-            events: events,
             initialState: initialState,
-            finalStates: finalStates);
+            finalStates: finalStates,
+            context: context,
+            actions: Map());
+
+  void function(String name) {
+    functions[name]!(context)();
+  }
 }

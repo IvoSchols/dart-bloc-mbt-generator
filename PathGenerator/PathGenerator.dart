@@ -37,6 +37,7 @@ class Segment {
 //Transition
 class Event {
   String name;
+  //TODO?: add a list of guards
 
   Event(this.name);
 }
