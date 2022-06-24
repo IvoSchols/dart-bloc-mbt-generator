@@ -15,10 +15,11 @@ import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:pub_semver/pub_semver.dart';
 
+import 'package:statemachine/statemachine.dart';
 import 'Visitor/CubitVisitor.dart';
-import '../FiniteStateMachine/FiniteStateMachineCubit.dart';
 
 void analyzeAllFiles(AnalysisContextCollection collection) {
+  //TODO: implement like analyzeSomeFiles
   for (AnalysisContext context in collection.contexts) {
     for (String path in context.contextRoot.analyzedFiles()) {
       analyzeSingleFile(context, path);
@@ -26,15 +27,24 @@ void analyzeAllFiles(AnalysisContextCollection collection) {
   }
 }
 
-void analyzeSomeFiles(
+//Returns state machine for the given files, or null if no state machine is found
+List<Machine> analyzeSomeFiles(
     AnalysisContextCollection collection, List<String> includedPaths) {
+  List<Machine> stateMachines = [];
   for (String path in includedPaths) {
     AnalysisContext context = collection.contextFor(path);
-    analyzeSingleFile(context, path);
+    Machine? stateMachine = analyzeSingleFile(context, path);
+    if (stateMachine == null) {
+      print("Could not analyze $path");
+      continue;
+    }
+    stateMachines.add(stateMachine);
   }
+  return stateMachines;
 }
 
-void analyzeSingleFile(AnalysisContext context, String path) {
+//Returns state machine for the given file, or null if no state machine is found
+Machine? analyzeSingleFile(AnalysisContext context, String path) {
   AnalysisSession session = context.currentSession;
   ParseStringResult parseStringResult = parseFile(
       path: path,
@@ -44,7 +54,7 @@ void analyzeSingleFile(AnalysisContext context, String path) {
 
   print(unit.toString());
 
-  checkCompilationUnit(unit);
+  return checkCompilationUnit(unit);
 }
 
 void processFile(AnalysisSession session, String path) async {
@@ -56,32 +66,29 @@ void processFile(AnalysisSession session, String path) async {
 
 void main() {
   List<String> includedPaths = <String>[
-    '/home/steen/Documents/BachelorDossier/examples/counter/counter_cubit.dart'
+    '/home/steen/Documents/Leiden/BachelorDossier/examples/counter/counter_cubit.dart'
   ];
   AnalysisContextCollection collection =
       new AnalysisContextCollection(includedPaths: includedPaths);
   analyzeSomeFiles(collection, includedPaths);
 }
 
-String checkCompilationUnit(CompilationUnit unit) {
+Machine? checkCompilationUnit(CompilationUnit unit) {
   //TODO: update with general visitor that discriminates between cubit & bloc
   AstVisitor visitor;
+  Machine? stateMachine;
 
-  unit.childEntities.forEach((childEntity) {
+  for (dynamic child in unit.childEntities) {
     //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
     //If it is, return a FiniteStateMachineCubit
-    if (childEntity is ClassDeclaration &&
-        childEntity.extendsClause != null &&
-        childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
+    if (child is ClassDeclaration &&
+        child.extendsClause != null &&
+        child.extendsClause!.superclass.name.toString() == "Cubit") {
       visitor = CubitVisitor();
-      FiniteStateMachineCubit? fsmCubit =
-          visitor.visitClassDeclaration(childEntity);
+      stateMachine = visitor.visitClassDeclaration(child);
 
-      if (fsmCubit != null) {
-        fsmCubit.export(fsmCubit.name + ".json");
-      }
+      if (stateMachine != null) break;
     }
-  });
-
-  return "visitor.result";
+  }
+  return stateMachine;
 }
