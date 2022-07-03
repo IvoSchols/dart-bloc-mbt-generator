@@ -54,10 +54,10 @@ class SimplePathGenerator implements PathGenerator {
 
     //Iterate over all transitions from current state
     for (Transition transition in startState.transitions) {
-      State nextState = transition.activate();
-      if (nextState == startState) continue;
-      _DFS(finiteStateMachine, nextState, transition.key, endState, visited,
-          currentPath, simplePaths);
+      //   // State nextState = transition.activate();
+      //   if (nextState == startState) continue;
+      //   _DFS(finiteStateMachine, nextState, transition.key, endState, visited,
+      //       currentPath, simplePaths);
     }
     return simplePaths;
   }

@@ -14,7 +14,7 @@ void main(List<String> args) {
   machine.context['x'] = int;
 
   stateA.guards[stateB] = Guard([(context) => context["x"] > 5]);
-  stateB.guards[stateA] = Guard([() => false]);
+  stateB.guards[stateA] = Guard([(context) => false]);
 
   stateB.enter();
   stateA.enter();
