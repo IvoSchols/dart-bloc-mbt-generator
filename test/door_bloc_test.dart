@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dart_bloc_mbt_generator/examples/door/door_bloc.dart';
+import 'package:dart_bloc_mbt_generator/examples/bloc_examples/door/bloc/door_bloc.dart';
 
 import 'package:test/test.dart';
 

@@ -1,25 +1,17 @@
-import 'package:statemachine/statemachine.dart';
+// @dart=2.9
+import 'package:dart_bloc_mbt_generator/PathGenerator/PathGenerator.dart';
+import 'package:dart_bloc_mbt_generator/PathGenerator/SimplePathGenerator.dart';
+import 'package:dart_bloc_mbt_generator/examples/cubit_examples/simpleAB/statemachine/simpleAB_statemachine.dart';
+import 'package:state_machine/state_machine.dart';
 
 void main(List<String> args) {
-  final machine = Machine<String>();
-  final stateA = machine.newState('A');
-  final stateB = machine.newState('B');
+  final machine = constructSimpleABStatemachine();
 
-  stateA.onEntry(() => print('Entering A'));
-  stateA.onExit(() => print('Exiting A'));
-  stateB.onEntry(() => print('Entering B'));
-  stateB.onExit(() => print('Exiting B'));
+  PathGenerator pathGenerator = SimplePathGenerator();
+  List<Paths> allPaths = pathGenerator.generateAllPaths(machine);
+  print(allPaths.toString());
+  print("hello");
+  // machine.newState
 
-  machine.start();
-  machine.context['x'] = int;
-
-  stateA.guards[stateB] = Guard([(context) => context["x"] > 5]);
-  stateB.guards[stateA] = Guard([(context) => false]);
-
-  stateB.enter();
-  stateA.enter();
-
-  // PathGenerator pathGenerator = SimplePathGenerator();
-  // List<Paths> allPaths = pathGenerator.generateAllPaths(counterCubit);
-  // print(allPaths.toString());
+  // print(machine.states);
 }

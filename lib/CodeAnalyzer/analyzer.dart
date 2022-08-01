@@ -66,7 +66,7 @@ void processFile(AnalysisSession session, String path) async {
 
 void main() {
   List<String> includedPaths = <String>[
-    '/home/steen/Documents/Leiden/BachelorDossier/examples/counter/counter_cubit.dart'
+    '/home/steen/Documents/Leiden/BachelorDossier/lib/examples/door/door_bloc.dart'
   ];
   AnalysisContextCollection collection =
       new AnalysisContextCollection(includedPaths: includedPaths);

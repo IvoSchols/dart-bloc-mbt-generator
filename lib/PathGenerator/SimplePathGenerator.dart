@@ -1,25 +1,27 @@
-import 'package:statemachine/statemachine.dart';
+import 'package:state_machine/state_machine.dart';
 
 import 'PathGenerator.dart';
 
 class SimplePathGenerator implements PathGenerator {
   //Generarate simple paths from initial state to all states
-  List<Paths> generateAllPaths(Machine finiteStateMachine) {
+  List<Paths> generateAllPaths(StateMachine stateMachine) {
     List<Paths> paths = [];
-    finiteStateMachine.states.forEach((State state) {
-      paths.add(this.generatePaths(finiteStateMachine, state));
+    List<State> states = stateMachine.states;
+    states.forEach((State state) {
+      paths.add(this.generatePaths(stateMachine, state));
     });
     return paths;
   }
 
   @override
-  Paths generatePaths(Machine finiteStateMachine, State toState) {
+  Paths generatePaths(StateMachine finiteStateMachine, State toState) {
     //Initialize visited states map with false
-    Map<State, bool> visited = Map.fromIterable(finiteStateMachine.states,
-        key: (state) => state, value: (_) => false);
+    Map<State, bool> visited = {
+      for (var state in finiteStateMachine.states) state: false
+    };
     Path currentPath = Path([]);
     Paths simplePaths = Paths(toState, []);
-    finiteStateMachine.start();
+    // finiteStateMachine.start();
     State? startState = finiteStateMachine.current;
     if (startState == null) {
       throw Exception("No start state");
@@ -32,7 +34,7 @@ class SimplePathGenerator implements PathGenerator {
 
   //Generate simple paths from initial state to target state
   dynamic _DFS(
-      Machine finiteStateMachine,
+      StateMachine finiteStateMachine,
       State startState,
       String lastTransition,
       State endState,
@@ -53,11 +55,11 @@ class SimplePathGenerator implements PathGenerator {
     }
 
     //Iterate over all transitions from current state
-    for (Transition transition in startState.transitions) {
-      //   // State nextState = transition.activate();
-      //   if (nextState == startState) continue;
-      //   _DFS(finiteStateMachine, nextState, transition.key, endState, visited,
-      //       currentPath, simplePaths);
+    for (StateTransition transition in startState.transitions) {
+      State nextState = transition.to;
+      if (nextState == startState) continue;
+      _DFS(finiteStateMachine, nextState, transition.name, endState, visited,
+          currentPath, simplePaths);
     }
     return simplePaths;
   }

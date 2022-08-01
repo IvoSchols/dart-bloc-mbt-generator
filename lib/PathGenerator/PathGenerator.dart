@@ -1,9 +1,9 @@
-import 'package:statemachine/statemachine.dart';
+import 'package:state_machine/state_machine.dart';
 
 abstract class PathGenerator {
-  List<Paths> generateAllPaths(Machine finiteStateMachine);
+  List<Paths> generateAllPaths(StateMachine finiteStateMachine);
   //TODO: update the variable type
-  Paths generatePaths(Machine finiteStateMachine, State toState);
+  Paths generatePaths(StateMachine finiteStateMachine, State toState);
 }
 
 //All the paths from initial state to target state

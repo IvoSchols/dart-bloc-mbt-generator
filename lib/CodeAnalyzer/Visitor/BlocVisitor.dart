@@ -4,14 +4,14 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:statemachine/statemachine.dart';
 
 /// A visitor that visits the AST and returns a [StateMachine]
-class CubitVisitor extends SimpleAstVisitor<void> {
+class BlocVisitor extends SimpleAstVisitor<void> {
   @override
-  // Find states and events of the FiniteStateMachineCubit class, if one is not found return null
+  // Find states and events for the state machine, if one is not found return null
   // Also provide a leg up on transition function
   Machine visitClassDeclaration(ClassDeclaration node) {
     if (node.extendsClause == null ||
-        node.extendsClause!.superclass.name.toString() != "Cubit") {
-      throw Exception("Not a Cubit class");
+        node.extendsClause!.superclass.name.toString() != "Bloc") {
+      throw Exception("Not a Bloc class");
     }
     if (node.extendsClause!.superclass.typeArguments ==
             null || // TODO: Necessary line?
@@ -22,7 +22,7 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     List<State> states = [];
     List<String> stateTransitions = [];
 
-    Machine stateMachine = new Machine<String>();
+    Machine stateMachine = Machine<String>();
 
     //Find states
     //TODO: find a way to get the events -> remove null

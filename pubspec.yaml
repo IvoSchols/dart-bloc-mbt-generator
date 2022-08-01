@@ -11,8 +11,8 @@ dependencies:
 #   path: ^1.8.0
   bloc: ^8.0.3
   equatable: ^2.0.3
-  statemachine:
-    git: https://github.com/IvoSchols/dart-statemachine.git
+  state_machine: 
+    git: https://github.com/IvoSchols/state_machine.git
 
 dev_dependencies:
   bloc_test: ^9.0.3
