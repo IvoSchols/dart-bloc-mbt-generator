@@ -4,12 +4,13 @@ import 'PathGenerator.dart';
 
 class SimplePathGenerator implements PathGenerator {
   //Generarate simple paths from initial state to all states
+  @override
   List<Paths> generateAllPaths(StateMachine stateMachine) {
     List<Paths> paths = [];
     List<State> states = stateMachine.states;
-    states.forEach((State state) {
-      paths.add(this.generatePaths(stateMachine, state));
-    });
+    for (State state in states) {
+      paths.add(generatePaths(stateMachine, state));
+    }
     return paths;
   }
 
@@ -27,13 +28,13 @@ class SimplePathGenerator implements PathGenerator {
       throw Exception("No start state");
     }
 
-    _DFS(finiteStateMachine, startState, "", toState, visited, currentPath,
+    _dfs(finiteStateMachine, startState, "", toState, visited, currentPath,
         simplePaths);
     return simplePaths;
   }
 
   //Generate simple paths from initial state to target state
-  dynamic _DFS(
+  dynamic _dfs(
       StateMachine finiteStateMachine,
       State startState,
       String lastTransition,
@@ -41,9 +42,11 @@ class SimplePathGenerator implements PathGenerator {
       Map<State, bool> visited,
       Path currentPath,
       Paths simplePaths) {
-    if (visited[startState] == null)
+    if (visited[startState] == null) {
       throw Exception("Start state not found");
-    else if (visited[startState] == true) return;
+    } else if (visited[startState] == true) {
+      return;
+    }
 
     visited[startState] = true;
     currentPath.segments.add(Segment(startState, Event(lastTransition)));
@@ -58,7 +61,7 @@ class SimplePathGenerator implements PathGenerator {
     for (StateTransition transition in startState.transitions) {
       State nextState = transition.to;
       if (nextState == startState) continue;
-      _DFS(finiteStateMachine, nextState, transition.name, endState, visited,
+      _dfs(finiteStateMachine, nextState, transition.name, endState, visited,
           currentPath, simplePaths);
     }
     return simplePaths;
