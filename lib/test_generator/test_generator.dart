@@ -2,63 +2,49 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:state_machine/state_machine.dart';
 import 'dart:io';
+import 'package:mason/mason.dart';
 
-abstract class TestOracle {
-  factory TestOracle(BlocBase blocBase, StateMachine machine) {
+abstract class TestGenerator {
+  factory TestGenerator(BlocBase blocBase, StateMachine machine) {
     switch (blocBase.runtimeType) {
       case Cubit:
-        return CubitOracle(blocBase as Cubit<dynamic>, machine);
       case Bloc:
-        return BlocOracle(blocBase as Bloc<dynamic, dynamic>, machine);
+        return CubitGenerator(blocBase as Cubit<dynamic>, machine);
+        return BlocGenerator(blocBase as Bloc<dynamic, dynamic>, machine);
       default:
         throw Exception("Unknown bloc type");
     }
   }
 
-  void writeTests(List<Paths> paths);
+  Future<void> writeTests(List<Paths> paths);
 }
 
-class CubitOracle implements TestOracle {
+class CubitGenerator implements TestGenerator {
   Cubit<dynamic> _cubit;
   StateMachine _machine;
 
-  CubitOracle(this._cubit, this._machine);
+  CubitGenerator(this._cubit, this._machine);
 
   @override
-  void writeTests(List<Paths> paths) {
+  Future<void> writeTests(List<Paths> paths) async {
     String machineName = _machine.name;
     String testFile = "test/${machineName}_test.dart";
     // TODO: retrieve cubit from AST
+    String cubitClassName = _cubit.runtimeType.toString();
+    String cubitObjectName = cubitClassName;
+    cubitClassName[0].toLowerCase();
 
-    var file = File(testFile);
-    IOSink sink = file.openWrite();
-
-    // Write imports
-    // sink.write("import 'package:bloc/bloc.dart';\n");
-    // sink.write("import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';\n");
-    // sink.write("import 'package:dart_bloc_mbt_generator/path_generator/simple_path_generator.dart';\n");
-    sink.writeln("import 'package:test/test.dart");
-    sink.writeln("package:bloc_test/bloc_test.dart");
     //TODO: add cubit import (retrieve from AST)
 
-    // Write main, write group
-    sink.writeln("void main() {");
-    sink.writeln("group('{$machineName}Cubit', () {
-    sink.writeln("CounterBloc counterBloc;") 
-
-    setUp(() {
-        counterBloc = CounterBloc();
-    });")
-
-    // Close main, close group
-    sink.writeln("}");
-
-    for (Paths path in paths) {
-      _writeTest(sink, path);
-    }
-
-    // Close the IOSink to free system resources.
-    sink.close();
+    // final brick = Brick.git(
+    //   const GitPath(
+    //     'https://github.com/felangel/mason.git',
+    //     path: 'bricks/greeting',
+    //   ),
+    // );
+    // final generator = await MasonGenerator.fromBrick(brick);
+    // final target = DirectoryGeneratorTarget(Directory.current);
+    // await generator.generate(target, vars: <String, dynamic>{'name': 'Dash'});
 
     // Format the newly written test file
     Process.run('dart', ['format', testFile]).then((result) {
@@ -74,11 +60,11 @@ class CubitOracle implements TestOracle {
   }
 }
 
-class BlocOracle implements TestOracle {
-  Bloc _bloc;
-  StateMachine _machine;
+// class BlocGenerator implements TestGenerator {
+//   Bloc _bloc;
+//   StateMachine _machine;
 
-  BlocOracle(this._bloc, this._machine);
+//   BlocGenerator(this._bloc, this._machine);
 
-  void test(List<Paths> paths) {}
-}
+//   void test(List<Paths> paths) {}
+// }

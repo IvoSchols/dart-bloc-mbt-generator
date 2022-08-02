@@ -7,4 +7,6 @@ abstract class SimpleAbState extends Equatable {
   List<Object> get props => [];
 }
 
-class SimpleAbInitial extends SimpleAbState {}
+class SimpleA extends SimpleAbState {}
+
+class SimpleB extends SimpleAbState {}

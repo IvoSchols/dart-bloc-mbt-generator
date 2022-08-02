@@ -1,6 +1,6 @@
 import 'package:state_machine/state_machine.dart';
 
-import 'PathGenerator.dart';
+import 'path_generator.dart';
 
 class SimplePathGenerator implements PathGenerator {
   //Generarate simple paths from initial state to all states
