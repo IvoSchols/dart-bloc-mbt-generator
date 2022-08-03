@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
-import 'package:dart_bloc_mbt_generator/file_generator/file_generator.dart';
+import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:state_machine/state_machine.dart';
 

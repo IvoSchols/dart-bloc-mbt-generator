@@ -23,7 +23,8 @@ class CubitVisitor extends SimpleAstVisitor<void> {
         node.extendsClause!.superclass.typeArguments!.arguments.isEmpty) {
       throw Exception("No machine states provided");
     }
-    String name = "";
+    String name =
+        node.name.toString().substring(0, node.name.toString().length - 5);
 
     // Find starting state
     String startingState = _findStartingState(node);

@@ -58,8 +58,6 @@ class Analyzer {
 
     if (result == null) return null;
 
-    result.imports = [path];
-
     return result;
   }
 
@@ -82,7 +80,7 @@ class Analyzer {
   static dynamic _checkCompilationUnit(CompilationUnit unit) {
     //TODO: update with general visitor that discriminates between cubit & bloc
     AstVisitor visitor;
-    StateMachine? stateMachine;
+    dynamic dynReturn;
 
     for (dynamic childEntity in unit.childEntities) {
       //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
@@ -91,20 +89,11 @@ class Analyzer {
           childEntity.extendsClause != null &&
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
         visitor = CubitVisitor();
-        stateMachine = visitor.visitClassDeclaration(childEntity);
+        dynReturn = visitor.visitClassDeclaration(childEntity);
 
-        if (stateMachine != null) break;
+        if (dynReturn != null) break;
       }
     }
-    if (stateMachine == null) {
-      return null;
-    }
-
-    dynamic dynReturn = {
-      'path': "",
-      'stateMachine': stateMachine,
-      'type': "cubit",
-    };
 
     return dynReturn;
   }
