@@ -14,81 +14,98 @@ import 'package:analyzer/src/dart/ast/utilities.dart';
 import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:state_machine/state_machine.dart';
 
-import 'package:statemachine/statemachine.dart';
-import 'Visitor/CubitVisitor.dart';
+import 'visitor/cubit_visitor.dart';
+import 'package:path/path.dart' as p;
 
-void analyzeAllFiles(AnalysisContextCollection collection) {
-  //TODO: implement like analyzeSomeFiles
-  for (AnalysisContext context in collection.contexts) {
-    for (String path in context.contextRoot.analyzedFiles()) {
-      analyzeSingleFile(context, path);
-    }
-  }
-}
+class Analyzer {
+// void analyzeAllFiles(AnalysisContextCollection collection) {
+//   //TODO: implement like analyzeSomeFiles
+//   for (AnalysisContext context in collection.contexts) {
+//     for (String path in context.contextRoot.analyzedFiles()) {
+//       analyzeSingleFile(context, path);
+//     }
+//   }
+// }
 
 //Returns state machine for the given files, or null if no state machine is found
-List<Machine> analyzeSomeFiles(
-    AnalysisContextCollection collection, List<String> includedPaths) {
-  List<Machine> stateMachines = [];
-  for (String path in includedPaths) {
-    AnalysisContext context = collection.contextFor(path);
-    Machine? stateMachine = analyzeSingleFile(context, path);
-    if (stateMachine == null) {
-      print("Could not analyze $path");
-      continue;
-    }
-    stateMachines.add(stateMachine);
-  }
-  return stateMachines;
-}
+  // List<StateMachine> analyzeSomeFiles(
+  //     AnalysisContextCollection collection, List<String> includedPaths) {
+  //   List<StateMachine> stateMachines = [];
+  //   for (String path in includedPaths) {
+  //     AnalysisContext context = collection.contextFor(path);
+  //     StateMachine? stateMachine = analyzeSingleFile(context, path);
+  //     if (stateMachine == null) {
+  //       print("Could not analyze $path");
+  //       continue;
+  //     }
+  //     stateMachines.add(stateMachine);
+  //   }
+  //   return stateMachines;
+  // }
 
 //Returns state machine for the given file, or null if no state machine is found
-Machine? analyzeSingleFile(AnalysisContext context, String path) {
-  AnalysisSession session = context.currentSession;
-  ParseStringResult parseStringResult = parseFile(
-      path: path,
-      featureSet: FeatureSet.fromEnableFlags2(
-          flags: [], sdkLanguageVersion: Version.parse('2.16.2')));
-  CompilationUnit unit = parseStringResult.unit;
+  static dynamic analyzeSingleFile(String path) {
+    String absolutePath = p.absolute("lib/" + path);
+    ParseStringResult parseStringResult = parseFile(
+        path: absolutePath,
+        featureSet: FeatureSet.fromEnableFlags2(
+            flags: [], sdkLanguageVersion: Version.parse('2.16.2')));
+    CompilationUnit unit = parseStringResult.unit;
 
-  print(unit.toString());
+    dynamic result = _checkCompilationUnit(unit);
 
-  return checkCompilationUnit(unit);
-}
+    if (result == null) return null;
 
-void processFile(AnalysisSession session, String path) async {
-  var result = session.getParsedUnit(path);
-  if (result is ParsedUnitResult) {
-    CompilationUnit unit = result.unit;
+    result.imports = [path];
+
+    return result;
   }
-}
 
-void main() {
-  List<String> includedPaths = <String>[
-    '/home/steen/Documents/Leiden/BachelorDossier/lib/examples/door/door_bloc.dart'
-  ];
-  AnalysisContextCollection collection =
-      new AnalysisContextCollection(includedPaths: includedPaths);
-  analyzeSomeFiles(collection, includedPaths);
-}
+  // void processFile(AnalysisSession session, String path) async {
+  //   var result = session.getParsedUnit(path);
+  //   if (result is ParsedUnitResult) {
+  //     CompilationUnit unit = result.unit;
+  //   }
+  // }
 
-Machine? checkCompilationUnit(CompilationUnit unit) {
-  //TODO: update with general visitor that discriminates between cubit & bloc
-  AstVisitor visitor;
-  Machine? stateMachine;
+// void main() {
+//   List<String> includedPaths = <String>[
+//     '/home/steen/Documents/Leiden/BachelorDossier/lib/examples/door/door_bloc.dart'
+//   ];
+//   AnalysisContextCollection collection =
+//       new AnalysisContextCollection(includedPaths: includedPaths);
+//   analyzeSomeFiles(collection, includedPaths);
+// }
 
-  for (dynamic child in unit.childEntities) {
-    //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
-    //If it is, return a FiniteStateMachineCubit
-    if (child is ClassDeclaration &&
-        child.extendsClause != null &&
-        child.extendsClause!.superclass.name.toString() == "Cubit") {
-      visitor = CubitVisitor();
-      stateMachine = visitor.visitClassDeclaration(child);
+  static dynamic _checkCompilationUnit(CompilationUnit unit) {
+    //TODO: update with general visitor that discriminates between cubit & bloc
+    AstVisitor visitor;
+    StateMachine? stateMachine;
 
-      if (stateMachine != null) break;
+    for (dynamic childEntity in unit.childEntities) {
+      //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
+      //If it is, return a FiniteStateMachineCubit
+      if (childEntity is ClassDeclaration &&
+          childEntity.extendsClause != null &&
+          childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
+        visitor = CubitVisitor();
+        stateMachine = visitor.visitClassDeclaration(childEntity);
+
+        if (stateMachine != null) break;
+      }
     }
+    if (stateMachine == null) {
+      return null;
+    }
+
+    dynamic dynReturn = {
+      'path': "",
+      'stateMachine': stateMachine,
+      'type': "cubit",
+    };
+
+    return dynReturn;
   }
-  return stateMachine;
 }
