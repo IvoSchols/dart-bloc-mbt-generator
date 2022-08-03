@@ -2,7 +2,7 @@
 import 'package:test/test.dart';
 import 'package:bloc_test/bloc_test.dart';
 {{#imports}}
-  import '{{{import}}}';
+  import '{{name.snakeCase()}}/{{{import}}}';
 {{/imports}}
 
 

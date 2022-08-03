@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
+import 'package:dart_bloc_mbt_generator/file_generator/file_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:state_machine/state_machine.dart';
-import 'dart:io';
+
 import 'package:mason/mason.dart';
 import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 
 abstract class TestGenerator {
   factory TestGenerator(String blocBasePath, StateMachine machine) {
-    dynamic result = Analyzer.analyzeSingleFile(blocBasePath);
-    if (result.type == "cubit") {
-      return CubitGenerator(result);
+    if (blocBasePath.contains("cubit") && blocBasePath.contains("bloc")) {
+      throw Exception(
+          "Cannot determine type: bloc and cubit are not allowed in the same path");
+    } else if (blocBasePath.contains("cubit")) {
+      return CubitGenerator(blocBasePath, machine);
       // } else if (blocBase is Bloc) {
       //   throw Exception("Unimplemented bloc type");
 // return BlocGenerator(blocBase as Bloc<dynamic, dynamic>, machine);
@@ -23,21 +28,19 @@ abstract class TestGenerator {
   Future<void> writeTests(List<Paths> paths);
 }
 
-class CubitGenerator
-    with TestGeneratorHelperFunctions
-    implements TestGenerator {
+class CubitGenerator implements TestGenerator {
   // Cubit<dynamic> _cubit;
-  // StateMachine _machine;
-  dynamic _result;
+  String _blocBasePath;
+  StateMachine _machine;
 
-  CubitGenerator(this._result);
+  CubitGenerator(this._blocBasePath, this._machine);
 
   @override
   Future<void> writeTests(List<Paths> paths) async {
-    String machineName = _result.name;
+    String machineName = _machine.name;
     String testFile = "test/${machineName}/${machineName}_test.dart";
     // TODO: retrieve cubit from AST
-    String cubitClassName = _result.runtimeType.toString();
+    String cubitClassName = _machine.runtimeType.toString();
     String cubitObjectName = cubitClassName;
     cubitClassName.replaceRange(0, 0, cubitClassName[0].toLowerCase());
 
@@ -51,10 +54,7 @@ class CubitGenerator
       vars: <String, dynamic>{
         'name': 'simple ab',
         'imports': [
-          {
-            'import':
-                'package:dart_bloc_mbt_generator/examples/cubit_examples/simpleAB/cubit/simple_ab_cubit.dart'
-          }
+          {'import': 'package:dart_bloc_mbt_generator/{$_blocBasePath}'}
         ],
         'cubit': 'SimpleAbCubit',
         'tests': [
@@ -96,7 +96,7 @@ class CubitGenerator
     print(generatedFile.toString());
 
     // Format the newly written test file
-    _formatFiles([testFile]);
+    FileGeneratorHelperFunctions.formatFiles([testFile]);
   }
 }
 
@@ -108,18 +108,3 @@ class CubitGenerator
 
 //   void test(List<Paths> paths) {}
 // }
-
-class TestGeneratorHelperFunctions {
-  void _formatFile(String path) {
-    Process.run('dart', ['format', path]).then((result) {
-      stdout.write(result.stdout);
-      stderr.write(result.stderr);
-    });
-  }
-
-  void _formatFiles(List<String> paths) {
-    for (String path in paths) {
-      _formatFile(path);
-    }
-  }
-}

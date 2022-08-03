@@ -8,6 +8,7 @@ StateMachine constructSimpleABStatemachine() {
   final b = statemachine.newState('b');
 
   StateTransition ab = statemachine.newStateTransition('ab', [a], b);
+  ab.cancelIf((stateChange) => false);
 
   statemachine.start(a);
 
