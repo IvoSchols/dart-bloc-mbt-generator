@@ -66,8 +66,9 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     ClassMember startingStateMember = node.members[0];
     for (dynamic childEntity in startingStateMember.childEntities) {
       if (childEntity is SuperConstructorInvocationImpl) {
-        startingState = childEntity.argumentList.toString();
-        startingState = startingState.substring(1, startingState.length - 1);
+        startingState = childEntity
+            .argumentList.arguments[0].childEntities.first
+            .toString();
         break;
       }
     }
@@ -80,7 +81,8 @@ class CubitVisitor extends SimpleAstVisitor<void> {
       if (member is MethodDeclarationImpl) {
         for (var argument in member.body.childEntities) {
           if (argument is MethodInvocationImpl) {
-            states.add(argument.argumentList.arguments[0].toString());
+            states.add(argument.argumentList.arguments[0].childEntities.first
+                .toString());
           }
         }
       }
@@ -97,7 +99,8 @@ class CubitVisitor extends SimpleAstVisitor<void> {
         String event = member.name.toString();
         for (var argument in member.body.childEntities) {
           if (argument is MethodInvocationImpl) {
-            String to = argument.argumentList.arguments[0].toString();
+            String to = argument.argumentList.arguments[0].childEntities.first
+                .toString();
             transitions.add(CubitStateTransition(event, states.toList(), to));
           }
         }

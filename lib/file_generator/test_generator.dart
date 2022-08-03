@@ -38,7 +38,7 @@ class CubitGenerator implements TestGenerator {
   @override
   Future<void> writeTests(List<Paths> paths) async {
     String machineName = _machine.name;
-    String testFile = "test/${machineName}/${machineName}_test.dart";
+    String testFile = "test/${machineName}.dart";
     // TODO: retrieve cubit from AST
     String cubitClassName = _machine.runtimeType.toString();
     String cubitObjectName = cubitClassName;
@@ -52,9 +52,9 @@ class CubitGenerator implements TestGenerator {
     List<GeneratedFile> generatedFile = await generator.generate(
       target,
       vars: <String, dynamic>{
-        'name': 'simple ab',
+        'name': 'simple ab test',
         'imports': [
-          {'import': 'package:dart_bloc_mbt_generator/{$_blocBasePath}'}
+          {'import': 'package:dart_bloc_mbt_generator/$_blocBasePath'}
         ],
         'cubit': 'SimpleAbCubit',
         'tests': [

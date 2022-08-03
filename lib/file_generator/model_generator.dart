@@ -39,6 +39,10 @@ class CubitModelGenerator implements ModelGenerator {
   @override
   Future<void> writeModel() async {
     String machineName = _result["name"];
+
+    String modelFolder = "generated_examples";
+    String modelFile = modelFolder + "/${machineName}.dart";
+
     Set<String> states = _result["states"];
     List<CubitStateTransition> stateTransitions = _result["transitions"];
     String startingState = _result["startingState"];
@@ -47,21 +51,24 @@ class CubitModelGenerator implements ModelGenerator {
 
     final brick = Brick.path("bricks/statemachine_model_cubit");
     final generator = await MasonGenerator.fromBrick(brick);
-    final target = DirectoryGeneratorTarget(Directory("examplair"));
+    final target = DirectoryGeneratorTarget(Directory("lib/$modelFolder"));
     List<GeneratedFile> generatedFile = await generator.generate(
       target,
       vars: <String, dynamic>{
         'name': machineName,
-        'states': states.map((state) => {'state': state}).toList(),
-        'transitions': stateTransitions.map((st) =>
-            {'transition': st.event, 'from': st.fromState, 'to': st.toState}),
+        'states': states.map((state) => {'state': state}),
+        'transitions': stateTransitions.map((st) => {
+              'transition': st.event,
+              'froms': st.fromState.map((from) => {'from': from}).toList(),
+              'to': st.toState
+            }),
         'startingState': startingState,
       },
     );
     print(generatedFile.toString());
 
-    // Format the newly written test file
-    // FileGeneratorHelperFunctions.formatFiles([testFile]);
+    // Format the newly written model file
+    FileGeneratorHelperFunctions.formatFiles([modelFile]);
   }
 }
 

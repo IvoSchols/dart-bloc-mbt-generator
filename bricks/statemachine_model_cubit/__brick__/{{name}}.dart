@@ -11,7 +11,7 @@ StateMachine construct{{name.pascalCase()}}Statemachine() {
 
   // Define transitions
   {{#transitions}}
-    StateTransition {{transition.camelCase()}} = statemachine.newStateTransition({{transition.camelCase()}}, [{{from.camelCase()}}], {{to.camelCase()}});
+    StateTransition {{transition.camelCase()}} = statemachine.newStateTransition('{{transition.camelCase()}}', [{{#froms}}{{from.camelCase()}},{{/froms}}], {{to.camelCase()}});
   {{/transitions}}
 
   // Define starting state
