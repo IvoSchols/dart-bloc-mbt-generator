@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitor/cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/model_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/simple_path_generator.dart';
@@ -14,13 +15,13 @@ Future<void> main() async {
   String relativePath =
       'examples/cubit_examples/simple_ab/cubit/simple_ab_cubit.dart';
   //TODO: remove parentehses when reading in file
-  dynamic result = Analyzer.analyzeSingleFile(relativePath);
+  VisitedCubit result = Analyzer.analyzeSingleFile(relativePath);
   CubitModelGenerator(relativePath, result).writeModel();
 
   //Generate tests from statemachine
   final StateMachine machine = constructSimpleAbStatemachine();
   TestGenerator testGenerator = TestGenerator(relativePath, machine);
   final PathGenerator pathGenerator = SimplePathGenerator();
-  final List<Paths> allPaths = pathGenerator.generateAllPaths(machine);
-  await testGenerator.writeTests(allPaths);
+  final List<Path> paths = pathGenerator.generatePaths(machine);
+  await testGenerator.writeTests(paths);
 }

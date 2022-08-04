@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:state_machine/state_machine.dart';
 
 import 'path_generator.dart';
@@ -5,43 +6,36 @@ import 'path_generator.dart';
 class SimplePathGenerator implements PathGenerator {
   //Generarate simple paths from initial state to all states
   @override
-  List<Paths> generateAllPaths(StateMachine stateMachine) {
-    List<Paths> paths = [];
-    List<State> states = stateMachine.states;
-    for (State state in states) {
-      paths.add(generatePaths(stateMachine, state));
+  List<Path> generatePaths(StateMachine stateMachine) {
+    List<Path> paths = [];
+    for (State state in stateMachine.states) {
+      paths.addAll(generatePathsTo(stateMachine, state));
     }
     return paths;
   }
 
   @override
-  Paths generatePaths(StateMachine finiteStateMachine, State toState) {
+  List<Path> generatePathsTo(StateMachine machine, State toState) {
     //Initialize visited states map with false
-    Map<State, bool> visited = {
-      for (var state in finiteStateMachine.states) state: false
-    };
+    Map<State, bool> visited = {for (var state in machine.states) state: false};
     Path currentPath = Path([]);
-    Paths simplePaths = Paths(toState, []);
+    List<Path> simplePaths = [];
     // finiteStateMachine.start();
-    State? startState = finiteStateMachine.current;
-    if (startState == null) {
-      throw Exception("No start state");
-    }
+    State? startState = machine.current;
 
-    _dfs(finiteStateMachine, startState, "", toState, visited, currentPath,
-        simplePaths);
+    _dfs(machine, startState, "", toState, visited, currentPath, simplePaths);
     return simplePaths;
   }
 
   //Generate simple paths from initial state to target state
   dynamic _dfs(
-      StateMachine finiteStateMachine,
+      StateMachine machine,
       State startState,
       String lastTransition,
       State endState,
       Map<State, bool> visited,
       Path currentPath,
-      Paths simplePaths) {
+      List<Path> simplePaths) {
     if (visited[startState] == null) {
       throw Exception("Start state not found");
     } else if (visited[startState] == true) {
@@ -51,7 +45,7 @@ class SimplePathGenerator implements PathGenerator {
     visited[startState] = true;
     currentPath.segments.add(Segment(startState, Event(lastTransition)));
     if (startState == endState) {
-      simplePaths.paths.add(currentPath.copy());
+      simplePaths.add(currentPath.copy());
       visited[startState] = false;
       currentPath.segments.removeLast();
       return;
@@ -61,8 +55,8 @@ class SimplePathGenerator implements PathGenerator {
     for (StateTransition transition in startState.transitions) {
       State nextState = transition.to;
       if (nextState == startState) continue;
-      _dfs(finiteStateMachine, nextState, transition.name, endState, visited,
-          currentPath, simplePaths);
+      _dfs(machine, nextState, transition.name, endState, visited, currentPath,
+          simplePaths);
     }
     return simplePaths;
   }

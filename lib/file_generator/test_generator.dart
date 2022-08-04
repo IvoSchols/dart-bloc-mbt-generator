@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:state_machine/state_machine.dart';
 
 import 'package:mason/mason.dart';
-import 'package:analyzer/dart/analysis/analysis_context.dart';
-import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 
 abstract class TestGenerator {
   factory TestGenerator(String blocBasePath, StateMachine machine) {
@@ -25,30 +21,30 @@ abstract class TestGenerator {
     }
   }
 
-  Future<void> writeTests(List<Paths> paths);
+  Future<void> writeTests(List<Path> paths);
 }
 
 class CubitGenerator implements TestGenerator {
   // Cubit<dynamic> _cubit;
-  String _blocBasePath;
-  StateMachine _machine;
+  final String _blocBasePath;
+  final StateMachine _machine;
 
   CubitGenerator(this._blocBasePath, this._machine);
 
   @override
-  Future<void> writeTests(List<Paths> paths) async {
+  Future<void> writeTests(List<Path> paths) async {
     String machineName = _machine.name;
-    String testFile = "test/${machineName}.dart";
+    String testFolder = "lib/gen/test";
+    String testFile = "/$testFolder/$machineName.dart";
     // TODO: retrieve cubit from AST
     String cubitClassName = _machine.runtimeType.toString();
-    String cubitObjectName = cubitClassName;
     cubitClassName.replaceRange(0, 0, cubitClassName[0].toLowerCase());
 
     //TODO: add cubit import (retrieve from AST)
 
     final brick = Brick.path("bricks/cubit_test");
     final generator = await MasonGenerator.fromBrick(brick);
-    final target = DirectoryGeneratorTarget(Directory("test"));
+    final target = DirectoryGeneratorTarget(Directory(testFolder));
     List<GeneratedFile> generatedFile = await generator.generate(
       target,
       vars: <String, dynamic>{

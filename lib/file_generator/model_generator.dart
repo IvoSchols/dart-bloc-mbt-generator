@@ -1,18 +1,12 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitor/cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
-import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
-import 'package:state_machine/state_machine.dart';
 
 import 'package:mason/mason.dart';
-import 'package:analyzer/dart/analysis/analysis_context.dart';
-import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 
 abstract class ModelGenerator {
-  factory ModelGenerator(String blocBasePath, dynamic result) {
+  factory ModelGenerator(String blocBasePath, VisitedCubit result) {
     if (blocBasePath.contains("cubit") && blocBasePath.contains("bloc")) {
       throw Exception(
           "Cannot determine type: bloc and cubit are not allowed in the same path");
@@ -32,20 +26,20 @@ abstract class ModelGenerator {
 class CubitModelGenerator implements ModelGenerator {
   // Cubit<dynamic> _cubit;
   String _blocBasePath;
-  dynamic _result;
+  VisitedCubit _vCubit;
 
-  CubitModelGenerator(this._blocBasePath, this._result);
+  CubitModelGenerator(this._blocBasePath, this._vCubit);
 
   @override
   Future<void> writeModel() async {
-    String machineName = _result["name"];
+    String machineName = _vCubit.name;
 
-    String modelFolder = "generated_examples";
+    String modelFolder = "gen/models";
     String modelFile = modelFolder + "/${machineName}.dart";
 
-    Set<String> states = _result["states"];
-    List<CubitStateTransition> stateTransitions = _result["transitions"];
-    String startingState = _result["startingState"];
+    Set<String> states = _vCubit.states;
+    List<CubitStateTransition> stateTransitions = _vCubit.transitions;
+    String startingState = _vCubit.startingState;
 
     //TODO: add cubit import (retrieve from AST)
 

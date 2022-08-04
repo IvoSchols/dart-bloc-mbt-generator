@@ -1,17 +1,10 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:state_machine/state_machine.dart';
 
 abstract class PathGenerator {
-  List<Paths> generateAllPaths(StateMachine finiteStateMachine);
   //TODO: update the variable type
-  Paths generatePaths(StateMachine finiteStateMachine, State toState);
-}
-
-//All the paths from initial state to target state
-class Paths {
-  State targetState;
-  List<Path> paths;
-
-  Paths(this.targetState, this.paths);
+  List<Path> generatePaths(StateMachine finiteStateMachine);
+  List<Path> generatePathsTo(StateMachine machine, State toState);
 }
 
 //Sequence of segments of a path (always starts with initial state!)
@@ -20,7 +13,7 @@ class Path {
 
   Path(this.segments);
 
-  Path copy() => Path(this.segments.map((segment) => segment.copy()).toList());
+  Path copy() => Path(segments.map((segment) => segment.copy()).toList());
 }
 
 //Current state and which event will be triggered to get to the next state
@@ -30,7 +23,7 @@ class Segment {
 
   Segment(this.state, this.event);
 
-  Segment copy() => Segment(this.state, this.event);
+  Segment copy() => Segment(state, event);
 }
 
 //Transition

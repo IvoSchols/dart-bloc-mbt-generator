@@ -1,9 +1,9 @@
 import 'package:analyzer/src/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:state_machine/state_machine.dart';
 
 /// A visitor that visits the AST and returns a [StateMachine]
@@ -12,7 +12,7 @@ class CubitVisitor extends SimpleAstVisitor<void> {
   @override
   // Find states and events of the FiniteStateMachineCubit class, if one is not found return null
   // Also provide a leg up on transition function
-  dynamic visitClassDeclaration(ClassDeclaration node) {
+  VisitedCubit visitClassDeclaration(ClassDeclaration node) {
     if (node.extendsClause == null ||
         node.extendsClause!.superclass.name.toString() != "Cubit") {
       throw Exception("Not a Cubit class");
@@ -24,7 +24,7 @@ class CubitVisitor extends SimpleAstVisitor<void> {
       throw Exception("No machine states provided");
     }
     String name =
-        node.name.toString().substring(0, node.name.toString().length - 5);
+        node.name.toString().replaceFirst(RegExp("'cubit'|'Cubit'"), '');
 
     // Find starting state
     String startingState = _findStartingState(node);
@@ -46,12 +46,8 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     List<CubitStateTransition> stateTransitions =
         _findTransitions(states, node);
 
-    dynamic result = {
-      'name': name,
-      'states': states,
-      'transitions': stateTransitions,
-      'startingState': startingState
-    };
+    VisitedCubit result =
+        VisitedCubit(name, states, stateTransitions, startingState);
 
     return result;
   }
@@ -111,10 +107,25 @@ class CubitVisitor extends SimpleAstVisitor<void> {
   }
 }
 
-class CubitStateTransition {
-  String event;
-  List<String> fromState;
-  String toState;
+class VisitedCubit {
+  String name;
+  Set<String> states;
+  List<CubitStateTransition> transitions;
+  String startingState;
+
+  VisitedCubit(this.name, this.states, this.transitions, this.startingState);
+}
+
+class CubitStateTransition extends Equatable {
+  final String event;
+  final List<String> fromState;
+  final String toState;
 
   CubitStateTransition(this.event, this.fromState, this.toState);
+
+  @override
+  List<Object> get props => [event, fromState, toState];
 }
+
+
+// Recursive visitor to find states, events, transitions and initial state of a cubit 
