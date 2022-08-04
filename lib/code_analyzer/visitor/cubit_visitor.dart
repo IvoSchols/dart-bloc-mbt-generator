@@ -8,7 +8,7 @@ import 'package:state_machine/state_machine.dart';
 
 /// A visitor that visits the AST and returns a [StateMachine]
 /// TODO: recursively find all potential candidates for state machines
-class CubitVisitor extends SimpleAstVisitor<void> {
+class CubitVisitor extends SimpleAstVisitor<VisitedCubit> {
   @override
   // Find states and events of the FiniteStateMachineCubit class, if one is not found return null
   // Also provide a leg up on transition function
@@ -23,38 +23,24 @@ class CubitVisitor extends SimpleAstVisitor<void> {
         node.extendsClause!.superclass.typeArguments!.arguments.isEmpty) {
       throw Exception("No machine states provided");
     }
+
     String name =
         node.name.toString().replaceFirst(RegExp("'cubit'|'Cubit'"), '');
 
     // Find starting state
     String startingState = _findStartingState(node);
     if (startingState == "") {
-      throw Exception("No starting state provided");
+      throw Exception("No starting state found in class declaration");
     }
 
-    //Find states
-    //TODO: find a way to get the events -> remove null
-    Set<String> states = _findStates(node);
+    AstVisitor visitor = _RecursiveCubitVisitor();
+    VisitedCubit result = visitor.visitClassDeclaration(node);
 
-    if (states.isEmpty) {
-      throw Exception("No states are emitted");
-    }
-
-    states.add(startingState);
-
-    //Find transitions
-    List<CubitStateTransition> stateTransitions =
-        _findTransitions(states, node);
-
-    VisitedCubit result =
-        VisitedCubit(name, states, stateTransitions, startingState);
+    result.name = name;
+    result.startingState = startingState;
+    result.states.add(startingState);
 
     return result;
-  }
-
-  @override
-  String visitMethodDeclaration(MethodDeclaration node) {
-    return node.name.name;
   }
 
   String _findStartingState(ClassDeclaration node) {
@@ -70,6 +56,57 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     }
     return startingState;
   }
+}
+
+class VisitedCubit {
+  String name;
+  Set<String> states;
+  List<CubitStateTransition> transitions;
+  String startingState;
+
+  VisitedCubit(this.name, this.states, this.transitions, this.startingState);
+}
+
+class CubitStateTransition extends Equatable {
+  final String event;
+  final List<String> fromState;
+  final String toState;
+
+  CubitStateTransition(this.event, this.fromState, this.toState);
+
+  @override
+  List<Object> get props => [event, fromState, toState];
+}
+
+// Recursive visitor to find states, events, transitions and initial state of a cubit
+class _RecursiveCubitVisitor extends RecursiveAstVisitor<VisitedCubit> {
+  @override
+  VisitedCubit visitClassDeclaration(ClassDeclaration node) {
+    //TODO: change to replace last!
+
+    Set<String> states = {};
+    List<CubitStateTransition> transitions = [];
+
+    // VisitedCubit? foundCubit = super.visitClassDeclaration(node);
+
+    // if (foundCubit == null) {
+    //   throw Exception("Could not find cubit");
+    // }
+
+    //Find states
+    states = _findStates(node);
+    //Find transitions
+    transitions = _findTransitions(states, node);
+
+    if (states.isEmpty || transitions.isEmpty) {
+      throw Exception("Could not initialize all variables");
+    }
+
+    return VisitedCubit('', states, transitions, '');
+  }
+
+  // @override
+  // VisitedCubit visitClassMember() {}
 
   Set<String> _findStates(ClassDeclaration node) {
     Set<String> states = {};
@@ -106,26 +143,3 @@ class CubitVisitor extends SimpleAstVisitor<void> {
     return transitions;
   }
 }
-
-class VisitedCubit {
-  String name;
-  Set<String> states;
-  List<CubitStateTransition> transitions;
-  String startingState;
-
-  VisitedCubit(this.name, this.states, this.transitions, this.startingState);
-}
-
-class CubitStateTransition extends Equatable {
-  final String event;
-  final List<String> fromState;
-  final String toState;
-
-  CubitStateTransition(this.event, this.fromState, this.toState);
-
-  @override
-  List<Object> get props => [event, fromState, toState];
-}
-
-
-// Recursive visitor to find states, events, transitions and initial state of a cubit 
