@@ -1,3 +1,5 @@
+import 'package:analyzer/dart/ast/syntactic_entity.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/src/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -71,8 +73,10 @@ class CubitStateTransition extends Equatable {
   final String event;
   final List<String> fromState;
   final String toState;
+  final List<Function>? conditions;
 
-  CubitStateTransition(this.event, this.fromState, this.toState);
+  CubitStateTransition(this.event, this.fromState, this.toState,
+      {this.conditions});
 
   @override
   List<Object> get props => [event, fromState, toState];
@@ -82,11 +86,6 @@ class CubitStateTransition extends Equatable {
 class _RecursiveCubitVisitor extends RecursiveAstVisitor<VisitedCubit> {
   @override
   VisitedCubit visitClassDeclaration(ClassDeclaration node) {
-    //TODO: change to replace last!
-
-    Set<String> states = {};
-    List<CubitStateTransition> transitions = [];
-
     // VisitedCubit? foundCubit = super.visitClassDeclaration(node);
 
     // if (foundCubit == null) {
@@ -94,9 +93,9 @@ class _RecursiveCubitVisitor extends RecursiveAstVisitor<VisitedCubit> {
     // }
 
     //Find states
-    states = _findStates(node);
+    Set<String> states = _findStates(node);
     //Find transitions
-    transitions = _findTransitions(states, node);
+    List<CubitStateTransition> transitions = _findTransitions(states, node);
 
     if (states.isEmpty || transitions.isEmpty) {
       throw Exception("Could not initialize all variables");
@@ -105,20 +104,68 @@ class _RecursiveCubitVisitor extends RecursiveAstVisitor<VisitedCubit> {
     return VisitedCubit('', states, transitions, '');
   }
 
-  // @override
-  // VisitedCubit visitClassMember() {}
+  //Recursively find all states (1st level)
+  @override
+  VisitedCubit visitMethodDeclaration(MethodDeclaration node) {
+    Set<String> states = {};
+    // super.visitMethodDeclaration(node);
+    for (SyntacticEntity childEntity in node.body.childEntities) {
+      // TODO: Cannot use is keyword?
+      if (childEntity.runtimeType.toString() == "SimpleToken") {
+        continue;
+      }
+      //Find state
+      if (childEntity is MethodInvocationImpl) {
+        states.addAll(visitMethodInvocation(childEntity).states);
+      }
+      // Find state with condition
+      if (childEntity is ExpressionFunctionBody) {
+        for (SyntacticEntity childEntity in childEntity.childEntities) {
+          if (childEntity is SetOrMapLiteral) {
+            for (SyntacticEntity child
+                in childEntity.elements[0].childEntities) {
+              if (child.toString() == "thenElement") {
+                // states.addAll(visitMethodInvocation(child).states);
+                print("scoobadoo");
+              }
+            }
+            // states.add(
+            //     child.argumentList.arguments[0].childEntities.first.toString());
+          }
+        }
+      }
+    }
+    return VisitedCubit('', states, [], '');
+  }
+
+  @override
+  VisitedCubit visitMethodInvocation(MethodInvocation node) {
+    Set<String> states = {};
+
+    // Base case: add states with structure: emit(state)
+    if (node.argumentList.arguments.length == 1) {
+      states.add(node.argumentList.arguments[0].childEntities.first.toString());
+    }
+
+    // Find deeper states (not yet implemented!)
+    VisitedCubit? result = super.visitMethodInvocation(node);
+    if (result == null) {
+      return VisitedCubit('', states, [], '');
+    }
+    result.states.addAll(states);
+    return result;
+  }
 
   Set<String> _findStates(ClassDeclaration node) {
     Set<String> states = {};
     for (var member in node.members) {
       if (member is MethodDeclarationImpl) {
-        for (var argument in member.body.childEntities) {
-          if (argument is MethodInvocationImpl) {
-            states.add(argument.argumentList.arguments[0].childEntities.first
-                .toString());
-          }
-        }
+        VisitedCubit visitedCubit = visitMethodDeclaration(member);
+        states.addAll(visitedCubit.states);
       }
+    }
+    if (states.isEmpty) {
+      throw Exception("Could not find states");
     }
     return states;
   }
