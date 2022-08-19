@@ -38,7 +38,7 @@ class CubitModelGenerator implements ModelGenerator {
     String modelFile = modelFolder + "/${machineName}.dart";
 
     Set<String> states = _vCubit.states;
-    List<CubitStateTransition> stateTransitions = _vCubit.transitions;
+    Set<Transition> stateTransitions = _vCubit.transitions;
     String startingState = _vCubit.startingState;
 
     //TODO: add cubit import (retrieve from AST)
@@ -52,7 +52,7 @@ class CubitModelGenerator implements ModelGenerator {
         'name': machineName,
         'states': states.map((state) => {'state': state}),
         'transitions': stateTransitions.map((st) => {
-              'transition': st.event,
+              // 'transition': st.event,
               'froms': st.fromState.map((from) => {'from': from}).toList(),
               'to': st.toState
             }),
