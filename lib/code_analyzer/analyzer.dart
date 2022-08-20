@@ -2,14 +2,14 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/states_decorator.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/transitions_decorator.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/variables_decorator.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/visitor.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/visitor_decorator.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/name_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/states_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/transitions_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/variables_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
 import 'package:pub_semver/pub_semver.dart';
 
-import 'cubit/cubit_visitor.dart';
 import 'package:path/path.dart' as p;
 
 class Analyzer {
@@ -37,20 +37,55 @@ class Analyzer {
       if (childEntity is ClassDeclaration &&
           childEntity.extendsClause != null &&
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
-        CubitVisitor visitor = CubitVisitor();
-        StatesDecorator statesDecorator = StatesDecorator(visitor);
-        VariablesDecorator variablesDecorator =
-            VariablesDecorator(statesDecorator);
-        TransitionsDecorator transitionsDecorator =
-            TransitionsDecorator(variablesDecorator);
+        RecursiveCubitVisitor visitor;
 
-        transitionsDecorator.onClassDeclaration(childEntity);
+        EventManager eventManager = EventManager();
+        StatesListener statesListener = StatesListener();
+        TransitionsListener transitionsListener = TransitionsListener();
+        VariablesListener variablesListener = VariablesListener();
+        NameListener nameListener = NameListener();
 
-        String name = visitor.classDeclaration;
+        eventManager.subscribe(statesListener);
+        eventManager.subscribe(transitionsListener);
+        eventManager.subscribe(variablesListener);
+        eventManager.subscribe(nameListener);
+
+        eventManager.onClassDeclaration(childEntity);
+
+        String name;
         Set<String> states = {};
         Map<String, String> variables = {};
         Set<Transition> transitions = {};
-        String startingState = visitor.superclassName;
+        String startingState;
+
+        // Name of the cubit
+        if (nameListener.name.isEmpty) {
+          throw Exception("No cubit name found");
+        }
+        name = nameListener.name;
+
+        // States of the cubit
+        if (statesListener.states.isEmpty) {
+          throw Exception("No states found");
+        }
+        states = statesListener.states;
+
+        // Context Variables of the cubit
+        if (variablesListener.variables.isEmpty) {
+          throw Exception("No method invocation found");
+        }
+
+        // Transitions of the cubit
+        if (transitionsListener.transitions.isEmpty) {
+          throw Exception("No method declaration is found");
+        }
+        transitions = transitionsListener.transitions;
+
+        // Name of the starting state
+        if (nameListener.startingState.isEmpty) {
+          throw Exception("No superclass found");
+        }
+        startingState = nameListener.startingState;
 
         //TODO: build visitedCubit from decorators and concrete component
         visitedCubit = VisitedCubit(name, {}, {}, {}, startingState);

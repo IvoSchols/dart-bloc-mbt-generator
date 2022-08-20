@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitor/cubit_visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
 
 import 'package:mason/mason.dart';

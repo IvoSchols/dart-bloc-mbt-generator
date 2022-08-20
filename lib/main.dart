@@ -1,6 +1,5 @@
 // @dart=2.9
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/cubit_visitor.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/model_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/simple_path_generator.dart';
