@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 import 'package:equatable/equatable.dart';
 
 class VisitedCubit {
@@ -34,7 +35,8 @@ class Transition extends Equatable {
 }
 
 // Recursive visitor to find states, events, transitions and initial state of a cubit
-class RecursiveCubitVisitor extends RecursiveAstVisitor {
+class RecursiveCubitVisitor extends RecursiveAstVisitor
+    implements EventListener {
   RecursiveCubitVisitor({
     required this.onVisitClassDeclaration,
     required this.onVisitSuperConstructorInvocation,
@@ -67,6 +69,12 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor {
   // }
 
   // return VisitedCubit('', states, transitions, '');
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    onVisitClassDeclaration(node);
+    super.visitClassDeclaration(node);
+  }
 
   @override
   void visitSuperConstructorInvocation(SuperConstructorInvocation node) {

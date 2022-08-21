@@ -50,7 +50,7 @@ class Analyzer {
         eventManager.subscribe(variablesListener);
         eventManager.subscribe(nameListener);
 
-        eventManager.onClassDeclaration(childEntity);
+        eventManager.recursiveAstVisitor.visitClassDeclaration(childEntity);
 
         String name;
         Set<String> states = {};
@@ -71,9 +71,9 @@ class Analyzer {
         states = statesListener.states;
 
         // Context Variables of the cubit
-        if (variablesListener.variables.isEmpty) {
-          throw Exception("No method invocation found");
-        }
+        // if (variablesListener.variables.isEmpty) {
+        //   throw Exception("No method invocation found");
+        // }
 
         // Transitions of the cubit
         if (transitionsListener.transitions.isEmpty) {
@@ -87,8 +87,8 @@ class Analyzer {
         }
         startingState = nameListener.startingState;
 
-        //TODO: build visitedCubit from decorators and concrete component
-        visitedCubit = VisitedCubit(name, {}, {}, {}, startingState);
+        visitedCubit =
+            VisitedCubit(name, states, variables, transitions, startingState);
       }
     }
     if (visitedCubit == null) throw Exception("No cubit found");

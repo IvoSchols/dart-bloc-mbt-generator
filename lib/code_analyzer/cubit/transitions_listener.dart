@@ -2,17 +2,17 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 
-class TransitionsListener implements EventListener {
+class TransitionsListener extends EventListener {
   //TODO: find ways to identify when a transition is found and to build it and add it to the list of transitions when finished
   Transition? currentTransition = null;
 
   Set<Transition> transitions = {};
 
   @override
-  void onClassDeclaration(ClassDeclaration node) {}
+  void visitClassDeclaration(ClassDeclaration node) {}
 
   @override
-  void onMethodDeclaration(MethodDeclaration node) {
+  void visitMethodDeclaration(MethodDeclaration node) {
     String functionName = node.name.toString();
     Set<String> fromState = {};
     String toState = "";
@@ -37,17 +37,17 @@ class TransitionsListener implements EventListener {
     //Todo: find conditions
     //Todo: find inputs
 
-    if (toState.isEmpty) {
-      throw "Must have ending state";
-    }
+    // if (toState.isEmpty) {
+    //   throw "Must have ending state";
+    // }
 
     transitions
         .add(Transition(functionName, fromState, toState, conditions, inputs));
   }
 
   @override
-  void onMethodInvocation(MethodInvocation node) {}
+  void visitMethodInvocation(MethodInvocation node) {}
 
   @override
-  void onSuperConstructorInvocation(SuperConstructorInvocation node) {}
+  void visitSuperConstructorInvocation(SuperConstructorInvocation node) {}
 }

@@ -16,10 +16,10 @@ class EventManager implements EventListener {
 
   EventManager() {
     recursiveAstVisitor = RecursiveCubitVisitor(
-      onVisitClassDeclaration: onClassDeclaration,
-      onVisitSuperConstructorInvocation: onSuperConstructorInvocation,
-      onVisitMethodInvocation: onMethodInvocation,
-      onVisitMethodDeclaration: onMethodDeclaration,
+      onVisitClassDeclaration: visitClassDeclaration,
+      onVisitSuperConstructorInvocation: visitSuperConstructorInvocation,
+      onVisitMethodInvocation: visitMethodInvocation,
+      onVisitMethodDeclaration: visitMethodDeclaration,
     );
   }
 
@@ -40,41 +40,40 @@ class EventManager implements EventListener {
     eventListeners.remove(eventListener);
   }
 
-  void notify(Function event, var data) {
-    //TODO: notify all event listeners by calling their own event methods
-
-    eventListeners.forEach((eventListener) {
-      eventListener(event, data);
-    });
-    eventListeners.forEach(event(data));
-  }
-
   /// Extracts the name of the class (and removes the 'Cubit' suffix)
   /// Requirement: class name must not be 'empty' (i.e. no name)
   @override
-  onClassDeclaration(ClassDeclaration node) {
-    notify(onClassDeclaration, node);
+  visitClassDeclaration(ClassDeclaration node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitClassDeclaration(node);
+    }
     // recursiveAstVisitor.visitClassDeclaration(node);
   }
 
   /// Extracts the name of the superclass
   @override
-  onSuperConstructorInvocation(SuperConstructorInvocation node) {
-    notify(onSuperConstructorInvocation, node);
+  visitSuperConstructorInvocation(SuperConstructorInvocation node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitSuperConstructorInvocation(node);
+    }
     // recursiveAstVisitor.visitSuperConstructorInvocation(node);
   }
 
   @override
-  onMethodInvocation(MethodInvocation node) {
-    notify(onMethodInvocation, node);
+  visitMethodInvocation(MethodInvocation node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitMethodInvocation(node);
+    }
     // recursiveAstVisitor.visitMethodInvocation(node);
   }
 
   // Extracts the transitions of the cubit
   // Requirement: the only methods that are declared are transitions
   @override
-  onMethodDeclaration(MethodDeclaration node) {
-    notify(onMethodDeclaration, node);
+  visitMethodDeclaration(MethodDeclaration node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitMethodDeclaration(node);
+    }
     // recursiveAstVisitor.visitMethodDeclaration(node);
   }
 }
