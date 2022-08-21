@@ -16,19 +16,19 @@ class VisitedCubit {
 
 class Transition extends Equatable {
   final String functionName;
-  Set<String> fromState;
-  final String toState;
-  final Set<bool Function()> conditions;
-  final Set<Function()> inputs;
+  Set<String> fromStates;
+  Set<String> toStates;
+  Set<bool Function()> conditions;
+  Set<Function()> inputs;
 
-  Transition(this.functionName, this.fromState, this.toState, this.conditions,
+  Transition(this.functionName, this.fromStates, this.toStates, this.conditions,
       this.inputs);
 
   @override
   List<Object> get props => [
         functionName,
-        fromState,
-        toState,
+        fromStates,
+        toStates,
         conditions,
         inputs,
       ];
@@ -93,54 +93,4 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
     onVisitMethodDeclaration(node);
     return super.visitMethodDeclaration(node);
   }
-
-  // //Recursively find all states (1st level)
-  // @override
-  // VisitedCubit visitMethodDeclaration(MethodDeclaration node) {
-  //   VisitedCubit result = VisitedCubit('', {}, [], '');
-  //   // super.visitMethodDeclaration(node);
-  //   for (SyntacticEntity childEntity in node.body.childEntities) {
-  //     // TODO: Cannot use is keyword?
-  //     if (childEntity.runtimeType.toString() == "SimpleToken") {
-  //       continue;
-  //     }
-  //     //Find state wrapped in a direct function call
-  //     if (childEntity is MethodInvocationImpl) {
-  //       result.states.addAll(visitMethodInvocation(childEntity).states);
-  //     }
-  //     // Find state wrapped in a function body with a single expression
-  //     if (node.body is ExpressionFunctionBodyImpl) {
-  //       // Find function parameters
-  //       if (node.parameters!.length != 0 &&
-  //           node.parameters!.childEntities.isNotEmpty) {
-  //         _FindFunctionParameters(node);
-  //       }
-  //     }
-  //   }
-  //   return result;
-  // }
-
-  // List<FunctionParameter> _FindFunctionParameters(var node) {
-  //   List<FunctionParameter> functionParameters = [];
-  //   for (var childEntity in node.parameters!.childEntities) {
-  //     List<Function> functions;
-  //     if (childEntity is SimpleFormalParameterImpl) {
-  //       for (var childEntity2 in childEntity.childEntities) {
-  //         FunctionParameter functionParameter = FunctionParameter("", "");
-  //         if (childEntity2 is NamedTypeImpl) {
-  //           functionParameter.type = childEntity2.toString();
-  //           if (functionParameter.type != "bool")
-  //             throw Exception("Unimplemented type");
-  //         }
-  //         if (childEntity2 is DeclaredSimpleIdentifier) {
-  //           functionParameter.name = childEntity2.toString();
-  //         }
-  //         if (functionParameter.isNotEmpty) {
-  //           functionParameters.add(functionParameter);
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return functionParameters;
-  // }
 }

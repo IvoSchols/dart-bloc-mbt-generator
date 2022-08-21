@@ -80,7 +80,9 @@ class Analyzer {
           throw Exception("No method declaration is found");
         }
         transitions = transitionsListener.transitions;
-
+        for (Transition transition in transitions) {
+          transition.fromStates = states.difference(transition.fromStates);
+        }
         // Name of the starting state
         if (nameListener.startingState.isEmpty) {
           throw Exception("No superclass found");

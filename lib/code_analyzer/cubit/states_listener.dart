@@ -11,19 +11,4 @@ class StatesListener extends EventListener {
     String state = node.methodName.toString();
     states.add(state);
   }
-
-  @override
-  void visitClassDeclaration(ClassDeclaration node) {
-    // TODO: implement onClassDeclaration
-  }
-
-  @override
-  void visitMethodDeclaration(MethodDeclaration node) {
-    // TODO: implement onMethodDeclaration
-  }
-
-  @override
-  void visitSuperConstructorInvocation(SuperConstructorInvocation node) {
-    // TODO: implement onSuperConstructorInvocation
-  }
 }

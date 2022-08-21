@@ -53,8 +53,8 @@ class CubitModelGenerator implements ModelGenerator {
         'states': states.map((state) => {'state': state}),
         'transitions': stateTransitions.map((st) => {
               // 'transition': st.event,
-              'froms': st.fromState.map((from) => {'from': from}).toList(),
-              'to': st.toState
+              'froms': st.fromStates.map((from) => {'from': from}).toList(),
+              'to': st.toStates
             }),
         'startingState': startingState,
       },
