@@ -20,7 +20,7 @@ class TransitionsListener extends EventListener {
     String functionName = node.name.toString();
     Set<String> illegalFromStates = {};
     Set<String> fromStates = {}; // Set illegal and later subtract from states
-    Set<String> toStates = {};
+    String toState = "";
     Set<String> conditions = {};
     LinkedHashMap<String, String> inputs = LinkedHashMap();
 
@@ -28,7 +28,7 @@ class TransitionsListener extends EventListener {
       functionName,
       illegalFromStates,
       fromStates,
-      toStates,
+      toState,
       conditions,
       inputs,
     );
@@ -42,14 +42,10 @@ class TransitionsListener extends EventListener {
     if (node.methodName.toString() == "emit") return;
     if (currentTransition == null) return;
     String toState = node.methodName.toString();
-    currentTransition!.toStates.add(toState);
+    currentTransition = currentTransition!.copyWith(toState: toState);
 
     // Cannot seem to visit end? -> TODO: magic number
-    // Closing simple function
-    // int sum = node.end;
-    // for (var childEntity in node.childEntities) {
-    //   sum += childEntity.length;
-    // }
+
     // _tryToCloseTransition(node.parent!.end + 1);
     //Cannot invoke other methods because I do not know how end works
     transitions.add(currentTransition!);
@@ -57,14 +53,14 @@ class TransitionsListener extends EventListener {
     currentTransitionEnd = -1;
   }
 
-  _tryToCloseTransition(int end) {
-    if (currentTransitionEnd == -1) return;
-    if (currentTransitionEnd == end) {
-      transitions.add(currentTransition!);
-      currentTransition = null;
-      currentTransitionEnd = -1;
-    }
-  }
+  // _tryToCloseTransition(int end) {
+  //   if (currentTransitionEnd == -1) return;
+  //   if (currentTransitionEnd == end) {
+  //     transitions.add(currentTransition!);
+  //     currentTransition = null;
+  //     currentTransitionEnd = -1;
+  //   }
+  // }
 
   // Read conditions of the transition/method
   @override

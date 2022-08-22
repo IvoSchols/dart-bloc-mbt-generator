@@ -20,7 +20,7 @@ class Transition extends Equatable {
   final String functionName;
   final Set<String> illegalFromStates;
   final Set<String> fromStates;
-  final Set<String> toStates;
+  final String toState;
   final Set<String> conditions;
   final LinkedHashMap<String, String> inputs;
 
@@ -28,7 +28,7 @@ class Transition extends Equatable {
     this.functionName,
     this.illegalFromStates,
     this.fromStates,
-    this.toStates,
+    this.toState,
     this.conditions,
     this.inputs,
   );
@@ -37,7 +37,7 @@ class Transition extends Equatable {
     String? functionName,
     Set<String>? illegalFromStates,
     Set<String>? fromStates,
-    Set<String>? toStates,
+    String? toState,
     Set<String>? conditions,
     LinkedHashMap<String, String>? inputs,
   }) {
@@ -45,7 +45,7 @@ class Transition extends Equatable {
       functionName ?? this.functionName,
       illegalFromStates ?? this.illegalFromStates,
       fromStates ?? this.fromStates,
-      toStates ?? this.toStates,
+      toState ?? this.toState,
       conditions ?? this.conditions,
       inputs ?? this.inputs,
     );
@@ -56,7 +56,7 @@ class Transition extends Equatable {
         functionName,
         illegalFromStates,
         fromStates,
-        toStates,
+        toState,
         conditions,
         inputs,
       ];

@@ -24,9 +24,8 @@ abstract class ModelGenerator {
 }
 
 class CubitModelGenerator implements ModelGenerator {
-  // Cubit<dynamic> _cubit;
-  String _blocBasePath;
-  VisitedCubit _vCubit;
+  final String _blocBasePath;
+  final VisitedCubit _vCubit;
 
   CubitModelGenerator(this._blocBasePath, this._vCubit);
 
@@ -38,7 +37,7 @@ class CubitModelGenerator implements ModelGenerator {
     String modelFile = modelFolder + "/${machineName}.dart";
 
     Set<String> states = _vCubit.states;
-    Set<Transition> stateTransitions = _vCubit.transitions;
+    Set<Transition> transitions = _vCubit.transitions;
     String startingState = _vCubit.startingState;
 
     //TODO: add cubit import (retrieve from AST)
@@ -46,15 +45,20 @@ class CubitModelGenerator implements ModelGenerator {
     final brick = Brick.path("bricks/statemachine_model_cubit");
     final generator = await MasonGenerator.fromBrick(brick);
     final target = DirectoryGeneratorTarget(Directory("lib/$modelFolder"));
+
     List<GeneratedFile> generatedFile = await generator.generate(
       target,
       vars: <String, dynamic>{
         'name': machineName,
         'states': states.map((state) => {'state': state}),
-        'transitions': stateTransitions.map((st) => {
-              // 'transition': st.event,
-              'froms': st.fromStates.map((from) => {'from': from}).toList(),
-              'to': st.toStates
+        'transitions': transitions.map((t) => {
+              'name': t.functionName,
+              'fromStates': t.fromStates.map((from) => {'from': from}).toList(),
+              'toState': t.toState,
+              'conditions': t.conditions.map((c) => {'condition': c}).toList(),
+              'inputs': t.inputs.entries
+                  .map((e) => {'input': e.key, 'type': e.value})
+                  .toList(),
             }),
         'startingState': startingState,
       },
@@ -65,12 +69,3 @@ class CubitModelGenerator implements ModelGenerator {
     FileGeneratorHelperFunctions.formatFiles([modelFile]);
   }
 }
-
-// class BlocGenerator implements TestGenerator {
-//   Bloc _bloc;
-//   StateMachine _machine;
-
-//   BlocGenerator(this._bloc, this._machine);
-
-//   void test(List<Paths> paths) {}
-// }

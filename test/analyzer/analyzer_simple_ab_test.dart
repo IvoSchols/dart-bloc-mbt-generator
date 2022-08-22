@@ -33,14 +33,14 @@ void main() {
     test('transitions_goToA', () {
       expect(
           result.transitions,
-          contains(Transition("goToA", {}, {'SimpleA', 'SimpleB'}, {'SimpleA'},
+          contains(Transition("goToA", {}, {'SimpleA', 'SimpleB'}, 'SimpleA',
               {}, LinkedHashMap())));
     });
 
     test('transitions_goToB', () {
       expect(
           result.transitions.contains(Transition("goToB", {},
-              {'SimpleA', 'SimpleB'}, {'SimpleB'}, {}, LinkedHashMap())),
+              {'SimpleA', 'SimpleB'}, 'SimpleB', {}, LinkedHashMap())),
           true);
     });
   });

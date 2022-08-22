@@ -35,7 +35,7 @@ void main() {
       expect(
           result.transitions,
           contains(Transition("goToA", {}, {'ConditionalA', 'ConditionalB'},
-              {'ConditionalA'}, {}, LinkedHashMap())));
+              'ConditionalA', {}, LinkedHashMap())));
     });
 
     test('transition_goToB', () {
@@ -45,7 +45,7 @@ void main() {
               "goToB",
               {},
               {'ConditionalA', 'ConditionalB'},
-              {'ConditionalB'},
+              'ConditionalB',
               {'allowed'},
               LinkedHashMap.from({'allowed': 'bool'}))));
     });
