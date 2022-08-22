@@ -16,16 +16,18 @@ class VisitedCubit {
 
 class Transition extends Equatable {
   final String functionName;
+  final Set<String> illegalFromStates;
   final Set<String> fromStates;
   final Set<String> toStates;
   final Set<bool Function()> conditions;
   final Set<Function()> inputs;
 
-  Transition(this.functionName, this.fromStates, this.toStates, this.conditions,
-      this.inputs);
+  Transition(this.functionName, this.illegalFromStates, this.fromStates,
+      this.toStates, this.conditions, this.inputs);
 
   Transition copyWith({
     String? functionName,
+    Set<String>? illegalFromStates,
     Set<String>? fromStates,
     Set<String>? toStates,
     Set<bool Function()>? conditions,
@@ -33,6 +35,7 @@ class Transition extends Equatable {
   }) {
     return Transition(
       functionName ?? this.functionName,
+      illegalFromStates ?? this.illegalFromStates,
       fromStates ?? this.fromStates,
       toStates ?? this.toStates,
       conditions ?? this.conditions,
@@ -43,6 +46,7 @@ class Transition extends Equatable {
   @override
   List<Object> get props => [
         functionName,
+        illegalFromStates,
         fromStates,
         toStates,
         conditions,

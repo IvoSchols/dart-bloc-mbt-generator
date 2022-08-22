@@ -79,15 +79,19 @@ class Analyzer {
         if (transitionsListener.transitions.isEmpty) {
           throw Exception("No method declaration is found");
         }
-        // Construct new transitins (due to final requirement of equatable)
-        // Also subtract the illegal from states to get the possible from states
-        Set<Transition> newTransitions = {};
+
         transitions = transitionsListener.transitions;
         for (Transition transition in transitions) {
-          newTransitions.add(transition.copyWith(
-              fromStates: states.difference(transition.fromStates)));
+          Set<String> allowedFromStates =
+              states.difference(transition.illegalFromStates);
+          transition.fromStates.addAll(allowedFromStates);
+        }
+        Set<Transition> newTransitions = {};
+        for (var element in transitions) {
+          newTransitions.add(element);
         }
         transitions = newTransitions;
+
         // Name of the starting state
         if (nameListener.startingState.isEmpty) {
           throw Exception("No superclass found");

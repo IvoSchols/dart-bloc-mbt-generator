@@ -32,13 +32,13 @@ void main() {
       expect(
           result.transitions,
           contains(Transition(
-              "goToA", {'SimpleA', 'SimpleB'}, {'SimpleA'}, {}, {})));
+              "goToA", {}, {'SimpleA', 'SimpleB'}, {'SimpleA'}, {}, {})));
     });
 
     test('transitions_goToB', () {
       expect(
-          result.transitions.contains(
-              Transition("goToB", {'SimpleA', 'SimpleB'}, {'SimpleB'}, {}, {})),
+          result.transitions.contains(Transition(
+              "goToB", {}, {'SimpleA', 'SimpleB'}, {'SimpleB'}, {}, {})),
           true);
     });
   });

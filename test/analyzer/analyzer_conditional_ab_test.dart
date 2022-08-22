@@ -3,7 +3,7 @@
 import 'dart:math';
 
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitor/cubit_visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -14,7 +14,7 @@ void main() {
     VisitedCubit result = Analyzer.analyzeSingleFile(relativePath);
 
     test('name', () {
-      expect(result.name, 'ConditionalAbCubit');
+      expect(result.name, 'ConditionalAb');
     });
 
     test('states', () {
@@ -31,16 +31,16 @@ void main() {
 
     test('transition_goToA', () {
       expect(
-          result,
-          contains(CubitStateTransition(
-              "goToA", ['ConditionalA', 'ConditionalB'], 'ConditionalA')));
+          result.transitions,
+          contains(Transition("goToA", {}, {'ConditionalA', 'ConditionalB'},
+              {'ConditionalA'}, {}, {})));
     });
 
     test('transition_goToB', () {
       expect(
-          result,
-          contains(CubitStateTransition(
-              "goToB", ['ConditionalA', 'ConditionalB'], 'ConditionalB')));
+          result.transitions,
+          contains(Transition("goToB", {}, {'ConditionalA', 'ConditionalB'},
+              {'ConditionalB'}, {}, {})));
     });
 
     //TODO: add conditions

@@ -16,6 +16,7 @@ class TransitionsListener extends EventListener {
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     String functionName = node.name.toString();
+    Set<String> illegalFromStates = {};
     Set<String> fromStates = {}; // Set illegal and later subtract from states
     Set<String> toStates = {};
     Set<bool Function()> conditions = {};
@@ -23,6 +24,7 @@ class TransitionsListener extends EventListener {
 
     Transition newTransition = Transition(
       functionName,
+      illegalFromStates,
       fromStates,
       toStates,
       conditions,
