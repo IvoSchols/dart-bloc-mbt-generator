@@ -1,9 +1,6 @@
 // @dart=2.9
-
-import 'dart:math';
-
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitor/cubit_visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -15,7 +12,7 @@ void main() {
     VisitedCubit result = Analyzer.analyzeSingleFile(relativePath);
 
     test('fileName', () {
-      expect(result.name, 'SimpleAbCubit');
+      expect(result.name, 'SimpleAb');
     });
 
     test('states', () {
@@ -34,15 +31,15 @@ void main() {
     test('transitions_goToA', () {
       expect(
           result.transitions,
-          contains(CubitStateTransition(
-              "goToA", ['SimpleA', 'SimpleB'], 'SimpleA')));
+          contains(Transition(
+              "goToA", {'SimpleA', 'SimpleB'}, {'SimpleA'}, {}, {})));
     });
 
     test('transitions_goToB', () {
       expect(
-          result.transitions,
-          contains(CubitStateTransition(
-              "goToB", ['SimpleA', 'SimpleB'], 'SimpleB')));
+          result.transitions.contains(
+              Transition("goToB", {'SimpleA', 'SimpleB'}, {'SimpleB'}, {}, {})),
+          true);
     });
   });
 }
