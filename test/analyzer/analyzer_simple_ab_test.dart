@@ -1,4 +1,6 @@
 // @dart=2.9
+import 'dart:collection';
+
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:test/test.dart';
@@ -31,14 +33,14 @@ void main() {
     test('transitions_goToA', () {
       expect(
           result.transitions,
-          contains(Transition(
-              "goToA", {}, {'SimpleA', 'SimpleB'}, {'SimpleA'}, {}, {})));
+          contains(Transition("goToA", {}, {'SimpleA', 'SimpleB'}, {'SimpleA'},
+              {}, LinkedHashMap())));
     });
 
     test('transitions_goToB', () {
       expect(
-          result.transitions.contains(Transition(
-              "goToB", {}, {'SimpleA', 'SimpleB'}, {'SimpleB'}, {}, {})),
+          result.transitions.contains(Transition("goToB", {},
+              {'SimpleA', 'SimpleB'}, {'SimpleB'}, {}, LinkedHashMap())),
           true);
     });
   });

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
@@ -19,19 +21,25 @@ class Transition extends Equatable {
   final Set<String> illegalFromStates;
   final Set<String> fromStates;
   final Set<String> toStates;
-  final Set<bool Function()> conditions;
-  final Set<Function()> inputs;
+  final Set<String> conditions;
+  final LinkedHashMap<String, String> inputs;
 
-  Transition(this.functionName, this.illegalFromStates, this.fromStates,
-      this.toStates, this.conditions, this.inputs);
+  Transition(
+    this.functionName,
+    this.illegalFromStates,
+    this.fromStates,
+    this.toStates,
+    this.conditions,
+    this.inputs,
+  );
 
   Transition copyWith({
     String? functionName,
     Set<String>? illegalFromStates,
     Set<String>? fromStates,
     Set<String>? toStates,
-    Set<bool Function()>? conditions,
-    Set<Function()>? inputs,
+    Set<String>? conditions,
+    LinkedHashMap<String, String>? inputs,
   }) {
     return Transition(
       functionName ?? this.functionName,
@@ -73,26 +81,6 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
   void Function(MethodDeclaration node) onVisitMethodDeclaration;
   void Function(SimpleFormalParameter node) onVisitSimpleFormalParameter;
   void Function(IfElement node) onVisitIfElement;
-
-  // //Transitions
-  // for (var member in node.members) {
-  //   if (member is MethodDeclarationImpl) {
-  //     String event = member.name.toString();
-  //     for (var argument in member.body.childEntities) {
-  //       if (argument is MethodInvocationImpl) {
-  //         String to = argument.argumentList.arguments[0].childEntities.first
-  //             .toString();
-  //         transitions.add(CubitStateTransition(event, states.toList(), to));
-  //       }
-  //     }
-  //   }
-  // }
-
-  // if (transitions.isEmpty) {
-  //   throw Exception("Could not find transitions");
-  // }
-
-  // return VisitedCubit('', states, transitions, '');
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {

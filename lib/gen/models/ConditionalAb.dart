@@ -15,6 +15,8 @@ StateMachine constructConditionalAbStatemachine() {
   
     StateTransition  = statemachine.newStateTransition('', [conditionalA,conditionalB,], {ConditionalA});
   
+    StateTransition  = statemachine.newStateTransition('', [conditionalA,conditionalB,], {});
+  
 
   // Define starting state
   statemachine.start(conditionalA);

@@ -1,5 +1,7 @@
 // @dart=2.9
 
+import 'dart:collection';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
@@ -33,14 +35,19 @@ void main() {
       expect(
           result.transitions,
           contains(Transition("goToA", {}, {'ConditionalA', 'ConditionalB'},
-              {'ConditionalA'}, {}, {})));
+              {'ConditionalA'}, {}, LinkedHashMap())));
     });
 
     test('transition_goToB', () {
       expect(
           result.transitions,
-          contains(Transition("goToB", {}, {'ConditionalA', 'ConditionalB'},
-              {'ConditionalB'}, {}, {})));
+          contains(Transition(
+              "goToB",
+              {},
+              {'ConditionalA', 'ConditionalB'},
+              {'ConditionalB'},
+              {'allowed'},
+              LinkedHashMap.from({'allowed': 'bool'}))));
     });
 
     //TODO: add conditions
