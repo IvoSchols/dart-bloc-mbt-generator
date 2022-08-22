@@ -9,4 +9,6 @@ abstract class EventListener {
   void visitMethodInvocation(MethodInvocation node) {}
 
   void visitSuperConstructorInvocation(SuperConstructorInvocation node) {}
+
+  void visitSimpleIdentifier(SimpleIdentifier node) {}
 }

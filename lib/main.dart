@@ -13,7 +13,7 @@ import 'package:dart_bloc_mbt_generator/examples/cubit_examples/simple_ab/statem
 Future<void> main() async {
   // Generate model files from cubit
   String relativePath =
-      'examples/cubit_examples/conditional_ab/cubit/conditional_ab_cubit.dart';
+      'examples/cubit_examples/simple_ab/cubit/simple_ab_cubit.dart';
   //TODO: remove parentehses when reading in file
   VisitedCubit result = Analyzer.analyzeSingleFile(relativePath);
   CubitModelGenerator(relativePath, result).writeModel();

@@ -67,13 +67,21 @@ class TransitionsListener extends EventListener {
     String toState = node.methodName.toString();
     currentTransition!.toStates.add(toState);
 
-    // Cannot seem to visit end?
-    if (currentTransitionEnd == node.end + 2) {
-      transitions.add(currentTransition!);
-      currentTransition = null;
-    }
+    // Cannot seem to visit end? -> TODO: magic number
+    // Closing simple function
+    // int sum = node.end;
+    // for (var childEntity in node.childEntities) {
+    //   sum += childEntity.length;
+    // }
+    _tryToCloseTransition(node.parent!.end + 1);
   }
 
-  @override
-  void visitSuperConstructorInvocation(SuperConstructorInvocation node) {}
+  _tryToCloseTransition(int end) {
+    if (currentTransitionEnd == -1) return;
+    if (currentTransitionEnd == end) {
+      transitions.add(currentTransition!);
+      currentTransition = null;
+      currentTransitionEnd = -1;
+    }
+  }
 }

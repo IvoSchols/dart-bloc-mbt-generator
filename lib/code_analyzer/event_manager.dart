@@ -13,6 +13,7 @@ class EventManager implements EventListener {
       onVisitSuperConstructorInvocation: visitSuperConstructorInvocation,
       onVisitMethodInvocation: visitMethodInvocation,
       onVisitMethodDeclaration: visitMethodDeclaration,
+      onVisitSimpleIdentifier: visitSimpleIdentifier,
     );
   }
 
@@ -57,6 +58,13 @@ class EventManager implements EventListener {
   visitMethodDeclaration(MethodDeclaration node) {
     for (EventListener eventListener in eventListeners) {
       eventListener.visitMethodDeclaration(node);
+    }
+  }
+
+  @override
+  visitSimpleIdentifier(SimpleIdentifier node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitSimpleIdentifier(node);
     }
   }
 }
