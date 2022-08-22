@@ -84,4 +84,15 @@ class TransitionsListener extends EventListener {
       currentTransitionEnd = -1;
     }
   }
+
+  @override
+  void visitSimpleFormalParameter(SimpleFormalParameter node) {
+    if (currentTransition == null) return;
+  }
+
+  @override
+  void visitIfElement(IfElement node) {
+    if (currentTransition == null) return;
+    // currentTransition!.conditions.add(() => true);
+  }
 }

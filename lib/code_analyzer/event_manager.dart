@@ -13,7 +13,8 @@ class EventManager implements EventListener {
       onVisitSuperConstructorInvocation: visitSuperConstructorInvocation,
       onVisitMethodInvocation: visitMethodInvocation,
       onVisitMethodDeclaration: visitMethodDeclaration,
-      onVisitSimpleIdentifier: visitSimpleIdentifier,
+      onVisitSimpleFormalParameter: visitSimpleFormalParameter,
+      onVisitIfElement: visitIfElement,
     );
   }
 
@@ -62,9 +63,16 @@ class EventManager implements EventListener {
   }
 
   @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
+  visitSimpleFormalParameter(SimpleFormalParameter node) {
     for (EventListener eventListener in eventListeners) {
-      eventListener.visitSimpleIdentifier(node);
+      eventListener.visitSimpleFormalParameter(node);
+    }
+  }
+
+  @override
+  visitIfElement(IfElement node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitIfElement(node);
     }
   }
 }

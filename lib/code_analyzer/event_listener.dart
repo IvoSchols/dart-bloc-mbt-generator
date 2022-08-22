@@ -10,5 +10,7 @@ abstract class EventListener {
 
   void visitSuperConstructorInvocation(SuperConstructorInvocation node) {}
 
-  void visitSimpleIdentifier(SimpleIdentifier node) {}
+  void visitSimpleFormalParameter(SimpleFormalParameter node) {}
+
+  void visitIfElement(IfElement node) {}
 }

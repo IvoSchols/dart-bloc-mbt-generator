@@ -62,7 +62,8 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
     required this.onVisitSuperConstructorInvocation,
     required this.onVisitMethodInvocation,
     required this.onVisitMethodDeclaration,
-    required this.onVisitSimpleIdentifier,
+    required this.onVisitSimpleFormalParameter,
+    required this.onVisitIfElement,
   });
 
   void Function(ClassDeclaration node) onVisitClassDeclaration;
@@ -70,7 +71,8 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
       onVisitSuperConstructorInvocation;
   void Function(MethodInvocation node) onVisitMethodInvocation;
   void Function(MethodDeclaration node) onVisitMethodDeclaration;
-  void Function(SimpleIdentifier node) onVisitSimpleIdentifier;
+  void Function(SimpleFormalParameter node) onVisitSimpleFormalParameter;
+  void Function(IfElement node) onVisitIfElement;
 
   // //Transitions
   // for (var member in node.members) {
@@ -117,8 +119,14 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
   }
 
   @override
-  visitSimpleIdentifier(SimpleIdentifier node) {
-    onVisitSimpleIdentifier(node);
-    return super.visitSimpleIdentifier(node);
+  visitSimpleFormalParameter(SimpleFormalParameter node) {
+    onVisitSimpleFormalParameter(node);
+    return super.visitSimpleFormalParameter(node);
+  }
+
+  @override
+  visitIfElement(IfElement node) {
+    onVisitIfElement(node);
+    return super.visitIfElement(node);
   }
 }
