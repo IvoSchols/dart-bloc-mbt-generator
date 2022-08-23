@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
+import 'package:state_machine/state_machine.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -11,37 +12,52 @@ void main() {
     // Generate model files from cubit
     String relativePath =
         'examples/cubit_examples/simple_ab/cubit/simple_ab_cubit.dart';
-    VisitedCubit result = Analyzer.analyzeSingleFile(relativePath);
+    StateMachine result = Analyzer.analyzeSingleFile(relativePath);
 
     test('fileName', () {
       expect(result.name, 'SimpleAb');
     });
 
     test('states', () {
-      expect(result.states, equals({'SimpleA', 'SimpleB'}));
+      expect(result.states.map((s) => s.name).toSet(),
+          equals({'SimpleA', 'SimpleB'}));
       //TODO: does this test length?
     });
 
     test('startingState', () {
-      expect(result.startingState, equals('SimpleA'));
+      expect(result.current.name, equals('SimpleA'));
     });
 
     test('transitionLength', () {
-      expect(result.transitions.length, equals(2));
+      for (State s in result.states) {
+        expect(s.transitions.length, equals(2));
+      }
     });
 
     test('transitions_goToA', () {
-      expect(
-          result.transitions,
-          contains(Transition("goToA", {}, {'SimpleA', 'SimpleB'}, 'SimpleA',
-              {}, LinkedHashMap())));
+      //Forgive me for the following code
+      for (State s in result.states) {
+        StateTransition t = s.transitions.firstWhere((t) => t.name == "goToA");
+
+        expect(t.from, hasLength(2));
+        expect(t.from.map((e) => e.name).toList(),
+            containsAll(['SimpleA', 'SimpleB']));
+
+        expect(t.to.name, equals('SimpleA'));
+      }
     });
 
     test('transitions_goToB', () {
-      expect(
-          result.transitions.contains(Transition("goToB", {},
-              {'SimpleA', 'SimpleB'}, 'SimpleB', {}, LinkedHashMap())),
-          true);
+      //Forgive me for the following code
+      for (State s in result.states) {
+        StateTransition t = s.transitions.firstWhere((t) => t.name == "goToB");
+
+        expect(t.from, hasLength(2));
+        expect(t.from.map((e) => e.name).toList(),
+            containsAll(['SimpleA', 'SimpleB']));
+
+        expect(t.to.name, equals('SimpleB'));
+      }
     });
   });
 }

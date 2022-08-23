@@ -83,31 +83,27 @@ class Analyzer {
         // }
 
         // Transitions of the cubit
-        if (transitionsListener.stateTransitionTrees.isEmpty) {
+        if (transitionsListener.traces.isEmpty) {
           throw Exception("No method declaration is found");
         }
 
-        transitions = _buildTransitionsFromTrees(
-            transitionsListener.stateTransitionTrees, states);
-        // for (Transition transition in transitions) {
-        //   Set<String> allowedFromStates =
-        //       states.difference(transition.illegalFromStates);
-        //   transition.fromStates.addAll(allowedFromStates);
-        // }
-        // Set<Transition> newTransitions = {};
-        // for (var element in transitions) {
-        //   newTransitions.add(element);
-        // }
-        // transitions = newTransitions;
+        transitions = transitionsListener.traces
+            .map((t) => Transition(
+                t.functionName,
+                states.difference(t.illegalFromStates),
+                t.toState,
+                t.conditions,
+                t.inputs))
+            .toSet();
 
-        for (var transition in transitions) {
+        for (Transition transition in transitions) {
           StateTransition st = visitedCubitStateMachine.newStateTransition(
               transition.functionName,
               transition.fromStates.map((f) => statesMap[f]).toList(),
               statesMap[transition.toState]);
 
           for (var condition in transition.conditions) {
-            st.cancelIf(condition); // TODO: finish  this
+            // st.cancelIf(condition.(stateChange) => false); // TODO: finish  this
           }
         }
 
@@ -117,7 +113,7 @@ class Analyzer {
         }
         startingState = nameListener.startingState;
 
-        // VisitedCubit(name, states, variables, transitions, startingState);
+        visitedCubitStateMachine.start(statesMap[startingState]);
       }
     }
     if (visitedCubitStateMachine == null) throw Exception("No cubit found");

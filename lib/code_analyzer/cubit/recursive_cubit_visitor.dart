@@ -21,7 +21,7 @@ class Transition extends Equatable {
   final String functionName;
   final Set<String> fromStates;
   final String toState;
-  final Set<bool Function(StateChange stateChange)> conditions;
+  final Set<String> conditions;
   final LinkedHashMap<String, String> inputs;
 
   Transition(
@@ -37,7 +37,7 @@ class Transition extends Equatable {
     Set<String>? illegalFromStates,
     Set<String>? fromStates,
     String? toState,
-    Set<bool Function(StateChange stateChange)>? conditions,
+    Set<String>? conditions,
     LinkedHashMap<String, String>? inputs,
   }) {
     return Transition(
