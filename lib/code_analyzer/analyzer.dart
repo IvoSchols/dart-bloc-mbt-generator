@@ -87,7 +87,7 @@ class Analyzer {
           throw Exception("No method declaration is found");
         }
 
-        transitions = _buildTransitionsFromTree(
+        transitions = _buildTransitionsFromTrees(
             transitionsListener.stateTransitionTrees, states);
         // for (Transition transition in transitions) {
         //   Set<String> allowedFromStates =
@@ -125,8 +125,23 @@ class Analyzer {
     return visitedCubitStateMachine;
   }
 
-  static Set<Transition> _buildTransitionsFromTree(
+  static Set<Transition> _buildTransitionsFromTrees(
       Set<StateTransitionTree> stateTransitionTrees, Set<String> states) {
-    return {};
+    Set<Transition> transitions = {};
+
+    for (StateTransitionTree tree in stateTransitionTrees) {
+      transitions.addAll(_buildTransitionsFromTree(tree, states));
+    }
+
+    return transitions;
+  }
+
+  // Perform DFS on the state transition tree to find all the transitions
+  // and add them to the transitions set
+  static Set<Transition> _buildTransitionsFromTree(
+      StateTransitionTree stateTransitionTree, Set<String> states) {
+    Set<Transition> transitions = {};
+
+    return transitions;
   }
 }
