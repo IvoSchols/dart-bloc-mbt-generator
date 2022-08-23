@@ -8,9 +8,11 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/transitions_listener
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/variables_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/state_transition_tree/state_transition_tree.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'package:path/path.dart' as p;
+import 'package:state_machine/state_machine.dart';
 
 class Analyzer {
 //Returns state machine for the given file, or null if no state machine is found
@@ -22,14 +24,14 @@ class Analyzer {
             flags: [], sdkLanguageVersion: Version.parse('2.16.2')));
     CompilationUnit unit = parseStringResult.unit;
 
-    VisitedCubit result = _checkCompilationUnit(unit);
+    StateMachine result = _checkCompilationUnit(unit);
 
     return result;
   }
 
-  static VisitedCubit _checkCompilationUnit(CompilationUnit unit) {
+  static StateMachine _checkCompilationUnit(CompilationUnit unit) {
     //TODO: update with general visitor that discriminates between cubit & bloc
-    VisitedCubit? visitedCubit;
+    StateMachine? visitedCubitStateMachine;
 
     for (dynamic childEntity in unit.childEntities) {
       //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
@@ -63,12 +65,17 @@ class Analyzer {
           throw Exception("No cubit name found");
         }
         name = nameListener.name;
+        visitedCubitStateMachine = StateMachine(name);
 
         // States of the cubit
         if (statesListener.states.isEmpty) {
           throw Exception("No states found");
         }
         states = statesListener.states;
+        Map<String, State> statesMap = {};
+        for (var state in states) {
+          statesMap[state] = visitedCubitStateMachine.newState(state);
+        }
 
         // Context Variables of the cubit
         // if (variablesListener.variables.isEmpty) {
@@ -76,21 +83,33 @@ class Analyzer {
         // }
 
         // Transitions of the cubit
-        if (transitionsListener.transitions.isEmpty) {
+        if (transitionsListener.stateTransitionTrees.isEmpty) {
           throw Exception("No method declaration is found");
         }
 
-        transitions = transitionsListener.transitions;
-        for (Transition transition in transitions) {
-          Set<String> allowedFromStates =
-              states.difference(transition.illegalFromStates);
-          transition.fromStates.addAll(allowedFromStates);
+        transitions = _buildTransitionsFromTree(
+            transitionsListener.stateTransitionTrees, states);
+        // for (Transition transition in transitions) {
+        //   Set<String> allowedFromStates =
+        //       states.difference(transition.illegalFromStates);
+        //   transition.fromStates.addAll(allowedFromStates);
+        // }
+        // Set<Transition> newTransitions = {};
+        // for (var element in transitions) {
+        //   newTransitions.add(element);
+        // }
+        // transitions = newTransitions;
+
+        for (var transition in transitions) {
+          StateTransition st = visitedCubitStateMachine.newStateTransition(
+              transition.functionName,
+              transition.fromStates.map((f) => statesMap[f]).toList(),
+              statesMap[transition.toState]);
+
+          for (var condition in transition.conditions) {
+            st.cancelIf(condition); // TODO: finish  this
+          }
         }
-        Set<Transition> newTransitions = {};
-        for (var element in transitions) {
-          newTransitions.add(element);
-        }
-        transitions = newTransitions;
 
         // Name of the starting state
         if (nameListener.startingState.isEmpty) {
@@ -98,12 +117,16 @@ class Analyzer {
         }
         startingState = nameListener.startingState;
 
-        visitedCubit =
-            VisitedCubit(name, states, variables, transitions, startingState);
+        // VisitedCubit(name, states, variables, transitions, startingState);
       }
     }
-    if (visitedCubit == null) throw Exception("No cubit found");
+    if (visitedCubitStateMachine == null) throw Exception("No cubit found");
 
-    return visitedCubit;
+    return visitedCubitStateMachine;
+  }
+
+  static Set<Transition> _buildTransitionsFromTree(
+      Set<StateTransitionTree> stateTransitionTrees, Set<String> states) {
+    return {};
   }
 }

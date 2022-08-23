@@ -4,6 +4,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 import 'package:equatable/equatable.dart';
+import 'package:state_machine/state_machine.dart';
 
 class VisitedCubit {
   String name;
@@ -18,15 +19,13 @@ class VisitedCubit {
 
 class Transition extends Equatable {
   final String functionName;
-  final Set<String> illegalFromStates;
   final Set<String> fromStates;
   final String toState;
-  final Set<String> conditions;
+  final Set<bool Function(StateChange stateChange)> conditions;
   final LinkedHashMap<String, String> inputs;
 
   Transition(
     this.functionName,
-    this.illegalFromStates,
     this.fromStates,
     this.toState,
     this.conditions,
@@ -38,12 +37,11 @@ class Transition extends Equatable {
     Set<String>? illegalFromStates,
     Set<String>? fromStates,
     String? toState,
-    Set<String>? conditions,
+    Set<bool Function(StateChange stateChange)>? conditions,
     LinkedHashMap<String, String>? inputs,
   }) {
     return Transition(
       functionName ?? this.functionName,
-      illegalFromStates ?? this.illegalFromStates,
       fromStates ?? this.fromStates,
       toState ?? this.toState,
       conditions ?? this.conditions,
@@ -54,7 +52,6 @@ class Transition extends Equatable {
   @override
   List<Object> get props => [
         functionName,
-        illegalFromStates,
         fromStates,
         toState,
         conditions,

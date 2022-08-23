@@ -1,15 +1,19 @@
 import 'dart:collection';
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/state_transition_tree/state_transition_tree.dart';
+
+import '../state_transition_tree/state_transition_node.dart';
 
 class TransitionsListener extends EventListener {
   //TODO: find ways to identify when a transition is found and to build it and add it to the list of transitions when finished
-  Transition? currentTransition;
-  int currentTransitionEnd = -1;
+  StateTransitionTree? _currentStateTransitionTree;
+  Node? _currentNode;
 
-  Set<Transition> transitions = {};
+  Set<StateTransitionTree> stateTransitionTrees = {};
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {}
@@ -17,71 +21,69 @@ class TransitionsListener extends EventListener {
   /// The first entry point for finding transitions.
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    String functionName = node.name.toString();
-    Set<String> illegalFromStates = {};
-    Set<String> fromStates = {}; // Set illegal and later subtract from states
-    String toState = "";
-    Set<String> conditions = {};
+    String functionName = node.name2.toString();
+    // Set<String> illegalFromStates = {};
+    // Set<String> fromStates = {}; // Set illegal and later subtract from states
+    // String toState = "";
+    // Set<String> conditions = {};
     LinkedHashMap<String, String> inputs = LinkedHashMap();
 
-    Transition newTransition = Transition(
-      functionName,
-      illegalFromStates,
-      fromStates,
-      toState,
-      conditions,
-      inputs,
-    );
+    FunctionNode newFunctionNode = FunctionNode(functionName);
+    StateTransitionTree newStateTransitionTree =
+        StateTransitionTree(root: newFunctionNode);
 
-    currentTransition = newTransition;
-    currentTransitionEnd = node.end;
+    _currentStateTransitionTree = newStateTransitionTree;
+    _currentNode = newFunctionNode;
   }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.toString() == "emit") return;
-    if (currentTransition == null) return;
-    String toState = node.methodName.toString();
-    currentTransition = currentTransition!.copyWith(toState: toState);
+    if (_currentStateTransitionTree == null) return;
+    assert(_currentNode != null, "No current node");
 
-    // Cannot seem to visit end? -> TODO: magic number
+    Node toNode = Node(node.methodName.toString());
 
-    // _tryToCloseTransition(node.parent!.end + 1);
-    //Cannot invoke other methods because I do not know how end works
-    transitions.add(currentTransition!);
-    currentTransition = null;
-    currentTransitionEnd = -1;
+    assert(!_currentNode!.hasChildren(), "Node cannot have children");
+
+    _currentNode!.addChild(toNode);
+    _currentNode = toNode;
+
+    stateTransitionTrees.add(_currentStateTransitionTree!);
+    _currentStateTransitionTree = null;
   }
-
-  // _tryToCloseTransition(int end) {
-  //   if (currentTransitionEnd == -1) return;
-  //   if (currentTransitionEnd == end) {
-  //     transitions.add(currentTransition!);
-  //     currentTransition = null;
-  //     currentTransitionEnd = -1;
-  //   }
-  // }
 
   // Read conditions of the transition/method
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter node) {
-    if (currentTransition == null) return;
-    String name = node.identifier.toString();
+    if (_currentStateTransitionTree == null) return;
+    assert(_currentNode != null, "No current node");
+    assert(_currentNode is FunctionNode, "Current node is not a function node");
 
-    if (currentTransition!.inputs.containsKey(name)) {
+    FunctionNode functionNode = _currentNode as FunctionNode;
+
+    String name = node.name.toString();
+
+    if (functionNode.parameters.containsKey(name)) {
       throw "Input name already exists";
     }
 
     String type = node.type.toString();
 
-    currentTransition!.inputs[name] = type;
+    functionNode.parameters[name] = type;
   }
 
   @override
   void visitIfElement(IfElement node) {
-    if (currentTransition == null) return;
+    assert(_currentStateTransitionTree != null,
+        "No current state transition tree");
+    assert(_currentNode != null, "No current node");
+
+    //TODO: add implementation for multiple conditions
+
     String condition = node.condition.toString();
-    currentTransition!.conditions.add(condition);
-    // _tryToCloseTransition(node.parent!.end + 1);
+    Node newNode = ConstraintNode(condition);
+    _currentNode!.addChild(newNode);
+    _currentNode = newNode;
   }
 }

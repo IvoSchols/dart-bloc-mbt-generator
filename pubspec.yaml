@@ -10,6 +10,8 @@ environment:
 dependencies:
 #   path: ^1.8.0
   analyzer: ^4.3.1
+  binary_expression_tree:
+    git: https://github.com/IvoSchols/dart-binary-expression-tree
   bloc: ^8.0.3
   bloc_test: ^9.0.3
   equatable: ^2.0.3

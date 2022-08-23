@@ -15,8 +15,8 @@ Future<void> main() async {
   String relativePath =
       'examples/cubit_examples/conditional_ab/cubit/conditional_ab_cubit.dart';
   //TODO: remove parentehses when reading in file
-  VisitedCubit result = Analyzer.analyzeSingleFile(relativePath);
-  CubitModelGenerator(relativePath, result).writeModel();
+  StateMachine result = Analyzer.analyzeSingleFile(relativePath);
+  // CubitModelGenerator(relativePath, result).writeModel();
 
   //Generate tests from statemachine
   final StateMachine machine = constructSimpleAbStatemachine();
