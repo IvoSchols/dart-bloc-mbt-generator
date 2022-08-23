@@ -24,14 +24,14 @@ class Analyzer {
             flags: [], sdkLanguageVersion: Version.parse('2.16.2')));
     CompilationUnit unit = parseStringResult.unit;
 
-    StateMachine result = _checkCompilationUnit(unit);
+    VisitedCubit result = _checkCompilationUnit(unit);
 
     return result;
   }
 
-  static StateMachine _checkCompilationUnit(CompilationUnit unit) {
+  static VisitedCubit _checkCompilationUnit(CompilationUnit unit) {
     //TODO: update with general visitor that discriminates between cubit & bloc
-    StateMachine? visitedCubitStateMachine;
+    VisitedCubit? visitedCubit;
 
     for (dynamic childEntity in unit.childEntities) {
       //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
@@ -65,17 +65,12 @@ class Analyzer {
           throw Exception("No cubit name found");
         }
         name = nameListener.name;
-        visitedCubitStateMachine = StateMachine(name);
 
         // States of the cubit
         if (statesListener.states.isEmpty) {
           throw Exception("No states found");
         }
         states = statesListener.states;
-        Map<String, State> statesMap = {};
-        for (var state in states) {
-          statesMap[state] = visitedCubitStateMachine.newState(state);
-        }
 
         // Context Variables of the cubit
         // if (variablesListener.variables.isEmpty) {
@@ -96,48 +91,18 @@ class Analyzer {
                 t.inputs))
             .toSet();
 
-        for (Transition transition in transitions) {
-          StateTransition st = visitedCubitStateMachine.newStateTransition(
-              transition.functionName,
-              transition.fromStates.map((f) => statesMap[f]).toList(),
-              statesMap[transition.toState]);
-
-          for (var condition in transition.conditions) {
-            // st.cancelIf(condition.(stateChange) => false); // TODO: finish  this
-          }
-        }
-
         // Name of the starting state
         if (nameListener.startingState.isEmpty) {
           throw Exception("No superclass found");
         }
         startingState = nameListener.startingState;
 
-        visitedCubitStateMachine.start(statesMap[startingState]);
+        visitedCubit =
+            VisitedCubit(name, states, variables, transitions, startingState);
       }
     }
-    if (visitedCubitStateMachine == null) throw Exception("No cubit found");
+    if (visitedCubit == null) throw Exception("No cubit found");
 
-    return visitedCubitStateMachine;
-  }
-
-  static Set<Transition> _buildTransitionsFromTrees(
-      Set<StateTransitionTree> stateTransitionTrees, Set<String> states) {
-    Set<Transition> transitions = {};
-
-    for (StateTransitionTree tree in stateTransitionTrees) {
-      transitions.addAll(_buildTransitionsFromTree(tree, states));
-    }
-
-    return transitions;
-  }
-
-  // Perform DFS on the state transition tree to find all the transitions
-  // and add them to the transitions set
-  static Set<Transition> _buildTransitionsFromTree(
-      StateTransitionTree stateTransitionTree, Set<String> states) {
-    Set<Transition> transitions = {};
-
-    return transitions;
+    return visitedCubit;
   }
 }

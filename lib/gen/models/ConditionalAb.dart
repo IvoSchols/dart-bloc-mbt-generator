@@ -1,25 +1,26 @@
+// @dart=2.9
+import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:state_machine/state_machine.dart';
 
 // Construct a statemachine with two states (A, B) and one transition (A->B)
 StateMachine constructConditionalAbStatemachine() {
-  final statemachine = StateMachine('conditional_ab');
+  final statemachine = StateMachine('ConditionalAb');
 
   // Define states
-  
-    final conditionalA = statemachine.newState('ConditionalA');
-  
-    final conditionalB = statemachine.newState('ConditionalB');
-  
+  final ConditionalA = statemachine.newState('ConditionalA');
+  final ConditionalB = statemachine.newState('ConditionalB');
 
-  // Define transitions
-  
-    StateTransition  = statemachine.newStateTransition('', [conditionalA,conditionalB,], {ConditionalA});
-  
-    StateTransition  = statemachine.newStateTransition('', [conditionalA,conditionalB,], {});
-  
+  // Define transitions and their conditions
+  StateTransition goToA = statemachine.newStateTransition(
+      'goToA', [ConditionalA, ConditionalB], ConditionalA);
+
+  StateTransition goToB = statemachine.newStateTransition(
+      'goToB', [ConditionalA, ConditionalB], ConditionalB);
+
+  goToB.cancelIf((StateChange change) => change.payload.allowed);
 
   // Define starting state
-  statemachine.start(conditionalA);
+  statemachine.start(ConditionalA);
 
   return statemachine;
 }

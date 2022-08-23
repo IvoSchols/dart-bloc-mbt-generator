@@ -2,10 +2,7 @@ import 'dart:io';
 
 class FileGeneratorHelperFunctions {
   static void formatFile(String path) {
-    Process.run('dart', ['format', path]).then((result) {
-      stdout.write(result.stdout);
-      stderr.write(result.stderr);
-    });
+    Process.run('./dart', ['format', path], runInShell: true);
   }
 
   static void formatFiles(List<String> paths) {
