@@ -52,7 +52,7 @@ class SimplePathGenerator implements PathGenerator {
     }
 
     //Iterate over all transitions from current state
-    for (StateTransition transition in startState.transitions) {
+    for (Transition transition in startState.transitions) {
       State nextState = transition.to;
       if (nextState == startState) continue;
       _dfs(machine, nextState, transition.name, endState, visited, currentPath,

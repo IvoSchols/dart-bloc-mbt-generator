@@ -7,14 +7,17 @@ StateMachine constructDoorStatemachine() {
   final isClosed = door.newState('closed');
   final isLocked = door.newState('locked');
 
-  StateTransition open = door.newStateTransition('open', [isClosed], isOpen);
-  StateTransition close = door.newStateTransition('close', [isOpen], isClosed);
-  StateTransition lock = door.newStateTransition('lock', [isClosed], isLocked);
-  StateTransition unlock =
-      door.newStateTransition('unlock', [isLocked], isClosed);
+  // ignore: unused_local_variable
+  Transition open = door.newStateTransition('open', [isClosed], isOpen);
+  // ignore: unused_local_variable
+  Transition close = door.newStateTransition('close', [isOpen], isClosed);
+  // ignore: unused_local_variable
+  Transition lock = door.newStateTransition('lock', [isClosed], isLocked);
+  // ignore: unused_local_variable
+  Transition unlock = door.newStateTransition('unlock', [isLocked], isClosed);
 
   // Pass the doorwayEmpty flag to the state.
-  open.cancelIf((stateChange) => stateChange.payload != true);
+  // open.cancelIf((stateChange) => stateChange.payload != true);
 
   // door.start(isOpen);
 

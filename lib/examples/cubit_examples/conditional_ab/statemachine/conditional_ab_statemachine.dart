@@ -7,9 +7,10 @@ StateMachine constructCondtionalAbStatemachine() {
   final a = statemachine.newState('a');
   final b = statemachine.newState('b');
 
-  StateTransition ab = statemachine.newStateTransition('ab', [a], b);
-  ab.cancelIf(
-      (StateChange stateChange) => stateChange.payload.allowed == false);
+  // ignore: unused_local_variable
+  Transition ab = statemachine.newStateTransition('ab', [a], b);
+  // ab.cancelIf(
+  // (StateChange stateChange) => stateChange.payload.allowed == false);
 
   statemachine.start(a);
 

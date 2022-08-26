@@ -17,11 +17,10 @@ dependencies:
   dart_z3:
     git: https://github.com/IvoSchols/dart-z3
   equatable: ^2.0.3
-  mason: ^0.1.0-dev.31
   path: ^1.8.2
   pub_semver: ^2.1.1
   state_machine: 
-    git: https://github.com/IvoSchols/state_machine.git
+    git: https://github.com/IvoSchols/dart-state-machine
   test: ^1.21.4
 
 dev_dependencies:

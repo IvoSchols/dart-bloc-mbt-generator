@@ -14,12 +14,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "archive",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/archive-3.3.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "args",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/args-2.3.1",
       "packageUri": "lib/",
@@ -52,18 +46,6 @@
     {
       "name": "boolean_selector",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "checked_yaml",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/checked_yaml-2.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "clock",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/clock-1.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -134,12 +116,6 @@
       "languageVersion": "2.15"
     },
     {
-      "name": "http",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/http-0.13.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "http_multi_server",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/http_multi_server-3.2.1",
       "packageUri": "lib/",
@@ -148,12 +124,6 @@
     {
       "name": "http_parser",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "intl",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -170,12 +140,6 @@
       "languageVersion": "2.16"
     },
     {
-      "name": "json_annotation",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.6.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.14"
-    },
-    {
       "name": "lints",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0",
       "packageUri": "lib/",
@@ -186,18 +150,6 @@
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/logging-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
-    },
-    {
-      "name": "mason",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/mason-0.1.0-dev.31",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "mason_logger",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/mason_logger-0.1.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
     },
     {
       "name": "matcher",
@@ -220,12 +172,6 @@
     {
       "name": "mocktail",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/mocktail-0.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "mustache_template",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/mustache_template-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -256,12 +202,6 @@
     {
       "name": "pub_semver",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/pub_semver-2.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "recase",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/recase-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -315,9 +255,9 @@
     },
     {
       "name": "state_machine",
-      "rootUri": "file:///home/steen/.pub-cache/git/state_machine-db5b37ac6ca0732498341ee43e731bb85c4e14a8/",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-state-machine-a997142d1a90b5285873e9f88b6db13c93bd7728/",
       "packageUri": "lib/",
-      "languageVersion": "2.11"
+      "languageVersion": "2.17"
     },
     {
       "name": "stream_channel",
@@ -368,12 +308,6 @@
       "languageVersion": "2.15"
     },
     {
-      "name": "w_common",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/w_common-2.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.11"
-    },
-    {
       "name": "watcher",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/watcher-1.0.1",
       "packageUri": "lib/",
@@ -404,7 +338,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-26T10:49:58.753821Z",
+  "generated": "2022-08-26T14:13:26.608645Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

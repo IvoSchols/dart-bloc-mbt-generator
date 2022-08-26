@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
+import 'package:dart_bloc_mbt_generator/file_generator/templates/cubit_test_template.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:state_machine/state_machine.dart';
-
-import 'package:mason/mason.dart';
 
 abstract class TestGenerator {
   factory TestGenerator(String blocBasePath, StateMachine machine) {
@@ -42,54 +41,18 @@ class CubitGenerator implements TestGenerator {
 
     //TODO: add cubit import (retrieve from AST)
 
-    final brick = Brick.path("bricks/cubit_test");
-    final generator = await MasonGenerator.fromBrick(brick);
-    final target = DirectoryGeneratorTarget(Directory(testFolder));
-    List<GeneratedFile> generatedFile = await generator.generate(
-      target,
-      vars: <String, dynamic>{
-        'name': 'simple ab test',
-        'imports': [
-          {'import': 'package:dart_bloc_mbt_generator/$_blocBasePath'}
-        ],
-        'cubit': 'SimpleAbCubit',
-        'tests': [
-          {
-            'stateClass': 'SimpleAbState',
-            'functions': [
-              {
-                'function': 'cubit.goToB()',
-              }
-            ],
-            'states': [
-              {
-                'state': 'SimpleB()',
-              }
-            ],
-          },
-          {
-            'stateClass': 'SimpleAbState',
-            'functions': [
-              {
-                'function': 'cubit.goToB()',
-              },
-              {
-                'function': 'cubit.goToA()',
-              }
-            ],
-            'states': [
-              {
-                'state': 'SimpleB()',
-              },
-              {
-                'state': 'SimpleA()',
-              }
-            ],
-          },
-        ],
-      },
-    );
-    print(generatedFile.toString());
+    List<String> imports = ['package:dart_bloc_mbt_generator/$_blocBasePath'];
+
+    //TODO: add cubit import (retrieve from AST)
+
+    String stateMachineStringified = cubitTestTemplate(imports, _machine);
+
+    // Write string to file relative to the current directory
+    File file = File(testFile);
+    file.createSync(recursive: true);
+    file.writeAsStringSync(stateMachineStringified);
+
+    print(file.toString());
 
     // Format the newly written test file
     FileGeneratorHelperFunctions.formatFiles([testFile]);

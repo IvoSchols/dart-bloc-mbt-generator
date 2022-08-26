@@ -23,14 +23,14 @@ class Analyzer {
             flags: [], sdkLanguageVersion: Version.parse('2.16.2')));
     CompilationUnit unit = parseStringResult.unit;
 
-    VisitedCubit result = _checkCompilationUnit(unit);
+    StateMachine result = _checkCompilationUnit(unit);
 
     return result;
   }
 
-  static VisitedCubit _checkCompilationUnit(CompilationUnit unit) {
+  static StateMachine _checkCompilationUnit(CompilationUnit unit) {
     //TODO: update with general visitor that discriminates between cubit & bloc
-    VisitedCubit? visitedCubit;
+    StateMachine? stateMachine;
 
     for (dynamic childEntity in unit.childEntities) {
       //If childEntity is a ClassDeclaration, check if it is a FiniteStateMachineCubit
@@ -38,8 +38,6 @@ class Analyzer {
       if (childEntity is ClassDeclaration &&
           childEntity.extendsClause != null &&
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
-        RecursiveCubitVisitor visitor;
-
         StatesListener statesListener = StatesListener();
         TransitionsListener transitionsListener = TransitionsListener();
         VariablesListener variablesListener = VariablesListener();
@@ -65,12 +63,18 @@ class Analyzer {
           throw Exception("No cubit name found");
         }
         name = nameListener.name;
+        stateMachine = StateMachine(name);
 
         // States of the cubit
         if (statesListener.states.isEmpty) {
           throw Exception("No states found");
         }
         states = statesListener.states;
+        Map<String, State> stateMap = {};
+
+        for (String state in states) {
+          stateMap[state] = stateMachine.newState(state);
+        }
 
         // Context Variables of the cubit
         // if (variablesListener.variables.isEmpty) {
@@ -82,28 +86,31 @@ class Analyzer {
           throw Exception("No method declaration is found");
         }
         //Convert trace trees to transitions
-        transitions = transitionsListener.traces.map((trace) {
-          return Transition(
-            trace.functionName,
-            states.difference(trace.illegalFromStates),
-            trace.toState,
-            trace.conditions,
-            trace.inputs,
-          );
-        }).toSet();
+        for (Trace trace in transitionsListener.traces) {
+          stateMachine.newStateTransition(
+              trace.functionName,
+              states
+                  .difference(trace.illegalFromStates)
+                  .map((string) => stateMap[string]!)
+                  .toList(),
+              stateMap[trace.toState]!,
+              conditions: trace.conditions,
+              variableDeclarations: trace.inputs);
+        }
 
         // Name of the starting state
         if (nameListener.startingState.isEmpty) {
           throw Exception("No superclass found");
         }
         startingState = nameListener.startingState;
+        stateMachine.initial = stateMap[startingState]!;
+        // stateMachine.start(stateMap[startingState]!);
 
-        visitedCubit =
-            VisitedCubit(name, states, variables, transitions, startingState);
+        stateMachine;
       }
     }
-    if (visitedCubit == null) throw Exception("No cubit found");
+    if (stateMachine == null) throw Exception("No cubit found");
 
-    return visitedCubit;
+    return stateMachine;
   }
 }

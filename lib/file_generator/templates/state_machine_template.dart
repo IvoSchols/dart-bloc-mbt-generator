@@ -1,19 +1,17 @@
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
+import 'package:state_machine/state_machine.dart';
 
-String stateMachineTemplate(VisitedCubit vCubit) {
-  final String name = vCubit.name;
-  final Set<String> states = vCubit.states;
-  final Set<Transition> transitions = vCubit.transitions;
-  final String startingState = vCubit.startingState;
+String stateMachineTemplate(StateMachine sm) {
+  final String name = sm.name;
+  final List<State> states = sm.states;
+  final State startingState = sm.initial;
 
   return '''
-  // @dart=2.9
   import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
   import 'package:state_machine/state_machine.dart';
 
 
-  // Construct a statemachine with two states (A, B) and one transition (A->B)
   StateMachine construct${name}Statemachine() {
   final statemachine = StateMachine('$name');
 
@@ -21,7 +19,7 @@ String stateMachineTemplate(VisitedCubit vCubit) {
   ${_states(states)}
 
   // Define transitions and their conditions
-  ${_transitions(transitions)}
+  ${_transitions(states.map((state) => state.transitions).expand((element) => element).toList())} //?
 
   // Define starting state
   statemachine.start($startingState);
@@ -32,15 +30,15 @@ String stateMachineTemplate(VisitedCubit vCubit) {
   ''';
 }
 
-String _states(Set<String> states) => states.map((state) => '''
+String _states(List<State> states) => states.map((state) => '''
     final $state = statemachine.newState('$state');
   ''').join();
 
-String _transitions(Set<Transition> transitions) => transitions.map((t) => ''' 
-      StateTransition ${t.functionName} = statemachine.newStateTransition('${t.functionName}', ${t.fromStates.toList().toString()}, ${t.toState});
+String _transitions(List<Transition> transitions) => transitions.map((t) => ''' 
+      Transition ${t.name} = statemachine.newStateTransition('${t.name}', ${t.from.toList().toString()}, ${t.to});
 
 
-      ${_conditions(t.functionName, t.conditions)}
+      ${_conditions(t.name, t.conditions ?? BinaryExpressionTree())}
     ''').join();
 
 //TODO: probably update when more complex conditions are added

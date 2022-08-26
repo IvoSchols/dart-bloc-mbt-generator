@@ -1,12 +1,15 @@
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
+import 'package:state_machine/state_machine.dart';
 
 //Should accept a set of traces and generate a test case for each trace
-String cubitTestTemplate(List<String> imports, VisitedCubit vCubit) {
-  final String name = vCubit.name;
-  final Set<String> states = vCubit.states;
+String cubitTestTemplate(List<String> imports, StateMachine sm) {
+  final String name = sm.name;
+  // ignore: unused_local_variable
+  final List<State> states = sm.states;
+  // ignore: unused_local_variable
   final String variables;
-  final Set<Transition> transitions = vCubit.transitions;
-  final String startingState = vCubit.startingState;
+  // final Set<Transition> transitions = sm.transitions;
+  // ignore: unused_local_variable
+  final State startingState = sm.initial;
   return '''
 import 'package:test/test.dart';
 import 'package:bloc_test/bloc_test.dart';
