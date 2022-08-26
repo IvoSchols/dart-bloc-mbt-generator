@@ -17,7 +17,7 @@ StateMachine constructConditionalAbStatemachine() {
   StateTransition goToB = statemachine.newStateTransition(
       'goToB', [ConditionalA, ConditionalB], ConditionalB);
 
-  goToB.cancelIf((StateChange change) => change.payload.allowed);
+  goToB.cancelIf((StateChange change) => !change.payload.allowed);
 
   // Define starting state
   statemachine.start(ConditionalA);

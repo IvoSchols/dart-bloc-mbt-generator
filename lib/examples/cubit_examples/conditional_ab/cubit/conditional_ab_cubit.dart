@@ -7,6 +7,7 @@ class ConditionalAbCubit extends Cubit<ConditionalAbState> {
   ConditionalAbCubit() : super(ConditionalA());
 
   void goToA() => emit(ConditionalA());
+
   void goToB(bool allowed) => {
         if (allowed) {emit(ConditionalB())}
       };

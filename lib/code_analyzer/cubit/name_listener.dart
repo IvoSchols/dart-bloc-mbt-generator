@@ -14,7 +14,7 @@ class NameListener extends EventListener {
     if (name.isNotEmpty) {
       throw Exception("Multiple class declarations found");
     }
-    name = node.name.toString();
+    name = node.name2.toString();
     name = name.replaceFirst(RegExp("cubit|Cubit"), '', name.length - 5);
   }
 

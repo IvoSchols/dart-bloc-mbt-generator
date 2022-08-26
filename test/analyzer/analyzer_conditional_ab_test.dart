@@ -1,9 +1,8 @@
 // @dart=2.9
 
 import 'dart:collection';
-import 'dart:io';
-import 'dart:math';
 
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:test/test.dart';
@@ -34,8 +33,8 @@ void main() {
     test('transition_goToA', () {
       expect(
           result.transitions,
-          contains(Transition("goToA", {}, {'ConditionalA', 'ConditionalB'},
-              'ConditionalA', {}, LinkedHashMap())));
+          contains(Transition("goToA", {'ConditionalA', 'ConditionalB'},
+              'ConditionalA', BinaryExpressionTree(), {})));
     });
 
     test('transition_goToB', () {
@@ -43,13 +42,10 @@ void main() {
           result.transitions,
           contains(Transition(
               "goToB",
-              {},
               {'ConditionalA', 'ConditionalB'},
               'ConditionalB',
-              {'allowed'},
+              BinaryExpressionTree(root: Node('allowed')),
               LinkedHashMap.from({'allowed': 'bool'}))));
     });
-
-    //TODO: add conditions
   });
 }

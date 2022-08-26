@@ -1,5 +1,6 @@
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 
+//Should accept a set of traces and generate a test case for each trace
 String cubitTestTemplate(List<String> imports, VisitedCubit vCubit) {
   final String name = vCubit.name;
   final Set<String> states = vCubit.states;

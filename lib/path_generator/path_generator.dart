@@ -2,7 +2,6 @@
 import 'package:state_machine/state_machine.dart';
 
 abstract class PathGenerator {
-  //TODO: update the variable type
   List<Path> generatePaths(StateMachine finiteStateMachine);
   List<Path> generatePathsTo(StateMachine machine, State toState);
 }
@@ -29,7 +28,6 @@ class Segment {
 //Transition
 class Event {
   String name;
-  //TODO?: add a list of guards
 
   Event(this.name);
 }

@@ -8,7 +8,6 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/transitions_listener
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/variables_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/state_transition_tree/state_transition_tree.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'package:path/path.dart' as p;
@@ -41,16 +40,17 @@ class Analyzer {
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
         RecursiveCubitVisitor visitor;
 
-        EventManager eventManager = EventManager();
         StatesListener statesListener = StatesListener();
         TransitionsListener transitionsListener = TransitionsListener();
         VariablesListener variablesListener = VariablesListener();
         NameListener nameListener = NameListener();
 
-        eventManager.subscribe(statesListener);
-        eventManager.subscribe(transitionsListener);
-        eventManager.subscribe(variablesListener);
-        eventManager.subscribe(nameListener);
+        EventManager eventManager = EventManager({
+          statesListener,
+          transitionsListener,
+          variablesListener,
+          nameListener,
+        });
 
         eventManager.recursiveAstVisitor.visitClassDeclaration(childEntity);
 
@@ -81,15 +81,16 @@ class Analyzer {
         if (transitionsListener.traces.isEmpty) {
           throw Exception("No method declaration is found");
         }
-
-        transitions = transitionsListener.traces
-            .map((t) => Transition(
-                t.functionName,
-                states.difference(t.illegalFromStates),
-                t.toState,
-                t.conditions,
-                t.inputs))
-            .toSet();
+        //Convert trace trees to transitions
+        transitions = transitionsListener.traces.map((trace) {
+          return Transition(
+            trace.functionName,
+            states.difference(trace.illegalFromStates),
+            trace.toState,
+            trace.conditions,
+            trace.inputs,
+          );
+        }).toSet();
 
         // Name of the starting state
         if (nameListener.startingState.isEmpty) {

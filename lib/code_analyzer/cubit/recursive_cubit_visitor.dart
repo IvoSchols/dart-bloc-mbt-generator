@@ -1,10 +1,8 @@
-import 'dart:collection';
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 import 'package:equatable/equatable.dart';
-import 'package:state_machine/state_machine.dart';
 
 class VisitedCubit {
   String name;
@@ -21,8 +19,8 @@ class Transition extends Equatable {
   final String functionName;
   final Set<String> fromStates;
   final String toState;
-  final Set<String> conditions;
-  final LinkedHashMap<String, String> inputs;
+  final BinaryExpressionTree conditions;
+  final Map<String, String> inputs;
 
   Transition(
     this.functionName,
@@ -37,8 +35,8 @@ class Transition extends Equatable {
     Set<String>? illegalFromStates,
     Set<String>? fromStates,
     String? toState,
-    Set<String>? conditions,
-    LinkedHashMap<String, String>? inputs,
+    BinaryExpressionTree? conditions,
+    Map<String, String>? inputs,
   }) {
     return Transition(
       functionName ?? this.functionName,

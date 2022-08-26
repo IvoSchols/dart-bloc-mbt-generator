@@ -33,7 +33,7 @@
     },
     {
       "name": "binary_expression_tree",
-      "rootUri": "file:///home/steen/.pub-cache/git/dart-binary-expression-tree-9c1866fd847ed97c8de47eacf7d6f21cf5f37096/",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-binary-expression-tree-c1b90dc1006d57ac8fafd6938458cdc4b16fdb4b/",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -92,6 +92,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "dart_z3",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-z3-ee29ef83f8a7f80d3aea6d9276222a7f97e9efb6/",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "diff_match_patch",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/diff_match_patch-0.4.1",
       "packageUri": "lib/",
@@ -102,6 +108,12 @@
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/equatable-2.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "ffi",
+      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/ffi-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "file",
@@ -303,7 +315,7 @@
     },
     {
       "name": "state_machine",
-      "rootUri": "file:///home/steen/.pub-cache/git/state_machine-bb5240b6706c39f58c1eb1f693afd6594e147a18/",
+      "rootUri": "file:///home/steen/.pub-cache/git/state_machine-db5b37ac6ca0732498341ee43e731bb85c4e14a8/",
       "packageUri": "lib/",
       "languageVersion": "2.11"
     },
@@ -392,7 +404,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-23T13:07:53.129490Z",
+  "generated": "2022-08-26T10:49:58.753821Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

@@ -1,3 +1,4 @@
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 
 String stateMachineTemplate(VisitedCubit vCubit) {
@@ -43,7 +44,8 @@ String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
     ''').join();
 
 //TODO: probably update when more complex conditions are added
-String _conditions(String transitionName, Set<String> conditions) =>
-    conditions.map((c) => '''
-      $transitionName.cancelIf((StateChange change) => !change.payload.$c);
-    ''').join();
+//TODO: unfold binary expression tree correctly
+String _conditions(String transitionName, BinaryExpressionTree conditions) =>
+    '''
+    $transitionName: conditions.toPostFix().toString();
+    ''';

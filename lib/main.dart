@@ -11,17 +11,21 @@ import 'package:dart_bloc_mbt_generator/examples/cubit_examples/simple_ab/statem
 // import 'package:dart_bloc_mbt_generator/generated_examples/simple_ab.dart';
 
 Future<void> main() async {
-  // Generate model files from cubit
+  // Generate finite state machine model from cubit and write to file
   String relativePath =
       'examples/cubit_examples/conditional_ab/cubit/conditional_ab_cubit.dart';
-  //TODO: remove parentehses when reading in file
+
   VisitedCubit vCubit = Analyzer.analyzeSingleFile(relativePath);
+
   CubitModelGenerator(relativePath).writeModel(vCubit);
 
-  //Generate tests from statemachine
+  //Generate tests from finite state machine model DFS walks and write tests to file
+  //
   final StateMachine machine = constructSimpleAbStatemachine();
-  TestGenerator testGenerator = TestGenerator(relativePath, machine);
+
   final PathGenerator pathGenerator = SimplePathGenerator();
   final List<Path> paths = pathGenerator.generatePaths(machine);
+
+  TestGenerator testGenerator = TestGenerator(relativePath, machine);
   await testGenerator.writeTests(paths);
 }

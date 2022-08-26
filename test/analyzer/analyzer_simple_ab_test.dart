@@ -1,8 +1,5 @@
 // @dart=2.9
-import 'dart:collection';
-
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:state_machine/state_machine.dart';
 import 'package:test/test.dart';
 
@@ -21,7 +18,6 @@ void main() {
     test('states', () {
       expect(result.states.map((s) => s.name).toSet(),
           equals({'SimpleA', 'SimpleB'}));
-      //TODO: does this test length?
     });
 
     test('startingState', () {

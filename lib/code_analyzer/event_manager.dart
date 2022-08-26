@@ -4,10 +4,10 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visi
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 
 class EventManager implements EventListener {
-  Set<EventListener> eventListeners = {};
+  final Set<EventListener> eventListeners;
   late RecursiveAstVisitor recursiveAstVisitor;
 
-  EventManager() {
+  EventManager(this.eventListeners) {
     recursiveAstVisitor = RecursiveCubitVisitor(
       onVisitClassDeclaration: visitClassDeclaration,
       onVisitSuperConstructorInvocation: visitSuperConstructorInvocation,
@@ -18,16 +18,16 @@ class EventManager implements EventListener {
     );
   }
 
-  void subscribe(EventListener eventListener) {
-    if (eventListener is EventManager) {
-      throw Exception('Cannot subscribe as EventManager');
-    }
-    eventListeners.add(eventListener);
-  }
+  // void subscribe(EventListener eventListener) {
+  //   if (eventListener is EventManager) {
+  //     throw Exception('Cannot subscribe as EventManager');
+  //   }
+  //   eventListeners.add(eventListener);
+  // }
 
-  void unsubscribe(EventListener eventListener) {
-    eventListeners.remove(eventListener);
-  }
+  // void unsubscribe(EventListener eventListener) {
+  //   eventListeners.remove(eventListener);
+  // }
 
   /// Extracts the name of the class (and removes the 'Cubit' suffix)
   /// Requirement: class name must not be 'empty' (i.e. no name)
