@@ -106,7 +106,6 @@ class Analyzer {
         stateMachine.initial = stateMap[startingState]!;
         // stateMachine.start(stateMap[startingState]!);
 
-        stateMachine;
       }
     }
     if (stateMachine == null) throw Exception("No cubit found");

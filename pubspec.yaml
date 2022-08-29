@@ -22,6 +22,7 @@ dependencies:
   state_machine: 
     git: https://github.com/IvoSchols/dart-state-machine
   test: ^1.21.4
+  tree_iterator: ^2.0.0
 
 dev_dependencies:
   lints: ^2.0.0

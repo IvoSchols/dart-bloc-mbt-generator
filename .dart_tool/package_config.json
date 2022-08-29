@@ -27,7 +27,7 @@
     },
     {
       "name": "binary_expression_tree",
-      "rootUri": "file:///home/steen/.pub-cache/git/dart-binary-expression-tree-c1b90dc1006d57ac8fafd6938458cdc4b16fdb4b/",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-binary-expression-tree-c24a84057ac8c484605a8663e0da71e05295edfc/",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -75,7 +75,7 @@
     },
     {
       "name": "dart_z3",
-      "rootUri": "file:///home/steen/.pub-cache/git/dart-z3-ee29ef83f8a7f80d3aea6d9276222a7f97e9efb6/",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-z3-98ca85e0e54d3f2b0ac75e53d3bc777f12da6dd8/",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -296,6 +296,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "tree_iterator",
+      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/tree_iterator-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "typed_data",
       "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1",
       "packageUri": "lib/",
@@ -338,7 +344,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-26T14:13:26.608645Z",
+  "generated": "2022-08-29T14:25:23.108513Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

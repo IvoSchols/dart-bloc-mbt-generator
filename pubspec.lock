@@ -34,7 +34,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: c1b90dc1006d57ac8fafd6938458cdc4b16fdb4b
+      resolved-ref: c24a84057ac8c484605a8663e0da71e05295edfc
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
     version: "1.0.4"
@@ -92,7 +92,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ee29ef83f8a7f80d3aea6d9276222a7f97e9efb6
+      resolved-ref: "98ca85e0e54d3f2b0ac75e53d3bc777f12da6dd8"
       url: "https://github.com/IvoSchols/dart-z3"
     source: git
     version: "1.0.2"
@@ -350,6 +350,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.16"
+  tree_iterator:
+    dependency: "direct main"
+    description:
+      name: tree_iterator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:
