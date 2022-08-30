@@ -1,5 +1,3 @@
-import 'dart:js_util';
-
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:state_machine/state_machine.dart';
@@ -51,32 +49,34 @@ void main() {
           containsAll(['ConditionalA', 'ConditionalB']));
       expect(goToA.to.name, equals('ConditionalA'));
       expect(goToA.conditions, isNotNull);
-      expect(goToA.conditions!.root, equals(BinaryExpressionTree().root));
+      expect(goToA.conditions!['conditionTree'].root,
+          equals(BinaryExpressionTree().root));
 
-      expect(goToA.inputTypes, equals({}));
+      expect(goToA.conditions!['inputTypes'], equals({}));
     });
 
     test('transition_goToB', () {
-      Transition goToA = result.states
+      Transition goToB = result.states
           .firstWhere((s) => s.name == 'ConditionalA')
           .transitions
           .firstWhere((t) => t.name == 'goToB');
-      Transition goToA2 = result.states
+      Transition goToB2 = result.states
           .firstWhere((s) => s.name == 'ConditionalB')
           .transitions
           .firstWhere((t) => t.name == 'goToB');
 
-      expect(goToA, equals(goToA2));
+      expect(goToB, equals(goToB2));
 
-      expect(goToA.from, hasLength(2));
-      expect(goToA.from.map((e) => e.name).toList(),
+      expect(goToB.from, hasLength(2));
+      expect(goToB.from.map((e) => e.name).toList(),
           containsAll(['ConditionalA', 'ConditionalB']));
-      expect(goToA.to.name, equals('ConditionalB'));
-      expect(goToA.conditions, isNotNull);
-      expect(true, instanceof(goToA.conditions!.root, Node));
-      expect(goToA.conditions!.root!.value, equals('allowed'));
+      expect(goToB.to.name, equals('ConditionalB'));
+      expect(goToB.conditions, isNotNull);
+      Node? root = goToB.conditions!['conditionTree'].root;
+      expect(root, isNotNull);
+      expect(root!.value, equals('allowed'));
 
-      expect(goToA.inputTypes, equals({}));
+      expect(goToB.conditions!['inputTypes'], equals({'allowed': 'bool'}));
     });
   });
 }

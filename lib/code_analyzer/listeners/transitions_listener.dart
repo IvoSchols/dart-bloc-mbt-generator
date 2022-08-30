@@ -20,7 +20,9 @@ class TransitionsListener extends EventListener {
     LinkedHashMap<String, String> inputs =
         LinkedHashMap(); // Is this already known at this point?
     Trace newTrace = Trace(
-        functionName: functionName, conditions: newTraceTree, inputs: inputs);
+        functionName: functionName,
+        conditionTree: newTraceTree,
+        inputTypes: inputs);
 
     _currentTrace = newTrace;
   }
@@ -33,13 +35,13 @@ class TransitionsListener extends EventListener {
 
     String name = node.name.toString();
 
-    if (_currentTrace!.inputs.containsKey(name)) {
+    if (_currentTrace!.inputTypes.containsKey(name)) {
       throw "Input name already exists";
     }
 
     String type = node.type.toString();
 
-    _currentTrace!.inputs[name] = type;
+    _currentTrace!.inputTypes[name] = type;
   }
 
   @override
@@ -80,15 +82,15 @@ class Trace {
   final String functionName;
   late Set<String> illegalFromStates;
   late String toState;
-  final BinaryExpressionTree conditions;
-  final LinkedHashMap<String, String> inputs;
+  final BinaryExpressionTree conditionTree;
+  final LinkedHashMap<String, String> inputTypes;
 
   Node? currentNode;
 
   Trace(
       {required this.functionName,
-      required this.conditions,
-      required this.inputs,
+      required this.conditionTree,
+      required this.inputTypes,
       illegalFromStates,
       toState}) {
     this.illegalFromStates = illegalFromStates ?? {};
@@ -96,8 +98,8 @@ class Trace {
   }
 
   void addNode(Node child) {
-    if (conditions.root == null) {
-      conditions.root = child;
+    if (conditionTree.root == null) {
+      conditionTree.root = child;
     } else {
       assert(!currentNode!.hasChildren());
       currentNode!.addChild(child);
@@ -116,8 +118,8 @@ class Trace {
       functionName: functionName ?? this.functionName,
       illegalFromStates: illegalFromStates ?? this.illegalFromStates,
       toState: toState ?? this.toState,
-      conditions: conditions ?? this.conditions,
-      inputs: inputs ?? this.inputs,
+      conditionTree: conditions ?? this.conditionTree,
+      inputTypes: inputs ?? this.inputTypes,
     );
   }
 }

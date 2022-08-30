@@ -64,6 +64,13 @@ class Analyzer {
         name = nameListener.name;
         stateMachine = StateMachine(name);
 
+        // Name of the starting state
+        if (nameListener.startingState.isEmpty) {
+          throw Exception("No superclass found");
+        }
+        startingState = nameListener.startingState;
+        stateMachine.newState(startingState);
+
         // States of the cubit
         if (statesListener.states.isEmpty) {
           throw Exception("No states found");
@@ -86,23 +93,18 @@ class Analyzer {
         }
         //Convert trace trees to transitions
         for (Trace trace in transitionsListener.traces) {
-          stateMachine.newStateTransition(
+          stateMachine.newTransition(
               trace.functionName,
               states
                   .difference(trace.illegalFromStates)
                   .map((string) => stateMap[string]!)
-                  .toList(),
+                  .toSet(),
               stateMap[trace.toState]!,
-              conditions: trace.conditions,
-              variableDeclarations: trace.inputs);
+              conditions: {
+                'inputTypes': trace.inputTypes,
+                'conditionTree': trace.conditionTree
+              });
         }
-
-        // Name of the starting state
-        if (nameListener.startingState.isEmpty) {
-          throw Exception("No superclass found");
-        }
-        startingState = nameListener.startingState;
-        stateMachine.initial = stateMap[startingState]!;
       }
     }
     if (stateMachine == null) throw Exception("No cubit found");

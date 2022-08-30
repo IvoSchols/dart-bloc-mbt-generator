@@ -8,7 +8,7 @@ StateMachine constructSimpleAbStatemachine() {
   final b = statemachine.newState('b');
 
   // ignore: unused_local_variable
-  Transition ab = statemachine.newStateTransition('ab', [a], b);
+  Transition ab = statemachine.newTransition('ab', {a}, b);
 
   statemachine.start(a);
 

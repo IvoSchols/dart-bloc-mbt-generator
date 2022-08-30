@@ -9,7 +9,7 @@ String cubitTestTemplate(
     List<String> imports, StateMachine sm, List<Path> paths) {
   final String name = sm.name;
   // ignore: unused_local_variable
-  final List<State> states = sm.states;
+  final Set<State> states = sm.states;
   // ignore: unused_local_variable
   final String variable;
 
@@ -68,7 +68,15 @@ String _tests(String name, List<Path> paths) => paths.map((path) => '''
 String _callCubitFunction(
     Transition transition, Map<String, String> variableValues) {
   final String functionName = _camelCase(transition.name);
-  final LinkedHashMap<String, String> inputTypes = transition.inputTypes;
+
+  final LinkedHashMap<String, String> inputTypes;
+
+  if (transition.conditions != null) {
+    inputTypes =
+        transition.conditions!['inputTypes'] as LinkedHashMap<String, String>;
+  } else {
+    inputTypes = LinkedHashMap<String, String>();
+  }
 
   final String requiredFunctionParameters =
       inputTypes.keys.map((key) => "${variableValues[key]}").join(", ");

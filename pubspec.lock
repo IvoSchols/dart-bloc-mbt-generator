@@ -304,10 +304,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: d406a8c4953d569f277b481e449273acfac65038
+      resolved-ref: "4930df6442bd39280c8ca005c6bcd826c7c8e9b9"
       url: "https://github.com/IvoSchols/dart-state-machine"
     source: git
-    version: "1.0.0"
+    version: "1.0.2"
   stream_channel:
     dependency: transitive
     description:

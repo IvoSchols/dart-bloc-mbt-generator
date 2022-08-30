@@ -144,9 +144,11 @@ change CurState to tr’s next state;
     //Solve the path conditions
     for (Transition t in path) {
       //Check if the transition has a condition
-      if (t.conditions == null || t.conditions!.root == null) continue;
+      if (t.conditions == null || t.conditions!['conditionTree'] == null)
+        continue;
       //Translate the transition condition into a Z3 expression
-      t.conditions!.callFunctionPostOrder(t.conditions!.root, (Node node) {
+      BinaryExpressionTree conditionTree = t.conditions!['conditionTree'];
+      conditionTree.callFunctionPostOrder(conditionTree.root, (Node node) {
         String condition = node.value;
 
         //Check if the condition is an operator
@@ -157,7 +159,8 @@ change CurState to tr’s next state;
           operands.add(result);
         } else {
           //The condition is an operand
-          operands.add(_stringToAst(ast, condition, t.inputTypes));
+          operands
+              .add(_stringToAst(ast, condition, t.conditions!['inputTypes']));
         }
       });
     }
