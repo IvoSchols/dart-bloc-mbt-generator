@@ -304,7 +304,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "03221f15d9d63b6cb1b0c0a240436528737acda0"
+      resolved-ref: d406a8c4953d569f277b481e449273acfac65038
       url: "https://github.com/IvoSchols/dart-state-machine"
     source: git
     version: "1.0.0"
