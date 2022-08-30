@@ -1,4 +1,3 @@
-// @dart=2.9
 import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 import 'package:state_machine/state_machine.dart';
 import 'package:test/test.dart';
@@ -33,7 +32,7 @@ void main() {
     test('transitions_goToA', () {
       //Forgive me for the following code
       for (State s in result.states) {
-        StateTransition t = s.transitions.firstWhere((t) => t.name == "goToA");
+        Transition t = s.transitions.firstWhere((t) => t.name == "goToA");
 
         expect(t.from, hasLength(2));
         expect(t.from.map((e) => e.name).toList(),
@@ -46,7 +45,7 @@ void main() {
     test('transitions_goToB', () {
       //Forgive me for the following code
       for (State s in result.states) {
-        StateTransition t = s.transitions.firstWhere((t) => t.name == "goToB");
+        Transition t = s.transitions.firstWhere((t) => t.name == "goToB");
 
         expect(t.from, hasLength(2));
         expect(t.from.map((e) => e.name).toList(),
