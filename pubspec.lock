@@ -34,10 +34,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: c24a84057ac8c484605a8663e0da71e05295edfc
+      resolved-ref: e2192f5a392166bb9061ee966beeb656406d82ae
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
-    version: "1.0.4"
+    version: "1.0.5"
   bloc:
     dependency: "direct main"
     description:

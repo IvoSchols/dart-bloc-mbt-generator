@@ -27,7 +27,7 @@
     },
     {
       "name": "binary_expression_tree",
-      "rootUri": "file:///home/steen/.pub-cache/git/dart-binary-expression-tree-c24a84057ac8c484605a8663e0da71e05295edfc/",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-binary-expression-tree-e2192f5a392166bb9061ee966beeb656406d82ae/",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -344,7 +344,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-30T09:34:42.843851Z",
+  "generated": "2022-08-30T10:01:44.940316Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

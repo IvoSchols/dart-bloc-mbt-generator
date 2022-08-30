@@ -1,6 +1,7 @@
 // Based of: Path-Oriented Test Data Generation Using Symbolic Execution and Constraint Solving Techniques
 import 'dart:collection';
 
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:collection/collection.dart';
 
 import 'package:dart_z3/dart_z3.dart';
@@ -145,10 +146,9 @@ change CurState to tr’s next state;
       //Check if the transition has a condition
       if (t.conditions == null || t.conditions!.root == null) continue;
       //Translate the transition condition into a Z3 expression
-      List<String> conditions = t.conditions!.toPostFix().cast<String>();
+      t.conditions!.callFunctionPostOrder(t.conditions!.root, (Node node) {
+        String condition = node.value;
 
-      for (int i = 0; i < conditions.length; i++) {
-        String condition = conditions[i];
         //Check if the condition is an operator
         if (_operators.contains(condition)) {
           dynamic left = operands.removeLast();
@@ -159,7 +159,7 @@ change CurState to tr’s next state;
           //The condition is an operand
           operands.add(_stringToAst(ast, condition, t.inputTypes));
         }
-      }
+      });
     }
 
     for (var o in operands) {

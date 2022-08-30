@@ -2,10 +2,10 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/name_listener.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/states_listener.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/transitions_listener.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/variables_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/name_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/states_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/transitions_listener.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/variables_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -103,8 +103,6 @@ class Analyzer {
         }
         startingState = nameListener.startingState;
         stateMachine.initial = stateMap[startingState]!;
-        // stateMachine.start(stateMap[startingState]!);
-
       }
     }
     if (stateMachine == null) throw Exception("No cubit found");

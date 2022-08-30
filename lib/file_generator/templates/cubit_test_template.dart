@@ -80,21 +80,3 @@ String _callCubitFunction(
   final String functionCall = "$functionName($requiredFunctionParameters)";
   return functionCall;
 }
-
-// String _callTransitionFunction(
-//         Transition transition, Map<String, String> variableValue) =>
-//     '''${transition.name}(
-//       ${{for (String inputType in transition.inputTypes.entries) {
-//         if (inputType == 'String') {
-//           return '${variableValue[inputType]}';
-//         } else {
-//           return '${variableValue[inputType]}';
-//         }
-//       }}}
-//       }
-//         if (transition.inputTypes.isNotEmpty) {
-//           '${transition.function}(${transition.functionParameters.map((p) => '${variableValue[p]}').join(', ')})'
-//         else
-//           'null'
-//       }})
-//     ''';
