@@ -83,7 +83,6 @@ class Trace {
   final BinaryExpressionTree conditions;
   final LinkedHashMap<String, String> inputs;
 
-  ListQueue _nodeStack = ListQueue<Node>();
   Node? currentNode;
 
   Trace(

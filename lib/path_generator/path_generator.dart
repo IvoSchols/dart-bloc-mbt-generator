@@ -1,6 +1,3 @@
-// ignore: import_of_legacy_library_into_null_safe
-import 'dart:collection';
-
 import 'package:state_machine/state_machine.dart';
 
 abstract class PathGenerator {

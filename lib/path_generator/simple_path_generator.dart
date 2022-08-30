@@ -20,8 +20,6 @@ class SimplePathGenerator implements PathGenerator {
     Map<State, bool> visited = {for (var state in machine.states) state: false};
     Path currentPath = Path({}, []);
     List<Path> simplePaths = [];
-    // finiteStateMachine.start();
-    State? startState = machine.current;
 
     _dfs(machine, null, toState, visited, currentPath, simplePaths);
     return simplePaths;

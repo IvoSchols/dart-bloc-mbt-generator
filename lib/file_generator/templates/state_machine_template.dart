@@ -1,5 +1,4 @@
 import 'package:binary_expression_tree/binary_expression_tree.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:state_machine/state_machine.dart';
 
 String stateMachineTemplate(StateMachine sm) {
