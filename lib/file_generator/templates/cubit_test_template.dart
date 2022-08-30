@@ -56,15 +56,14 @@ String _tests(String name, List<Path> paths) => paths.map((path) => '''
       act: (cubit) => ${path.transitions.map((t) => "cubit.${_callCubitFunction(t, path.pathInput)}").toList()},
       expect: () => ${path.transitions.map((t) => "${_pascalCase(t.to.name)}()").toList()},
     );
-
-    test('${_camelCase(path.pathInput.keys.first)}', () {
-      ${_camelCase(path.pathInput.keys.first)}();
-      expect(${_camelCase(path.pathInput.keys.first)}, emitsInOrder([
-        ${_camelCase(path.pathInput.values.first)}(),
-        ${_camelCase(path.pathInput.values.last)}(),
-      ]));
-    });
   ''').join();
+// test('${_camelCase(path.pathInput.keys.first)}', () {
+//   ${_camelCase(path.pathInput.keys.first)}();
+//   expect(${_camelCase(path.pathInput.keys.first)}, emitsInOrder([
+//     ${_camelCase(path.pathInput.values.first)}(),
+//     ${_camelCase(path.pathInput.values.last)}(),
+//   ]));
+// });
 
 String _callCubitFunction(
     Transition transition, Map<String, String> variableValues) {
