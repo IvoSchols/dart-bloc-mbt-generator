@@ -1,19 +1,25 @@
+import 'dart:collection';
+
 import 'package:state_machine/state_machine.dart';
 
+import '../../path_generator/path_generator.dart';
+
 //Should accept a set of traces and generate a test case for each trace
-String cubitTestTemplate(List<String> imports, StateMachine sm) {
+String cubitTestTemplate(
+    List<String> imports, StateMachine sm, List<Path> paths) {
   final String name = sm.name;
   // ignore: unused_local_variable
   final List<State> states = sm.states;
   // ignore: unused_local_variable
-  final String variables;
+  final String variable;
+
   // final Set<Transition> transitions = sm.transitions;
   // ignore: unused_local_variable
   final State startingState = sm.initial;
   return '''
 import 'package:test/test.dart';
 import 'package:bloc_test/bloc_test.dart';
-$_imports($imports);
+${_imports(imports)}
 
 
 void main() {
@@ -24,15 +30,7 @@ void main() {
       ${_camelCase(name)}Cubit = ${_pascalCase(name)}Cubit();
     });
 
-    {{! test cases }}
-    {{#tests}} <------------- DONT FORGET!!!
-      blocTest<${_pascalCase(name)}Cubit, ${_pascalCase(name)}State>(
-        'emits {{#states}} {{state}}() {{/states}}',
-        build: () => {{cubit.camelCase()}},
-        act: (cubit) => [{{#functions}} {{function}}, {{/functions}}],
-        expect: () => [{{#states}} {{state.pascalCase()}}, {{/states}}],
-      );
-    {{/tests}}
+    ${_tests(name, paths)}
   });
 }
 
@@ -43,16 +41,55 @@ String _imports(List<String> imports) => imports.map((import) => '''
     import '$import';
   ''').join();
 
-String _states(Set<String> states) => states.map((state) => '''
-    {{#if (state == startingState)}}
-      {{state.pascalCase()}},
-    {{/if}}
-  ''').join();
-
-//First letter to lowercase
+//First letter to uppercase
 String _pascalCase(String str) =>
+    str.substring(0, 1).toUpperCase() + str.substring(1);
+//First letter to lowercase
+String _camelCase(String str) =>
     str.substring(0, 1).toLowerCase() + str.substring(1);
 
-//First letter to uppercase
-String _camelCase(String str) =>
-    str.substring(0, 1).toUpperCase() + str.substring(1);
+String _tests(String name, List<Path> paths) => paths.map((path) => '''
+
+    blocTest<${_pascalCase(name)}Cubit, ${_pascalCase(name)}State>(
+      'emits ${path.transitions.map((t) => _pascalCase(t.to.name)).toList()}',
+      build: () => ${_camelCase(name)}Cubit,
+      act: (cubit) => ${path.transitions.map((t) => "cubit.${_callCubitFunction(t, path.pathInput)}").toList()},
+      expect: () => ${path.transitions.map((t) => "${_pascalCase(t.to.name)}()").toList()},
+    );
+
+    
+  ''').join();
+
+String _callCubitFunction(
+    Transition transition, Map<String, String> variableValues) {
+  final String functionName = _camelCase(transition.name);
+  final LinkedHashMap<String, String> inputTypes = transition.inputTypes;
+
+  final String requiredFunctionParameters =
+      inputTypes.keys.map((key) => "${variableValues[key]}").join(", ");
+
+  // This is for named parameters
+  // final String functionParameters =
+  //     inputTypes.keys.map((key) => "$key: ${variableValues[key]}").join(", ");
+
+  final String functionCall = "$functionName($requiredFunctionParameters)";
+  return functionCall;
+}
+
+// String _callTransitionFunction(
+//         Transition transition, Map<String, String> variableValue) =>
+//     '''${transition.name}(
+//       ${{for (String inputType in transition.inputTypes.entries) {
+//         if (inputType == 'String') {
+//           return '${variableValue[inputType]}';
+//         } else {
+//           return '${variableValue[inputType]}';
+//         }
+//       }}}
+//       }
+//         if (transition.inputTypes.isNotEmpty) {
+//           '${transition.function}(${transition.functionParameters.map((p) => '${variableValue[p]}').join(', ')})'
+//         else
+//           'null'
+//       }})
+//     ''';

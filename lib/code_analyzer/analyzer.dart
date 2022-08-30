@@ -6,7 +6,6 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/name_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/states_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/transitions_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/variables_listener.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -54,8 +53,8 @@ class Analyzer {
 
         String name;
         Set<String> states = {};
-        Map<String, String> variables = {};
-        Set<Transition> transitions = {};
+        // Map<String, String> variables = {};
+        // Set<Transition> transitions = {};
         String startingState;
 
         // Name of the cubit

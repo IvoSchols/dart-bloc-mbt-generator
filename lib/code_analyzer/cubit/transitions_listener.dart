@@ -5,8 +5,6 @@ import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 
 class TransitionsListener extends EventListener {
-  //TODO: find ways to identify when a transition is found and to build it and add it to the list of transitions when finished
-
   Trace? _currentTrace;
   Set<Trace> traces = {};
 
@@ -19,7 +17,8 @@ class TransitionsListener extends EventListener {
 
     BinaryExpressionTree newTraceTree = BinaryExpressionTree();
     //TODO: call formal parameters strategy
-    Map<String, String> inputs = {}; // Is this already known at this point?
+    LinkedHashMap<String, String> inputs =
+        LinkedHashMap(); // Is this already known at this point?
     Trace newTrace = Trace(
         functionName: functionName, conditions: newTraceTree, inputs: inputs);
 
@@ -82,7 +81,7 @@ class Trace {
   late Set<String> illegalFromStates;
   late String toState;
   final BinaryExpressionTree conditions;
-  final Map<String, String> inputs;
+  final LinkedHashMap<String, String> inputs;
 
   ListQueue _nodeStack = ListQueue<Node>();
   Node? currentNode;
@@ -112,7 +111,7 @@ class Trace {
     Set<String>? illegalFromStates,
     String? toState,
     BinaryExpressionTree? conditions,
-    Map<String, String>? inputs,
+    LinkedHashMap<String, String>? inputs,
   }) {
     return Trace(
       functionName: functionName ?? this.functionName,

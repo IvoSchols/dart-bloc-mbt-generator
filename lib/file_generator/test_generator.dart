@@ -24,7 +24,6 @@ abstract class TestGenerator {
 }
 
 class CubitGenerator implements TestGenerator {
-  // Cubit<dynamic> _cubit;
   final String _blocBasePath;
   final StateMachine _machine;
 
@@ -33,19 +32,15 @@ class CubitGenerator implements TestGenerator {
   @override
   Future<void> writeTests(List<Path> paths) async {
     String machineName = _machine.name;
-    String testFolder = "lib/gen/test";
-    String testFile = "/$testFolder/$machineName.dart";
-    // TODO: retrieve cubit from AST
-    String cubitClassName = _machine.runtimeType.toString();
-    cubitClassName.replaceRange(0, 0, cubitClassName[0].toLowerCase());
-
-    //TODO: add cubit import (retrieve from AST)
+    String testFolder = "lib/gen/tests";
+    String testFile = "$testFolder/$machineName.dart";
 
     List<String> imports = ['package:dart_bloc_mbt_generator/$_blocBasePath'];
 
     //TODO: add cubit import (retrieve from AST)
 
-    String stateMachineStringified = cubitTestTemplate(imports, _machine);
+    String stateMachineStringified =
+        cubitTestTemplate(imports, _machine, paths);
 
     // Write string to file relative to the current directory
     File file = File(testFile);

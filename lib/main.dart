@@ -1,4 +1,4 @@
-// @dart=2.9
+import 'package:bloc/bloc.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/cubit/recursive_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/model_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
@@ -28,6 +28,6 @@ Future<void> main() async {
   final PathGenerator pathGenerator = ZhangPathGenerator();
   final List<Path> paths = pathGenerator.generatePaths(stateMachine);
 
-  TestGenerator testGenerator = TestGenerator(relativePath, stateMachine);
+  TestGenerator testGenerator = CubitGenerator(relativePath, stateMachine);
   await testGenerator.writeTests(paths);
 }

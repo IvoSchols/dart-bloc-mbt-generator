@@ -1,13 +1,10 @@
 // Based of: Path-Oriented Test Data Generation Using Symbolic Execution and Constraint Solving Techniques
 import 'dart:collection';
-import 'dart:ffi';
 
 import 'package:collection/collection.dart';
 
-import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_z3/dart_z3.dart';
 import 'package:state_machine/state_machine.dart';
-import 'package:tree_iterator/tree_iterator.dart';
 
 import 'path_generator.dart';
 
@@ -52,7 +49,7 @@ change CurState to tr’s next state;
 
   @override
   List<Path> generatePaths(StateMachine stateMachine) {
-    return dfs(stateMachine);
+    return [dfs(stateMachine)];
   }
 
   @override
@@ -61,7 +58,7 @@ change CurState to tr’s next state;
     throw UnimplementedError();
   }
 
-  List<Path> dfs(StateMachine machine, {int maxDepth = 5}) {
+  Path dfs(StateMachine machine, {int maxDepth = 5}) {
     List<Transition> curPath = [];
     Map<String, String> pathInput =
         {}; // Map of input data for the current path (Variable: Value)
@@ -97,9 +94,9 @@ change CurState to tr’s next state;
       }
     }
     // Solve the constraints and output the variables’ values
+    Path solvedPath = Path(pathInput, curPath);
 
-    return [];
-    // return curPath;
+    return solvedPath;
   }
 
 // Check if any input exists that satisfies the path condition
@@ -137,15 +134,11 @@ change CurState to tr’s next state;
     String sResult = s.model();
     s.delSolver();
 
-    //TODO: parse model and return map of variables and values
-
     return _modelToMap(sResult);
   }
 
   void _buildSolverTree(Solver s, AST ast, List<Transition> path) {
     ListQueue<dynamic> operands = ListQueue<dynamic>();
-
-    Map<String, dynamic> astVariables = {};
 
     //Solve the path conditions
     for (Transition t in path) {
@@ -206,7 +199,7 @@ change CurState to tr’s next state;
     }
   }
 
-  _modelToMap(String model) {
+  Map<String, String> _modelToMap(String model) {
     Map<String, String> map = {};
     List<String> lines = model.split('\n');
     for (String line in lines) {

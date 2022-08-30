@@ -18,46 +18,40 @@ class SimplePathGenerator implements PathGenerator {
   List<Path> generatePathsTo(StateMachine machine, State toState) {
     //Initialize visited states map with false
     Map<State, bool> visited = {for (var state in machine.states) state: false};
-    Path currentPath = Path([]);
+    Path currentPath = Path({}, []);
     List<Path> simplePaths = [];
     // finiteStateMachine.start();
     State? startState = machine.current;
 
-    _dfs(machine, startState, "", toState, visited, currentPath, simplePaths);
+    _dfs(machine, null, toState, visited, currentPath, simplePaths);
     return simplePaths;
   }
 
   //Generate simple paths from initial state to target state
-  dynamic _dfs(
-      StateMachine machine,
-      State startState,
-      String lastTransition,
-      State endState,
-      Map<State, bool> visited,
-      Path currentPath,
-      List<Path> simplePaths) {
-    if (visited[startState] == null) {
+  dynamic _dfs(StateMachine machine, Transition? transition, State endState,
+      Map<State, bool> visited, Path currentPath, List<Path> simplePaths) {
+    if (visited[machine.current] == null) {
       throw Exception("Start state not found");
-    } else if (visited[startState] == true) {
+    } else if (visited[machine.current] == true) {
       return;
     }
 
-    visited[startState] = true;
-    currentPath.segments.add(Segment(startState, Event(lastTransition)));
-    if (startState == endState) {
-      simplePaths.add(currentPath.copy());
-      visited[startState] = false;
-      currentPath.segments.removeLast();
+    visited[machine.current] = true;
+    if (transition != null) currentPath.transitions.add(transition);
+    if (machine.current == endState) {
+      simplePaths.add(currentPath);
+      visited[machine.current] = false;
+      currentPath.transitions.removeLast();
       return;
     }
 
     //Iterate over all transitions from current state
-    for (Transition transition in startState.transitions) {
-      State nextState = transition.to;
-      if (nextState == startState) continue;
-      _dfs(machine, nextState, transition.name, endState, visited, currentPath,
-          simplePaths);
-    }
+    // for (Transition transition in startState.transitions) {
+    //   State nextState = transition.to;
+    //   if (nextState == startState) continue;
+    //   _dfs(machine, nextState, transition.name, endState, visited, currentPath,
+    //       simplePaths);
+    // }
     return simplePaths;
   }
 }

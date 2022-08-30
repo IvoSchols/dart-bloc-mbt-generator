@@ -255,7 +255,7 @@
     },
     {
       "name": "state_machine",
-      "rootUri": "file:///home/steen/.pub-cache/git/dart-state-machine-a997142d1a90b5285873e9f88b6db13c93bd7728/",
+      "rootUri": "file:///home/steen/.pub-cache/git/dart-state-machine-468ae967faecf994672b357834a8df10ca40ec0e/",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -344,7 +344,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-29T14:25:23.108513Z",
+  "generated": "2022-08-30T08:57:44.904788Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }
