@@ -55,7 +55,7 @@ class Analyzer {
         Set<String> states = {};
         // Map<String, String> variables = {};
         // Set<Transition> transitions = {};
-        String startingState;
+        String initialState;
 
         // Name of the cubit
         if (nameListener.name.isEmpty) {
@@ -65,11 +65,11 @@ class Analyzer {
         stateMachine = StateMachine(name);
 
         // Name of the starting state
-        if (statesListener.startingState.isEmpty) {
+        if (statesListener.initialState.isEmpty) {
           throw Exception("No superclass found");
         }
-        startingState = statesListener.startingState;
-        stateMachine.newState(startingState);
+        initialState = statesListener.initialState;
+        stateMachine.newState(initialState);
 
         // States of the cubit
         if (statesListener.states.isEmpty) {
