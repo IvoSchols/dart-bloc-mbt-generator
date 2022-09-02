@@ -3,7 +3,6 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 
 class NameListener extends EventListener {
   String name = "";
-  String startingState = "";
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -16,14 +15,5 @@ class NameListener extends EventListener {
     }
     name = node.name2.toString();
     name = name.replaceFirst(RegExp("cubit|Cubit"), '', name.length - 5);
-  }
-
-  @override
-  void visitSuperConstructorInvocation(SuperConstructorInvocation node) {
-    if (startingState.isNotEmpty) {
-      throw Exception("Multiple superclasses found");
-    }
-    startingState =
-        node.argumentList.arguments.first.childEntities.first.toString();
   }
 }

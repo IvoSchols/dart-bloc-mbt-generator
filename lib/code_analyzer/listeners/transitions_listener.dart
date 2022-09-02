@@ -4,9 +4,9 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 
-class TransitionsListener extends EventListener {
+class TracesListener extends EventListener {
   Trace? _currentTrace;
-  Set<Trace> traces = {};
+  final Set<Trace> traces = {};
 
   /// The first entry point for finding transitions.
   @override

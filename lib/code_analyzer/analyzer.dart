@@ -38,13 +38,13 @@ class Analyzer {
           childEntity.extendsClause != null &&
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
         StatesListener statesListener = StatesListener();
-        TransitionsListener transitionsListener = TransitionsListener();
+        TracesListener tracesListener = TracesListener();
         VariablesListener variablesListener = VariablesListener();
         NameListener nameListener = NameListener();
 
         EventManager eventManager = EventManager({
           statesListener,
-          transitionsListener,
+          tracesListener,
           variablesListener,
           nameListener,
         });
@@ -65,10 +65,10 @@ class Analyzer {
         stateMachine = StateMachine(name);
 
         // Name of the starting state
-        if (nameListener.startingState.isEmpty) {
+        if (statesListener.startingState.isEmpty) {
           throw Exception("No superclass found");
         }
-        startingState = nameListener.startingState;
+        startingState = statesListener.startingState;
         stateMachine.newState(startingState);
 
         // States of the cubit
@@ -88,11 +88,11 @@ class Analyzer {
         // }
 
         // Transitions of the cubit
-        if (transitionsListener.traces.isEmpty) {
+        if (tracesListener.traces.isEmpty) {
           throw Exception("No method declaration is found");
         }
         //Convert trace trees to transitions
-        for (Trace trace in transitionsListener.traces) {
+        for (Trace trace in tracesListener.traces) {
           stateMachine.newTransition(
               trace.functionName,
               states

@@ -159,7 +159,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/meta-1.8.0",
+      "rootUri": "file:///home/steen/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -344,7 +344,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-30T14:41:22.258394Z",
+  "generated": "2022-09-02T12:34:36.929779Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }
