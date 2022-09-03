@@ -54,8 +54,17 @@ class TracesListener extends EventListener {
     String trueState =
         node.thenElement.toString(); //TODO: what to do with this?
 
-    Node newNode = Node(condition);
+    Node newNode = _buildIfNode(condition);
     _currentTrace!.addNode(newNode);
+  }
+
+  Node _buildIfNode(String condition) {
+    Node node = Node(condition);
+    if (condition[0] == '!') {
+      node = Node(condition[0]);
+      node.left = _buildIfNode(condition.substring(1));
+    }
+    return node;
   }
 
   // Emit()

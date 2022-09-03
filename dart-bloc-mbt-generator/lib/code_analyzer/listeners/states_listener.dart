@@ -14,7 +14,7 @@ class StatesListener extends EventListener {
 
   @override
   void visitSuperConstructorInvocation(SuperConstructorInvocation node) {
-    if (startingState.isNotEmpty) {
+    if (initialState.isNotEmpty) {
       throw Exception("Multiple superclasses found");
     }
     initialState =

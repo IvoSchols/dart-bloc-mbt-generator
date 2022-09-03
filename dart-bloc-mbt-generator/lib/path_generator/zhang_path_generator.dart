@@ -46,7 +46,6 @@ change CurState to tr’s next state;
 // (which is a symbolic arithmetic expression)
 
   final Z3 _z3 = Z3();
-  final List<String> _operators = ['&&', '||', '+', '-', '*', '/'];
 
   @override
   List<Path> generatePaths(StateMachine stateMachine) {
@@ -152,9 +151,10 @@ change CurState to tr’s next state;
         String condition = node.value;
 
         //Check if the condition is an operator
-        if (_operators.contains(condition)) {
+
+        if (node.isOperator()) {
           dynamic left = operands.removeLast();
-          dynamic right = operands.removeLast();
+          dynamic right = node.value == '!' ? null : operands.removeLast();
           dynamic result = _combineAst(ast, condition, left, right);
           operands.add(result);
         } else {
@@ -185,20 +185,22 @@ change CurState to tr’s next state;
   }
 
   dynamic _combineAst(AST ast, String operator, dynamic left, dynamic right) {
-    if (operator == "&&") {
-      return ast.and([left, right]);
-    } else if (operator == "||") {
-      return ast.or([left, right]);
-    } else if (operator == "+") {
-      return ast.add([left, right]);
-    } else if (operator == "-") {
-      throw UnimplementedError();
-      // return ast.sub([left, right]);
-    } else if (operator == "*") {
-      return ast.mul([left, right]);
-    } else if (operator == "/") {
-      throw UnimplementedError();
-      // return ast.div(left, right);
+    switch (operator) {
+      case '&&':
+        return ast.and([left, right]);
+      case '||':
+        return ast.or([left, right]);
+      case '!':
+        return ast.not(left);
+      case '+':
+        return ast.add([left, right]);
+      case '-':
+        // return ast.sub([left, right]);
+        throw Exception('Unsupported operator $operator');
+      case '*':
+        return ast.mul([left, right]);
+      default:
+        throw Exception('Unsupported operator $operator');
     }
   }
 
