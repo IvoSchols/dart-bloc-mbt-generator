@@ -50,7 +50,7 @@ class CubitGenerator implements TestGenerator {
     print(file.toString());
 
     // Format the newly written test file
-    FileGeneratorHelperFunctions.formatFiles([testFile]);
+    FileGeneratorHelperFunctions.formatFiles([file.absolute.path]);
   }
 }
 
