@@ -11,7 +11,7 @@
             "type": "dart",
             "program": "lib/main.dart",
             "args": [
-                "--no-sound-null-safety"
+                
                ]
         }
     ]

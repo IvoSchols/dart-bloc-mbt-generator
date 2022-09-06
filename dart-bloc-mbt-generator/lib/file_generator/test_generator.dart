@@ -39,13 +39,12 @@ class CubitGenerator implements TestGenerator {
 
     //TODO: add cubit import (retrieve from AST)
 
-    String stateMachineStringified =
-        cubitTestTemplate(imports, _machine, paths);
+    String cubitTestsStringified = cubitTestTemplate(imports, _machine, paths);
 
     // Write string to file relative to the current directory
     File file = File(testFile);
     file.createSync(recursive: true);
-    file.writeAsStringSync(stateMachineStringified);
+    file.writeAsStringSync(cubitTestsStringified);
 
     print(file.toString());
 

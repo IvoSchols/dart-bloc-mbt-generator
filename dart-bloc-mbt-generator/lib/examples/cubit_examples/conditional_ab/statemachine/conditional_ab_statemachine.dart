@@ -9,8 +9,6 @@ StateMachine constructCondtionalAbStatemachine() {
 
   // ignore: unused_local_variable
   Transition ab = statemachine.newTransition('ab', {a}, b);
-  // ab.cancelIf(
-  // (StateChange stateChange) => stateChange.payload.allowed == false);
 
   statemachine.start(a);
 

@@ -25,14 +25,11 @@ class StateMachineModelGenerator {
     file.createSync(recursive: true);
     file.writeAsStringSync(stateMachineStringified);
 
-    // File(modelFile).writeAsStringSync(stateMachineStringified);
-
-    // print(generatedFile.toString());
+    print(file.toString());
 
     String dirPath = '${Directory.current.path}/$modelFile';
 
     // Format the newly written model file
-    //TODO: not working
     FileGeneratorHelperFunctions.formatFiles([dirPath]);
   }
 }

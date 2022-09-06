@@ -54,7 +54,7 @@ class Analyzer {
         String name;
         Set<String> states = {};
         // Map<String, String> variables = {};
-        // Set<Transition> transitions = {};
+        Set<Transition> transitions = {};
         String initialState;
 
         // Name of the cubit
@@ -93,6 +93,19 @@ class Analyzer {
         }
         //Convert trace trees to transitions
         for (Trace trace in tracesListener.traces) {
+          assert(trace.currentNode == null);
+
+          Map<dynamic, dynamic>? conditions = {};
+          if (trace.inputTypes.isNotEmpty) {
+            conditions['inputTypes'] = trace.inputTypes;
+          }
+          if (trace.conditionTree.root != null) {
+            conditions['conditionTree'] = trace.conditionTree;
+          }
+          if (conditions.isEmpty) {
+            conditions = null;
+          }
+
           stateMachine.newTransition(
               trace.functionName,
               states
@@ -100,10 +113,7 @@ class Analyzer {
                   .map((string) => stateMap[string]!)
                   .toSet(),
               stateMap[trace.toState]!,
-              conditions: {
-                'inputTypes': trace.inputTypes,
-                'conditionTree': trace.conditionTree
-              });
+              conditions: conditions);
         }
       }
     }
