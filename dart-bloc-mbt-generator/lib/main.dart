@@ -11,8 +11,8 @@ Future<void> main() async {
   // String relativePath =
   //     'examples/cubit_examples/simple_ab/cubit/simple_ab_cubit.dart';
 
-  String relativePath =
-      'examples/cubit_examples/conditional_ab/cubit/conditional_ab_cubit.dart';
+  // String relativePath =
+  //     'examples/cubit_examples/conditional_ab/cubit/conditional_ab_cubit.dart';
 
   // String relativePath =
   //     'examples/cubit_examples/traffic_light/cubit/traffic_light_cubit.dart';

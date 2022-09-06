@@ -3,28 +3,27 @@ import 'dart:collection';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/if_element_strategy.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/method_declaration_strategy.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/method_invocation_strategy.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/switch_strategy.dart';
 
 class TracesVisitor extends SimpleAstVisitor {
-  Trace? _currentTrace;
   final Set<Trace> traces = {};
+
+  final ListQueue<Trace> _currentTraceStack = ListQueue();
+
+  Trace? get _currentTrace =>
+      _currentTraceStack.isEmpty ? null : _currentTraceStack.last;
 
   /// The first entry point for finding transitions.
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
     assert(_currentTrace == null, 'A trace is already being built');
 
-    String functionName = node.name2.toString();
-
-    BinaryExpressionTree newTraceTree = BinaryExpressionTree();
-    //TODO: call formal parameters strategy
-    LinkedHashMap<String, String> inputs =
-        LinkedHashMap(); // Is this already known at this point?
-    Trace newTrace = Trace(
-        functionName: functionName,
-        conditionTree: newTraceTree,
-        inputTypes: inputs);
-
-    _currentTrace = newTrace;
+    MethodDeclarationStrategy strategy = MethodDeclarationStrategy();
+    strategy.visitMethodDeclaration(node);
+    _currentTraceStack.add(strategy.currentTrace);
   }
 
   // Read conditions of the transition/method
@@ -48,53 +47,37 @@ class TracesVisitor extends SimpleAstVisitor {
   void visitIfElement(IfElement node) {
     assert(_currentTrace != null, "No current state transition tree");
 
-    //TODO: add implementation for multiple conditions
-    String condition = node.condition.toString();
-
-    String trueState =
-        node.thenElement.toString(); //TODO: what to do with this?
-
-    Node newNode = _buildIfNode(condition);
-    _currentTrace!.addNode(newNode);
-  }
-
-  Node _buildIfNode(String condition) {
-    Node node = Node(condition);
-    if (condition[0] == '!') {
-      node = Node(condition[0]);
-      node.left = _buildIfNode(condition.substring(1));
-    }
-    return node;
+    IfElementStrategy strategy = IfElementStrategy(_currentTrace!);
+    strategy.visitIfElement(node);
+    _currentTraceStack.add(strategy.currentTrace);
   }
 
   // Emit()
   @override
   void visitMethodInvocation(MethodInvocation node) {
+    if (_currentTrace == null) return;
     // TODO: If emit -> call emitStratey
     if (node.methodName.toString() == "emit") return;
-    if (_currentTrace == null) return;
-    // assert(_currentTraceNode != null, "No current node");
+    MethodInvocationStrategy strategy =
+        MethodInvocationStrategy(_currentTrace!);
+    strategy.visitMethodInvocation(node);
 
-    String toState = node.methodName.toString();
-
-    // assert(!_currentTraceNode!.hasChildren(), "Node cannot have children");
-
-    _currentTrace!.toState = toState;
-
-    traces.add(_currentTrace!);
-    _currentTrace!.currentNode = null;
-    _currentTrace = null;
+    traces.add(strategy.currentTrace);
+    _currentTraceStack.removeLast(); // Remove method declaration trace
   }
 
   @override
-  void visitSwitchCase(SwitchCase node) {}
-
-  @override
-  void visitSwitchDefault(SwitchDefault node) {}
-
-  @override
-  void visitSwitchStatement(SwitchStatement node) {}
+  void visitSwitchStatement(SwitchStatement node) {
+    assert(_currentTrace != null, "No current state transition tree");
+    SwitchStrategy switchStrategy = SwitchStrategy(_currentTrace!);
+    switchStrategy.visitSwitchStatement(node);
+    //TODO: add getter for currentTrace from switchStrategyVisitor
+  }
 }
+
+///
+///
+///
 
 class Trace {
   final String functionName;
@@ -129,15 +112,15 @@ class Trace {
     String? functionName,
     Set<String>? illegalFromStates,
     String? toState,
-    BinaryExpressionTree? conditions,
-    LinkedHashMap<String, String>? inputs,
+    BinaryExpressionTree? conditionTree,
+    LinkedHashMap<String, String>? inputTypes,
   }) {
     return Trace(
       functionName: functionName ?? this.functionName,
       illegalFromStates: illegalFromStates ?? this.illegalFromStates,
       toState: toState ?? this.toState,
-      conditionTree: conditions ?? this.conditionTree,
-      inputTypes: inputs ?? this.inputTypes,
+      conditionTree: conditionTree ?? this.conditionTree,
+      inputTypes: inputTypes ?? this.inputTypes,
     );
   }
 }
