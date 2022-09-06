@@ -48,11 +48,7 @@ void main() {
       expect(goToA.from.map((e) => e.name).toList(),
           containsAll(['ConditionalA', 'ConditionalB']));
       expect(goToA.to.name, equals('ConditionalA'));
-      expect(goToA.conditions, isNotNull);
-      expect(goToA.conditions!['conditionTree'].root,
-          equals(BinaryExpressionTree().root));
-
-      expect(goToA.conditions!['inputTypes'], equals({}));
+      expect(goToA.conditions, isNull);
     });
 
     test('transition_goToB', () {
