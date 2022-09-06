@@ -9,14 +9,11 @@ class StateMachineModelGenerator {
 
   StateMachineModelGenerator(this._blocBasePath);
 
-  @override
   void writeModel(StateMachine stateMachine) {
     String machineName = stateMachine.name;
 
     String modelFolder = "lib/gen/models";
     String modelFile = "$modelFolder/$machineName.dart";
-
-    //TODO: add cubit import (retrieve from AST)
 
     String stateMachineStringified = stateMachineTemplate(stateMachine);
 

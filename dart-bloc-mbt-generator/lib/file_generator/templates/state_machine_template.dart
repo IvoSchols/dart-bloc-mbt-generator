@@ -36,8 +36,31 @@ String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
       Transition ${t.name} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
     ''').join();
 
-//TODO: probably update when more complex conditions are added
-//TODO: unfold binary expression tree correctly
-String _conditions(String transitionName, Map<dynamic, dynamic> conditions) =>
-    '''
-    ''';
+//TODO: implement conditions correctly (and its subfunctions)
+String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
+  String inputTypes = conditions['inputTypes'].toString();
+  String conditionTree = _conditionTree(conditions['conditionTree']);
+
+  String conditionString = '';
+
+  if (inputTypes.isNotEmpty) {
+    conditionString += 'inputTypes: $inputTypes, ';
+  }
+  if (conditionTree.isNotEmpty) {
+    conditionString += 'conditionTree: $conditionTree, ';
+  }
+
+  return conditionString;
+}
+
+String _inputTypes(Map<String, String> inputTypes) => '''
+    {
+      ${inputTypes.entries.map((e) => '''
+        '${e.key}': ${e.value}
+      ''').join()}
+    }
+  ''';
+
+String _conditionTree(BinaryExpressionTree conditionTree) {
+  return conditionTree.toPostFix.toString();
+}
