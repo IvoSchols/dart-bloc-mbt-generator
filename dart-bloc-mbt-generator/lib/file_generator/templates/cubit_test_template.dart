@@ -75,7 +75,8 @@ String _callCubitFunction(
     inputTypes =
         transition.conditions!['inputTypes'] as LinkedHashMap<String, String>;
   } else {
-    inputTypes = {} as LinkedHashMap<String, String>;
+    // ignore: prefer_collection_literals
+    inputTypes = LinkedHashMap<String, String>();
   }
 
   final String requiredFunctionParameters =

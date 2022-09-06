@@ -2,11 +2,13 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/analysis/results.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/delegating_cubit_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/name_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/states_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/transitions_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/variables_listener.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/name_visitor.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'package:path/path.dart' as p;
@@ -37,18 +39,19 @@ class Analyzer {
       if (childEntity is ClassDeclaration &&
           childEntity.extendsClause != null &&
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
-        StatesListener statesListener = StatesListener();
+        StatesVisitor statesVisitor = StatesVisitor();
         TracesListener tracesListener = TracesListener();
         VariablesListener variablesListener = VariablesListener();
-        NameListener nameListener = NameListener();
+        NameVisitor nameVisitor = NameVisitor();
 
+        DelegatingCubitVisitor delegatingCubitVisitor =
+            DelegatingCubitVisitor({statesVisitor, nameVisitor});
         EventManager eventManager = EventManager({
-          statesListener,
           tracesListener,
           variablesListener,
-          nameListener,
         });
 
+        delegatingCubitVisitor.visitClassDeclaration(childEntity);
         eventManager.recursiveAstVisitor.visitClassDeclaration(childEntity);
 
         String name;
@@ -58,24 +61,24 @@ class Analyzer {
         String initialState;
 
         // Name of the cubit
-        if (nameListener.name.isEmpty) {
+        if (nameVisitor.name.isEmpty) {
           throw Exception("No cubit name found");
         }
-        name = nameListener.name;
+        name = nameVisitor.name;
         stateMachine = StateMachine(name);
 
         // Name of the starting state
-        if (statesListener.initialState.isEmpty) {
+        if (statesVisitor.initialState.isEmpty) {
           throw Exception("No superclass found");
         }
-        initialState = statesListener.initialState;
+        initialState = statesVisitor.initialState;
         stateMachine.newState(initialState);
 
         // States of the cubit
-        if (statesListener.states.isEmpty) {
+        if (statesVisitor.states.isEmpty) {
           throw Exception("No states found");
         }
-        states = statesListener.states;
+        states = statesVisitor.states;
         Map<String, State> stateMap = {};
 
         for (String state in states) {

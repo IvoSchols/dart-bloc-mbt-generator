@@ -11,7 +11,11 @@
 
   // Define transitions and their conditions
         Transition goToA = statemachine.newTransition('goToA', {ConditionalA, ConditionalB}, ConditionalA );
-          Transition goToB = statemachine.newTransition('goToB', {ConditionalA, ConditionalB}, ConditionalB , conditions:     );
+          Transition goToB = statemachine.newTransition('goToB', {ConditionalA, ConditionalB}, ConditionalB , conditions:     {
+              'allowed': bool
+      
+    }
+  Closure: () => List<dynamic> from Function 'toPostFix':.);
     
 
   // Define starting state

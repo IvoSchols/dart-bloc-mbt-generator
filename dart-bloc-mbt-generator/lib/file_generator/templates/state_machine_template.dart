@@ -38,16 +38,13 @@ String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
 
 //TODO: implement conditions correctly (and its subfunctions)
 String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
-  String inputTypes = conditions['inputTypes'].toString();
-  String conditionTree = _conditionTree(conditions['conditionTree']);
-
   String conditionString = '';
 
-  if (inputTypes.isNotEmpty) {
-    conditionString += 'inputTypes: $inputTypes, ';
+  if (conditions['inputTypes'] != null) {
+    conditionString += _inputTypes(conditions['inputTypes']);
   }
-  if (conditionTree.isNotEmpty) {
-    conditionString += 'conditionTree: $conditionTree, ';
+  if (conditions['conditionTree'] != null) {
+    conditionString += _conditionTree(conditions['conditionTree']);
   }
 
   return conditionString;

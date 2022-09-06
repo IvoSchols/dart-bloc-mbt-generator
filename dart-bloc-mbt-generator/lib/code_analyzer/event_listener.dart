@@ -13,4 +13,10 @@ abstract class EventListener {
   void visitSimpleFormalParameter(SimpleFormalParameter node) {}
 
   void visitIfElement(IfElement node) {}
+
+  void visitSwitchCase(SwitchCase node) {}
+
+  void visitSwitchDefault(SwitchDefault node) {}
+
+  void visitSwitchStatement(SwitchStatement node) {}
 }

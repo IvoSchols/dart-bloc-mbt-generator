@@ -15,6 +15,9 @@ class EventManager implements EventListener {
       onVisitMethodDeclaration: visitMethodDeclaration,
       onVisitSimpleFormalParameter: visitSimpleFormalParameter,
       onVisitIfElement: visitIfElement,
+      onVisitSwitchCase: visitSwitchCase,
+      onVisitSwitchDefault: visitSwitchDefault,
+      onVisitSwitchStatement: visitSwitchStatement,
     );
   }
 
@@ -73,6 +76,27 @@ class EventManager implements EventListener {
   visitIfElement(IfElement node) {
     for (EventListener eventListener in eventListeners) {
       eventListener.visitIfElement(node);
+    }
+  }
+
+  @override
+  visitSwitchCase(SwitchCase node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitSwitchCase(node);
+    }
+  }
+
+  @override
+  visitSwitchDefault(SwitchDefault node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitSwitchDefault(node);
+    }
+  }
+
+  @override
+  visitSwitchStatement(SwitchStatement node) {
+    for (EventListener eventListener in eventListeners) {
+      eventListener.visitSwitchStatement(node);
     }
   }
 }

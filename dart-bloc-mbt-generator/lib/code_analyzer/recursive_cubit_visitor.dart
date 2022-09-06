@@ -13,6 +13,9 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
     required this.onVisitMethodDeclaration,
     required this.onVisitSimpleFormalParameter,
     required this.onVisitIfElement,
+    required this.onVisitSwitchCase,
+    required this.onVisitSwitchDefault,
+    required this.onVisitSwitchStatement,
   });
 
   void Function(ClassDeclaration node) onVisitClassDeclaration;
@@ -22,6 +25,9 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
   void Function(MethodDeclaration node) onVisitMethodDeclaration;
   void Function(SimpleFormalParameter node) onVisitSimpleFormalParameter;
   void Function(IfElement node) onVisitIfElement;
+  void Function(SwitchCase node) onVisitSwitchCase;
+  void Function(SwitchDefault node) onVisitSwitchDefault;
+  void Function(SwitchStatement node) onVisitSwitchStatement;
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -57,5 +63,23 @@ class RecursiveCubitVisitor extends RecursiveAstVisitor
   visitIfElement(IfElement node) {
     onVisitIfElement(node);
     return super.visitIfElement(node);
+  }
+
+  @override
+  visitSwitchCase(SwitchCase node) {
+    onVisitSwitchCase(node);
+    return super.visitSwitchCase(node);
+  }
+
+  @override
+  visitSwitchDefault(SwitchDefault node) {
+    onVisitSwitchDefault(node);
+    return super.visitSwitchDefault(node);
+  }
+
+  @override
+  visitSwitchStatement(SwitchStatement node) {
+    onVisitSwitchStatement(node);
+    return super.visitSwitchStatement(node);
   }
 }

@@ -85,6 +85,15 @@ class TracesListener extends EventListener {
     _currentTrace!.currentNode = null;
     _currentTrace = null;
   }
+
+  @override
+  void visitSwitchCase(SwitchCase node) {}
+
+  @override
+  void visitSwitchDefault(SwitchDefault node) {}
+
+  @override
+  void visitSwitchStatement(SwitchStatement node) {}
 }
 
 class Trace {
