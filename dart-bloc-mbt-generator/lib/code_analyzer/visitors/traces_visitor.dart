@@ -1,10 +1,10 @@
 import 'dart:collection';
 
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
 
-class TracesListener extends EventListener {
+class TracesVisitor extends SimpleAstVisitor {
   Trace? _currentTrace;
   final Set<Trace> traces = {};
 

@@ -2,10 +2,9 @@ import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/delegating_cubit_visitor.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/transitions_listener.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/listeners/variables_listener.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/event_manager.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/traces_visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/variables_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/name_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/states_visitor.dart';
 import 'package:pub_semver/pub_semver.dart';
@@ -39,24 +38,18 @@ class Analyzer {
           childEntity.extendsClause != null &&
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
         StatesVisitor statesVisitor = StatesVisitor();
-        TracesListener tracesListener = TracesListener();
-        VariablesListener variablesListener = VariablesListener();
+        TracesVisitor tracesVisitor = TracesVisitor();
+        VariablesVisitor variablesVisitor = VariablesVisitor();
         NameVisitor nameVisitor = NameVisitor();
 
-        DelegatingCubitVisitor delegatingCubitVisitor =
-            DelegatingCubitVisitor({statesVisitor, nameVisitor});
-        EventManager eventManager = EventManager({
-          tracesListener,
-          variablesListener,
-        });
+        DelegatingAstVisitor delegatingCubitVisitor = DelegatingAstVisitor(
+            {statesVisitor, tracesVisitor, variablesVisitor, nameVisitor});
 
         delegatingCubitVisitor.visitClassDeclaration(childEntity);
-        eventManager.recursiveAstVisitor.visitClassDeclaration(childEntity);
 
         String name;
         Set<String> states = {};
         // Map<String, String> variables = {};
-        Set<Transition> transitions = {};
         String initialState;
 
         // Name of the cubit
@@ -90,11 +83,11 @@ class Analyzer {
         // }
 
         // Transitions of the cubit
-        if (tracesListener.traces.isEmpty) {
+        if (tracesVisitor.traces.isEmpty) {
           throw Exception("No method declaration is found");
         }
         //Convert trace trees to transitions
-        for (Trace trace in tracesListener.traces) {
+        for (Trace trace in tracesVisitor.traces) {
           assert(trace.currentNode == null);
 
           Map<dynamic, dynamic>? conditions = {};
