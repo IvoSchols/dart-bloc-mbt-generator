@@ -1,6 +1,6 @@
-import 'package:dart_bloc_mbt_generator/code_analyzer/event_listener.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 
-class VariablesListener extends EventListener {
+class VariablesVisitor extends SimpleAstVisitor {
   Map<String, String> variables = {};
 
 //   @override
