@@ -13,29 +13,29 @@
 
   // Define transitions and their conditions
         
-      Transition changeTrafficLightTocolorRed = statemachine.newTransition('changeTrafficLightTocolorRed', {Red, Green, Yellow}, Red , conditions: inputTypes:{    {
+      Transition changeTrafficLightTo = statemachine.newTransition('changeTrafficLightTo', {Red, Green, Yellow}, Red , conditions: inputTypes:{    {
               'color': String
       
     }
-  }conditionTree: changeTrafficLightTocolorRedBinaryExpressionTree);
+  }conditionTree: changeTrafficLightToBinaryExpressionTree);
           
-      Transition changeTrafficLightTocolorGreen = statemachine.newTransition('changeTrafficLightTocolorGreen', {Red, Green, Yellow}, Green , conditions: inputTypes:{    {
+      Transition changeTrafficLightTo = statemachine.newTransition('changeTrafficLightTo', {Red, Green, Yellow}, Green , conditions: inputTypes:{    {
               'color': String
       
     }
-  }conditionTree: changeTrafficLightTocolorGreenBinaryExpressionTree);
+  }conditionTree: changeTrafficLightToBinaryExpressionTree);
           
-      Transition changeTrafficLightTocolorYellow = statemachine.newTransition('changeTrafficLightTocolorYellow', {Red, Green, Yellow}, Yellow , conditions: inputTypes:{    {
+      Transition changeTrafficLightTo = statemachine.newTransition('changeTrafficLightTo', {Red, Green, Yellow}, Yellow , conditions: inputTypes:{    {
               'color': String
       
     }
-  }conditionTree: changeTrafficLightTocolorYellowBinaryExpressionTree);
+  }conditionTree: changeTrafficLightToBinaryExpressionTree);
           
-      Transition changeTrafficLightTodefault = statemachine.newTransition('changeTrafficLightTodefault', {Red, Green, Yellow}, Exception , conditions: inputTypes:{    {
+      Transition changeTrafficLightTo = statemachine.newTransition('changeTrafficLightTo', {Red, Green, Yellow}, Exception , conditions: inputTypes:{    {
               'color': String
       
     }
-  }conditionTree: changeTrafficLightTodefaultBinaryExpressionTree);
+  }conditionTree: changeTrafficLightToBinaryExpressionTree);
     
 
   // Define starting state

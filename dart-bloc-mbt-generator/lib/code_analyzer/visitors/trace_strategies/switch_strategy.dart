@@ -37,8 +37,7 @@ class SwitchStrategy extends SimpleAstVisitor {
 
     if (toState.isNotEmpty) {
       Trace newTrace = _currentTrace.copyWith(
-          functionName: '${_currentTrace.functionName}$_conditionName$toState',
-          toState: toState);
+          functionName: _currentTrace.functionName, toState: toState);
       newTrace.addNode(newNode);
 
       traces.add(newTrace);
@@ -68,7 +67,7 @@ class SwitchStrategy extends SimpleAstVisitor {
     if (toState.isNotEmpty) {
       // Add the zippedTree to the currentTrace
       Trace newTrace = _currentTrace.copyWith(
-          functionName: '${_currentTrace.functionName}default',
+          functionName: _currentTrace.functionName,
           conditionTree: zippedTree,
           toState: toState);
 

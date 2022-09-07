@@ -11,10 +11,10 @@ void main() {
     });
 
     blocTest<TrafficLightCubit, TrafficLightState>(
-      'emits [Green]',
+      'emits [Exception]',
       build: () => trafficLightCubit,
-      act: (cubit) => [cubit.changeTrafficLightTo("green")],
-      expect: () => [Green()],
+      act: (cubit) => [cubit.changeTrafficLightTo("")],
+      expect: () => throwsA(isA<Exception>()),
     );
   });
 }
