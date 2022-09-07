@@ -5,7 +5,7 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/traces_visitor.da
 class EmitStrategy extends SimpleAstVisitor {
   late final Trace _currentTrace;
 
-  get currentTrace => _currentTrace;
+  Trace get currentTrace => _currentTrace;
 
   EmitStrategy(Trace currentTrace) {
     _currentTrace = currentTrace.copyWith();

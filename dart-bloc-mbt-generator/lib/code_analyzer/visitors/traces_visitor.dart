@@ -70,6 +70,10 @@ class TracesVisitor extends SimpleAstVisitor {
     assert(_currentTrace != null, "No current state transition tree");
     SwitchStrategy switchStrategy = SwitchStrategy(_currentTrace!);
     switchStrategy.visitSwitchStatement(node);
+    traces.addAll(switchStrategy.traces);
+    if (switchStrategy.traces.isNotEmpty) {
+      _currentTraceStack.removeLast();
+    }
     //TODO: add getter for currentTrace from switchStrategyVisitor
   }
 }

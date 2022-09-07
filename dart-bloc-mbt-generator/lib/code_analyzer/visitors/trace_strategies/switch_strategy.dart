@@ -1,8 +1,7 @@
-import 'dart:collection';
-
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/emit_strategy.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/traces_visitor.dart';
 
 class SwitchStrategy extends SimpleAstVisitor {
@@ -31,13 +30,19 @@ class SwitchStrategy extends SimpleAstVisitor {
     newNode.left = Node(_conditionName);
     newNode.right = Node(condition);
 
-    //TODO: add toState to trace
+    String toState = '';
+    node.statements.whereType<ExpressionStatement>().forEach((e) {
+      toState = visitExpressionStatement(e);
+    });
 
-    Trace newTrace = _currentTrace.copyWith(
-        functionName: '${_currentTrace.functionName}$_conditionName$condition');
-    newTrace.addNode(newNode);
+    if (toState.isNotEmpty) {
+      Trace newTrace = _currentTrace.copyWith(
+          functionName: '${_currentTrace.functionName}$_conditionName$toState',
+          toState: toState);
+      newTrace.addNode(newNode);
 
-    traces.add(newTrace);
+      traces.add(newTrace);
+    }
   }
 
   @override
@@ -55,14 +60,20 @@ class SwitchStrategy extends SimpleAstVisitor {
       }
     }
 
-    // TODO: add toState to trace
+    String toState = '';
+    node.statements.whereType<ExpressionStatement>().forEach((e) {
+      toState = visitExpressionStatement(e);
+    });
 
-    // Add the zippedTree to the currentTrace
-    Trace newTrace = _currentTrace.copyWith(
-        functionName: '${_currentTrace.functionName}default',
-        conditionTree: zippedTree);
+    if (toState.isNotEmpty) {
+      // Add the zippedTree to the currentTrace
+      Trace newTrace = _currentTrace.copyWith(
+          functionName: '${_currentTrace.functionName}default',
+          conditionTree: zippedTree,
+          toState: toState);
 
-    traces.add(newTrace);
+      traces.add(newTrace);
+    }
   }
 
   @override
@@ -77,5 +88,22 @@ class SwitchStrategy extends SimpleAstVisitor {
         visitSwitchDefault(member);
       }
     }
+  }
+
+  @override
+  String visitExpressionStatement(ExpressionStatement node) {
+    String toState = '';
+    if (node.expression is MethodInvocation) {
+      MethodInvocation methodInvocation = node.expression as MethodInvocation;
+      if (methodInvocation.methodName.toString() == 'emit') {
+        EmitStrategy strategy = EmitStrategy(_currentTrace);
+        strategy.visitMethodInvocation(methodInvocation);
+
+        toState = strategy.currentTrace.toState;
+      }
+    } else if (node.expression is ThrowExpression) {
+      toState = 'Exception';
+    }
+    return toState;
   }
 }

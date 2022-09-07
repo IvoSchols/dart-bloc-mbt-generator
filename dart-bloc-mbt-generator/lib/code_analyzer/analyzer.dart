@@ -73,8 +73,13 @@ class Analyzer {
         states = statesVisitor.states;
         Map<String, State> stateMap = {};
 
+        bool exceptionStateExists = false;
+
         for (String state in states) {
           stateMap[state] = stateMachine.newState(state);
+          if (state == "Exception") {
+            exceptionStateExists = true;
+          }
         }
 
         // Context Variables of the cubit
@@ -99,6 +104,9 @@ class Analyzer {
           }
           if (conditions.isEmpty) {
             conditions = null;
+          }
+          if (exceptionStateExists) {
+            trace.illegalFromStates.add("Exception");
           }
 
           stateMachine.newTransition(

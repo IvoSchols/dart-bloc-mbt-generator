@@ -26,18 +26,4 @@ class MethodDeclarationStrategy extends SimpleAstVisitor {
 
     _currentTrace = newTrace;
   }
-
-  // @override
-  // void visitMethodDeclaration(MethodDeclaration node) {
-  //   String methodName = node.name.toString();
-  //   String methodBody = node.body.toString();
-  //   String methodParameters = node.parameters.toString();
-
-  //   Node newNode = Node(methodName);
-  //   newNode.left = Node(methodBody);
-  //   newNode.right = Node(methodParameters);
-
-  //   _currentTrace.addNode(newNode);
-  // }
-
 }
