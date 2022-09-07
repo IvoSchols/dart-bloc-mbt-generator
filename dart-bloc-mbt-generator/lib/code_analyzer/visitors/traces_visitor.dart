@@ -5,7 +5,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/if_element_strategy.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/method_declaration_strategy.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/method_invocation_strategy.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/emit_strategy.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/switch_strategy.dart';
 
 class TracesVisitor extends SimpleAstVisitor {
@@ -52,18 +52,17 @@ class TracesVisitor extends SimpleAstVisitor {
     _currentTraceStack.add(strategy.currentTrace);
   }
 
-  // Emit()
   @override
   void visitMethodInvocation(MethodInvocation node) {
     if (_currentTrace == null) return;
-    // TODO: If emit -> call emitStratey
-    if (node.methodName.toString() == "emit") return;
-    MethodInvocationStrategy strategy =
-        MethodInvocationStrategy(_currentTrace!);
-    strategy.visitMethodInvocation(node);
+    if (node.methodName.toString() == "emit") {
+      EmitStrategy strategy = EmitStrategy(_currentTrace!);
+      strategy.visitMethodInvocation(node);
 
-    traces.add(strategy.currentTrace);
-    _currentTraceStack.removeLast(); // Remove method declaration trace
+      traces.add(strategy.currentTrace);
+      // Remove method declaration trace (prob not best way)
+      _currentTraceStack.removeLast();
+    }
   }
 
   @override

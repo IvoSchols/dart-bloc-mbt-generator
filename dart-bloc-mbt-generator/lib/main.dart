@@ -8,8 +8,8 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/analyzer.dart';
 
 Future<void> main() async {
   // Generate finite state machine model from cubit and write to file
-  // String relativePath =
-  //     'examples/cubit_examples/simple_ab/cubit/simple_ab_cubit.dart';
+  String relativePath =
+      'examples/cubit_examples/simple_ab/cubit/simple_ab_cubit.dart';
 
   // String relativePath =
   //     'examples/cubit_examples/conditional_ab/cubit/conditional_ab_cubit.dart';
@@ -17,8 +17,8 @@ Future<void> main() async {
   // String relativePath =
   //     'examples/cubit_examples/conditional_ab_negated/cubit/conditional_ab_negated_cubit.dart';
 
-  String relativePath =
-      'examples/cubit_examples/traffic_light/cubit/traffic_light_cubit.dart';
+  // String relativePath =
+  //     'examples/cubit_examples/traffic_light/cubit/traffic_light_cubit.dart';
 
   StateMachine stateMachine = Analyzer.analyzeSingleFile(relativePath);
 
