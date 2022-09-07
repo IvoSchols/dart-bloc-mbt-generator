@@ -107,6 +107,13 @@ class Trace {
     }
   }
 
+  void setInputTypes(LinkedHashMap<String, String> inputTypes) {
+    for (String element in this.inputTypes.keys) {
+      assert(!inputTypes.containsKey(element), "Input name already exists");
+    }
+    this.inputTypes.addAll(inputTypes);
+  }
+
   // Is a deep copy of binary expression tree needed?
   Trace copyWith({
     String? functionName,
@@ -119,7 +126,7 @@ class Trace {
       functionName: functionName ?? this.functionName,
       illegalFromStates: illegalFromStates ?? this.illegalFromStates,
       toState: toState ?? this.toState,
-      conditionTree: conditionTree ?? this.conditionTree,
+      conditionTree: conditionTree ?? this.conditionTree.copy(),
       inputTypes: inputTypes ?? this.inputTypes,
     );
   }

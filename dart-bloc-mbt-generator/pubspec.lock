@@ -34,10 +34,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0571142ba23143bcf635acb9cc497b02577af00b"
+      resolved-ref: "2db807b915095ff377519b393efbd3fef5ec2592"
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
-    version: "1.0.6"
+    version: "1.0.10"
   bloc:
     dependency: "direct main"
     description:
@@ -370,7 +370,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.3.0"
+    version: "9.4.0"
   watcher:
     dependency: transitive
     description:

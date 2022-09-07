@@ -17,7 +17,6 @@ class MethodDeclarationStrategy extends SimpleAstVisitor {
     String functionName = node.name2.toString();
 
     BinaryExpressionTree newTraceTree = BinaryExpressionTree();
-    //TODO: call formal parameters strategy
     LinkedHashMap<String, String> inputs =
         LinkedHashMap(); // Is this already known at this point?
     Trace newTrace = Trace(
