@@ -79,7 +79,7 @@ change CurState to tr’s next state;
           // Backtrack and modify CurState, pathCond and CurPath
           // pathCond.removeLast();
           curPath.removeLast();
-          curState = curPath.last.to;
+          curState = curPath.isNotEmpty ? curPath.last.to : machine.initial;
         }
       } else {
         // Add tr to the end of CurPath
@@ -143,24 +143,31 @@ change CurState to tr’s next state;
     //Solve the path conditions
     for (Transition t in path) {
       //Check if the transition has a condition
-      if (t.conditions == null || t.conditions!['conditionTree'] == null)
+      if (t.conditions == null || t.conditions!['conditionTree'] == null) {
         continue;
+      }
       //Translate the transition condition into a Z3 expression
       BinaryExpressionTree conditionTree = t.conditions!['conditionTree'];
       conditionTree.callFunctionPostOrder(conditionTree.root, (Node node) {
-        String condition = node.value;
+        String nodeValue = node.value;
 
         //Check if the condition is an operator
 
         if (node.isOperator()) {
           dynamic left = operands.removeLast();
-          dynamic right = node.value == '!' ? null : operands.removeLast();
-          dynamic result = _combineAst(ast, condition, left, right);
+          dynamic right = nodeValue == '!' ? null : operands.removeLast();
+          dynamic result = _combineAst(ast, nodeValue, left, right);
           operands.add(result);
         } else {
           //The condition is an operand
-          operands
-              .add(_stringToAst(ast, condition, t.conditions!['inputTypes']));
+          //Check if the operand is a variable
+          if (t.conditions!['inputTypes'][nodeValue] != null) {
+            operands.add(_variableStringToAst(
+                ast, nodeValue, t.conditions!['inputTypes']));
+            //If not assume operand is a constant (String) SMELLY!
+          } else {
+            operands.add(_constantStringToAst(ast, node));
+          }
         }
       });
     }
@@ -170,17 +177,31 @@ change CurState to tr’s next state;
     }
   }
 
-  dynamic _stringToAst(
+  dynamic _variableStringToAst(
       AST ast, String variable, Map<String, String> inputTypes) {
     if (!inputTypes.containsKey(variable)) {
       throw Exception('Variable $variable not found in inputTypes');
     }
     String type = inputTypes[variable]!;
 
-    if (type == 'bool') {
-      return ast.mkBoolVar(variable);
-    } else {
-      throw Exception('Unsupported type $type');
+    switch (type) {
+      // case 'int':
+      //   return ast.mkIntConst(variable);
+      case 'bool':
+        return ast.mkBoolVar(variable);
+      case 'String':
+        return ast.mkStringVar(variable);
+      default:
+        throw Exception('Type $type not supported');
+    }
+  }
+
+  dynamic _constantStringToAst(AST ast, Node constant) {
+    switch (constant.value.runtimeType) {
+      case String:
+        return ast.mkStringConst(constant.value);
+      default:
+        throw Exception('Type ${constant.value.runtimeType} not supported');
     }
   }
 
@@ -190,6 +211,8 @@ change CurState to tr’s next state;
         return ast.and([left, right]);
       case '||':
         return ast.or([left, right]);
+      case '==':
+        return ast.eq(left, right);
       case '!':
         return ast.not(left);
       case '+':

@@ -32,7 +32,8 @@ String _states(Set<State> states) => states.map((state) => '''
     final ${state.name} = statemachine.newState('${state.name}');
   ''').join();
 
-String _transitions(Set<Transition> transitions) => transitions.map((t) => ''' 
+String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
+      ${_conditionTree(t.conditions?['conditionTree'])}
       Transition ${t.name} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
     ''').join();
 
@@ -41,15 +42,17 @@ String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
   String conditionString = '';
 
   if (conditions['inputTypes'] != null) {
-    conditionString += _inputTypes(conditions['inputTypes']);
+    conditionString += 'inputTypes:{${_inputTypes(conditions['inputTypes'])}}';
   }
   if (conditions['conditionTree'] != null) {
-    conditionString += _conditionTree(conditions['conditionTree']);
+    conditionString += 'conditionTree: ${transitionName}BinaryExpressionTree';
+    // conditionString += _conditionTree(conditions['conditionTree']);
   }
 
   return conditionString;
 }
 
+//TODO: is e.value a string?
 String _inputTypes(Map<String, String> inputTypes) => '''
     {
       ${inputTypes.entries.map((e) => '''
@@ -58,6 +61,10 @@ String _inputTypes(Map<String, String> inputTypes) => '''
     }
   ''';
 
-String _conditionTree(BinaryExpressionTree conditionTree) {
-  return conditionTree.toPostFix.toString();
+String _conditionTree(BinaryExpressionTree? conditionTree) {
+  if (conditionTree == null) return '';
+
+  //TODO: implement conditionTree correctly
+
+  return '';
 }

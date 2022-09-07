@@ -34,7 +34,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "2db807b915095ff377519b393efbd3fef5ec2592"
+      resolved-ref: "3bb7428b5004c4bca16d8f178cd63ccde95d51f6"
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
     version: "1.0.10"
@@ -92,10 +92,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "98ca85e0e54d3f2b0ac75e53d3bc777f12da6dd8"
+      resolved-ref: bac6b425b89134242c42b35babedb0521ba8ded8
       url: "https://github.com/IvoSchols/dart-z3"
     source: git
-    version: "1.0.2"
+    version: "1.0.4"
   diff_match_patch:
     dependency: transitive
     description:
