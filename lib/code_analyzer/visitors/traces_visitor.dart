@@ -4,7 +4,6 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/if_element_strategy.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/method_declaration_strategy.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/emit_strategy.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/trace_strategies/switch_strategy.dart';
 
@@ -19,11 +18,17 @@ class TracesVisitor extends SimpleAstVisitor {
   /// The first entry point for finding transitions.
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    assert(_currentTrace == null, 'A trace is already being built');
+    String functionName = node.name2.toString();
 
-    MethodDeclarationStrategy strategy = MethodDeclarationStrategy();
-    strategy.visitMethodDeclaration(node);
-    _currentTraceStack.add(strategy.currentTrace);
+    BinaryExpressionTree newTraceTree = BinaryExpressionTree();
+    LinkedHashMap<String, String> inputs =
+        LinkedHashMap(); // Is this already known at this point?
+    Trace newTrace = Trace(
+        functionName: functionName,
+        conditionTree: newTraceTree,
+        inputTypes: inputs);
+
+    _currentTraceStack.add(newTrace);
   }
 
   // Read conditions of the transition/method
