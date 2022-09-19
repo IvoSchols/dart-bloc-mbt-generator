@@ -14,18 +14,32 @@ class IfElementStrategy extends SimpleAstVisitor {
 
   @override
   void visitIfElement(IfElement node) {
-    String condition = node.condition.toString();
-
-    Node newNode = _buildIfNode(condition);
+    Node newNode = _buildIfNode(node.condition);
     _currentTrace.addNode(newNode);
   }
 }
 
-Node _buildIfNode(String condition) {
+Node _buildIfNode(Expression condition) {
+  //TODO: add fail condition if not unary or binary expression
+  if (condition is BinaryExpression) {
+    return _buildBinaryExpressionNode(condition);
+  } else {
+    return _buildUnaryExpressionNode(condition.toString());
+  }
+}
+
+Node _buildUnaryExpressionNode(String condition) {
   Node node = Node(condition);
   if (condition[0] == '!') {
     node = Node(condition[0]);
-    node.left = _buildIfNode(condition.substring(1));
+    node.left = _buildUnaryExpressionNode(condition.substring(1));
   }
+  return node;
+}
+
+Node _buildBinaryExpressionNode(BinaryExpression condition) {
+  Node node = Node(condition.operator.lexeme);
+  node.left = _buildIfNode(condition.leftOperand);
+  node.right = _buildIfNode(condition.rightOperand);
   return node;
 }

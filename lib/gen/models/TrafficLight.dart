@@ -19,9 +19,9 @@
     }
   }conditionTree: changeTrafficLightToBinaryExpressionTree);
           
-      Transition changeTrafficLightTo = statemachine.newTransition('changeTrafficLightTo', {Red, Green, Yellow}, Green , conditions: inputTypes:{    {
+      Transition changeTrafficLightTo = statemachine.newTransition('changeTrafficLightTo', {Red, Green, Yellow}, Green , conditions: { 'inputTypes':{    {
               'color': String
-      
+      }
     }
   }conditionTree: changeTrafficLightToBinaryExpressionTree);
           

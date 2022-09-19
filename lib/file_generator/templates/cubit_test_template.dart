@@ -48,15 +48,42 @@ String _pascalCase(String str) =>
 String _camelCase(String str) =>
     str.substring(0, 1).toLowerCase() + str.substring(1);
 
-String _tests(String name, List<Path> paths) => paths.map((path) => '''
+String _tests(String name, List<Path> paths) =>
+    paths.map((path) => _test(name, path)).join();
 
+String _test(String name, Path path) {
+  if (path.pathInputs.length != path.transitions.length) {
+    throw Exception('Path inputs and transitions do not match');
+  }
+  return '''
     blocTest<${_pascalCase(name)}Cubit, ${_pascalCase(name)}State>(
-      'emits ${path.transitions.map((t) => _pascalCase(t.to.name)).toList()}',
+      'emits [${_states(path)}]',
       build: () => ${_camelCase(name)}Cubit,
-      act: (cubit) => ${path.transitions.map((t) => "cubit.${_callCubitFunction(t, path.pathInput)}").toList()},
-      expect: () => ${path.transitions.map((t) => "${_pascalCase(t.to.name)}()").toList()},
+      act: (cubit) => [${_actions(path)}],
+      expect: () => [${_states(path)}],
     );
-  ''').join();
+  ''';
+
+  // return '''blocTest<${_pascalCase(name)}Cubit, ${_pascalCase(name)}State>(
+  //     'emits ${path.transitions.map((t) => _pascalCase(t.to.name)).toList()}',
+  //     build: () => ${_camelCase(name)}Cubit,
+  //     act: (cubit) => ${path.transitions.map((t) => "cubit.${_callCubitFunction(t, path.pathInput)}").toList()},
+  //     expect: () => ${path.transitions.map((t) => "${_pascalCase(t.to.name)}()").toList()},
+  //   );''';
+}
+
+String _states(Path path) =>
+    path.transitions.map((t) => _pascalCase(t.to.name)).join(', ');
+
+String _actions(Path path) {
+  List<String> actions = [];
+  for (int i = 0; i < path.transitions.length; i++) {
+    actions.add(
+        "cubit.${_callCubitFunction(path.transitions[i], path.pathInputs[i])}");
+  }
+  return actions.join(', ');
+}
+
 // test('${_camelCase(path.pathInput.keys.first)}', () {
 //   ${_camelCase(path.pathInput.keys.first)}();
 //   expect(${_camelCase(path.pathInput.keys.first)}, emitsInOrder([

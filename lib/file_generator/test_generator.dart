@@ -52,12 +52,3 @@ class CubitGenerator implements TestGenerator {
     FileGeneratorHelperFunctions.formatFiles([file.absolute.path]);
   }
 }
-
-// class BlocGenerator implements TestGenerator {
-//   Bloc _bloc;
-//   StateMachine _machine;
-
-//   BlocGenerator(this._bloc, this._machine);
-
-//   void test(List<Paths> paths) {}
-// }

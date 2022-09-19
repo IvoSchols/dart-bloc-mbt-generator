@@ -60,15 +60,16 @@ change CurState to tr’s next state;
 
   Path dfs(StateMachine machine, {int maxDepth = 5}) {
     List<Transition> curPath = [];
-    Map<String, String> pathInput =
-        {}; // Map of input data for the current path (Variable: Value)
+    List<Map<String, String>> curPathInputs =
+        []; // Map of input data for the current path (Variable: Value)
     State curState = machine.current;
 
     for (int depth = 0; depth < maxDepth; depth++) {
-      // Select a transition tr which leaves CurState and whose predicate can be satisfied under pathCond
+      // Select a transition tr visits an unvisted state and
+      // whose predicate can be satisfied under pathCond
       // Call Z3 to check for satisfiability
-      Transition? tr = curState.transitions.firstWhereOrNull(
-          (t) => t.to != curState && _satisfiableWith(curPath, t));
+      Transition? tr = curState.transitions
+          .firstWhereOrNull((t) => !curPath.contains(t) && _satisfiable(t));
 
       if (tr == null) {
         // If the transition tr does not exist
@@ -80,12 +81,13 @@ change CurState to tr’s next state;
           // pathCond.removeLast();
           curPath.removeLast();
           curState = curPath.isNotEmpty ? curPath.last.to : machine.initial;
+          curPathInputs.removeLast();
         }
       } else {
         // Add tr to the end of CurPath
         curPath.add(tr);
         // Add tr’s predicate to pathCond
-        pathInput = _solve(curPath);
+        curPathInputs.add(_solve(tr));
         // Perform tr’s action
         // tr.action(); -> implement in statemachine?
 
@@ -94,22 +96,12 @@ change CurState to tr’s next state;
       }
     }
     // Solve the constraints and output the variables’ values
-    Path solvedPath = Path(pathInput, curPath);
+    Path solvedPath = Path(curPathInputs, curPath);
 
     return solvedPath;
   }
 
-// Check if any input exists that satisfies the path condition
-// Return true if path is satisfiable, false otherwise
-// Source: https://www.101computing.net/reverse-polish-notation/
-  bool _satisfiableWith(List<Transition> path, Transition tr) {
-    List<Transition> newPath = List.from(path);
-    newPath.add(tr);
-
-    return _satisfiable(newPath);
-  }
-
-  bool _satisfiable(List<Transition> path) {
+  bool _satisfiable(Transition t) {
 // Iterate over all conditions in the path and check if they are satisfiable
     // If any condition is not satisfiable, return false
     // If all conditions are satisfiable, return true
@@ -118,59 +110,59 @@ change CurState to tr’s next state;
     var native = _z3.native;
     var s = Solver(native, context);
 
-    _buildSolverTree(s, ast, path);
+    _buildSolverTree(s, ast, t);
 
     String sResult = s.check();
     s.delSolver();
     return (sResult == "true");
   }
 
-  Map<String, String> _solve(List<Transition> path) {
+  Map<String, String> _solve(Transition t) {
+    // Solve all conditions in the path and return the input data
     AST ast = AST(_z3.native);
     var context = ast.context;
     var native = _z3.native;
     var s = Solver(native, context);
-    _buildSolverTree(s, ast, path);
+    _buildSolverTree(s, ast, t);
     String sResult = s.model();
     s.delSolver();
 
     return _modelToMap(sResult);
   }
 
-  void _buildSolverTree(Solver s, AST ast, List<Transition> path) {
+  void _buildSolverTree(Solver s, AST ast, Transition t) {
     ListQueue<dynamic> operands = ListQueue<dynamic>();
 
     //Solve the path conditions
-    for (Transition t in path) {
-      //Check if the transition has a condition
-      if (t.conditions == null || t.conditions!['conditionTree'] == null) {
-        continue;
-      }
-      //Translate the transition condition into a Z3 expression
-      BinaryExpressionTree conditionTree = t.conditions!['conditionTree'];
-      conditionTree.callFunctionPostOrder(conditionTree.root, (Node node) {
-        String nodeValue = node.value;
 
-        //Check if the condition is an operator
-
-        if (node.isOperator()) {
-          dynamic left = operands.removeLast();
-          dynamic right = nodeValue == '!' ? null : operands.removeLast();
-          dynamic result = _combineAst(ast, nodeValue, left, right);
-          operands.add(result);
-        } else {
-          //The condition is an operand
-          //Check if the operand is a variable
-          if (t.conditions!['inputTypes'][nodeValue] != null) {
-            operands.add(_variableStringToAst(
-                ast, nodeValue, t.conditions!['inputTypes']));
-            //If not assume operand is a constant (String) SMELLY!
-          } else {
-            operands.add(_constantStringToAst(ast, node));
-          }
-        }
-      });
+    //Check if the transition has a condition
+    if (t.conditions == null || t.conditions!['conditionTree'] == null) {
+      return;
     }
+    //Translate the transition condition into a Z3 expression
+    BinaryExpressionTree conditionTree = t.conditions!['conditionTree'];
+    conditionTree.callFunctionPostOrder(conditionTree.root, (Node node) {
+      String nodeValue = node.value;
+
+      //Check if the condition is an operator
+
+      if (node.isOperator()) {
+        dynamic left = operands.removeLast();
+        dynamic right = nodeValue == '!' ? null : operands.removeLast();
+        dynamic result = _combineAst(ast, nodeValue, left, right);
+        operands.add(result);
+      } else {
+        //The condition is an operand
+        //Check if the operand is a variable
+        if (t.conditions!['inputTypes'][nodeValue] != null) {
+          operands.add(_variableStringToAst(
+              ast, nodeValue, t.conditions!['inputTypes']));
+          //If not assume operand is a constant (String) SMELLY!
+        } else {
+          operands.add(_constantStringToAst(ast, node));
+        }
+      }
+    });
 
     for (var o in operands) {
       s.add(o);
@@ -185,8 +177,8 @@ change CurState to tr’s next state;
     String type = inputTypes[variable]!;
 
     switch (type) {
-      // case 'int':
-      //   return ast.mkIntConst(variable);
+      case 'int':
+        return ast.mkIntVar(variable);
       case 'bool':
         return ast.mkBoolVar(variable);
       case 'String':
@@ -196,13 +188,12 @@ change CurState to tr’s next state;
     }
   }
 
+  //Extremely smelly way of discerning types! -> should probably keep map of types
   dynamic _constantStringToAst(AST ast, Node constant) {
-    switch (constant.value.runtimeType) {
-      case String:
-        return ast.mkStringConst(constant.value);
-      default:
-        throw Exception('Type ${constant.value.runtimeType} not supported');
+    if (_isNumeric(constant.value.toString())) {
+      return ast.mkInt(int.tryParse(constant.value.toString())!);
     }
+    return ast.mkStringConst(constant.value);
   }
 
   dynamic _combineAst(AST ast, String operator, dynamic left, dynamic right) {
@@ -213,6 +204,14 @@ change CurState to tr’s next state;
         return ast.or([left, right]);
       case '==':
         return ast.eq(left, right);
+      case '>=':
+        return ast.ge(left, right);
+      case '<=':
+        return ast.le(left, right);
+      case '>':
+        return ast.gt(left, right);
+      case '<':
+        return ast.lt(left, right);
       case '!':
         return ast.not(left);
       case '+':
@@ -238,3 +237,6 @@ change CurState to tr’s next state;
     return map;
   }
 }
+
+//https://stackoverflow.com/questions/24085385/checking-if-string-is-numeric-in-dart
+_isNumeric(string) => num.tryParse(string) != null;
