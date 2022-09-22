@@ -11,10 +11,16 @@ void main() {
     });
 
     blocTest<SimpleAbCubit, SimpleAbState>(
-      'emits [SimpleA]',
+      'emits [SimpleB, SimpleA, SimpleB, SimpleA, SimpleB]',
       build: () => simpleAbCubit,
-      act: (cubit) => [cubit.goToA()],
-      expect: () => [SimpleA],
+      act: (cubit) => [
+        cubit.goToB(),
+        cubit.goToA(),
+        cubit.goToB(),
+        cubit.goToA(),
+        cubit.goToB()
+      ],
+      expect: () => [SimpleB, SimpleA, SimpleB, SimpleA, SimpleB],
     );
   });
 }

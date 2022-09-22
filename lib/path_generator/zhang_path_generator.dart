@@ -62,37 +62,35 @@ change CurState to tr’s next state;
     List<Transition> curPath = [];
     List<Map<String, String>> curPathInputs =
         []; // Map of input data for the current path (Variable: Value)
-    State curState = machine.current;
 
     for (int depth = 0; depth < maxDepth; depth++) {
-      // Select a transition tr visits an unvisted state and
+      // Select a transition tr, visits not current, visits an unvisted state and
       // whose predicate can be satisfied under pathCond
       // Call Z3 to check for satisfiability
-      Transition? tr = curState.transitions
-          .firstWhereOrNull((t) => !curPath.contains(t) && _satisfiable(t));
+      Transition? tr = _selectTransition(machine, curPath);
 
       if (tr == null) {
         // If the transition tr does not exist
-        if (curState == machine.initial) {
+        if (machine.current == machine.initial) {
           // If CurState is s0
           break; // Failure
         } else {
           // Backtrack and modify CurState, pathCond and CurPath
-          // pathCond.removeLast();
           curPath.removeLast();
-          curState = curPath.isNotEmpty ? curPath.last.to : machine.initial;
           curPathInputs.removeLast();
-        }
-      } else {
-        // Add tr to the end of CurPath
-        curPath.add(tr);
-        // Add tr’s predicate to pathCond
-        curPathInputs.add(_solve(tr));
-        // Perform tr’s action
-        // tr.action(); -> implement in statemachine?
 
+          if (!curPath.isNotEmpty) {
+            curPath.last.execute(); // Backtrack
+          } else {
+            machine.start(); // Reset to initial state
+          }
+        }
+      } else if (tr.execute()) {
         // Change CurState to tr’s next state
-        curState = tr.to;
+
+        curPath.add(tr); // Add tr to the end of CurPath
+
+        curPathInputs.add(_solve(tr)); // Add tr’s predicate to pathCond
       }
     }
     // Solve the constraints and output the variables’ values
@@ -236,7 +234,35 @@ change CurState to tr’s next state;
     }
     return map;
   }
-}
 
-//https://stackoverflow.com/questions/24085385/checking-if-string-is-numeric-in-dart
-_isNumeric(string) => num.tryParse(string) != null;
+  // Select next transition, either not visited or least visited
+  Transition? _selectTransition(
+    StateMachine machine,
+    List<Transition> curPath,
+  ) {
+    Transition? transition;
+
+    // Check if transition is not current, not visited and can be satisfied
+    transition = machine.current.transitions.firstWhereOrNull((t) =>
+        t.to != machine.current && !curPath.contains(t) && _satisfiable(t));
+
+    // If no transition is found, check if transition exists that is not current,
+    // least visited and can be satisfied
+    if (transition == null) {
+      // Count number of times each transition is visited using groupFoldBy
+      Map<Transition, int> transitionCount =
+          curPath.groupFoldBy((t) => t, (previous, _) => (previous ?? 0) + 1);
+      // Delete current state from transitionCount
+      transitionCount.remove(machine.current);
+      // Sort transitions by number of times visited
+      List<Transition> sortedTransitions = transitionCount.keys.toList()
+        ..sort((a, b) => transitionCount[a]!.compareTo(transitionCount[b]!));
+      // Get least visited transition that is not current and can be satisfied
+      transition = sortedTransitions.firstWhereOrNull((t) => _satisfiable(t));
+    }
+    return transition;
+  }
+
+  //https://stackoverflow.com/questions/24085385/checking-if-string-is-numeric-in-dart
+  _isNumeric(string) => num.tryParse(string) != null;
+}

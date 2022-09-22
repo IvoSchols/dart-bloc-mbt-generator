@@ -18,7 +18,7 @@ class SimplePathGenerator implements PathGenerator {
   List<Path> generatePathsTo(StateMachine machine, State toState) {
     //Initialize visited states map with false
     Map<State, bool> visited = {for (var state in machine.states) state: false};
-    Path currentPath = Path({}, []);
+    Path currentPath = Path([], []);
     List<Path> simplePaths = [];
 
     _dfs(machine, null, toState, visited, currentPath, simplePaths);

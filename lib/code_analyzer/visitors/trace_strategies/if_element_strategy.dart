@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/traces_visitor.dart';
+import 'package:dart_bloc_mbt_generator/code_analyzer/trace.dart';
 
 class IfElementStrategy extends SimpleAstVisitor {
   IfElementStrategy(Trace currentTrace) {

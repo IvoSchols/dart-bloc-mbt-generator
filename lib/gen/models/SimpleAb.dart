@@ -8,8 +8,10 @@ StateMachine constructSimpleAbStatemachine() {
   final SimpleB = statemachine.newState('SimpleB');
 
   // Define transitions and their conditions
+
   Transition goToA =
       statemachine.newTransition('goToA', {SimpleA, SimpleB}, SimpleA);
+
   Transition goToB =
       statemachine.newTransition('goToB', {SimpleA, SimpleB}, SimpleB);
 
