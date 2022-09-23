@@ -3,6 +3,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/trace.dart';
 
+enum _IfType { ifT, elseifT, elseT }
+
 class IfElementStrategy extends SimpleAstVisitor {
   IfElementStrategy(Trace currentTrace, this._ElseElement) {
     _currentTrace = currentTrace.copyWith();
@@ -20,24 +22,37 @@ class IfElementStrategy extends SimpleAstVisitor {
     Node newNode = _buildIfNode(node.condition);
     BinaryExpressionTree conditionTree = _currentTrace.conditionTree;
 
-    if (conditionTree.root == null) {
-      conditionTree.root = newNode;
-    } else if (_isElseElement()) {
-      Node oldRoot = _currentTrace.conditionTree.root!.deepCopy();
+    _IfType ifType = _getIfType(node, _ElseElement);
 
-      if (conditionTree.root!.value != "&&") {
-        oldRoot.invertOperator();
-      } else {
-        oldRoot.right!.invertOperator();
-      }
-      conditionTree.root = Node(
-        "&&",
-        left: oldRoot,
-        right: newNode,
-      );
-    } else {
-      throw "If statement is not supported";
+    switch (ifType) {
+      case _IfType.ifT:
+        conditionTree.root = newNode;
+        break;
+      case _IfType.elseifT:
+        Node oldRoot = _currentTrace.conditionTree.root!.deepCopy();
+        conditionTree.root!.right = newNode;
+
+        if (conditionTree.root!.value != "&&") {
+          oldRoot.invertOperator();
+        } else {
+          oldRoot.right!.invertOperator();
+        }
+        conditionTree.root = Node(
+          "&&",
+          left: oldRoot,
+          right: newNode,
+        );
+        break;
+      default:
+        throw "Statement not supported";
     }
+  }
+
+  void visitElseElement(SetOrMapLiteral node) {
+    BinaryExpressionTree conditionTree = _currentTrace.conditionTree;
+    Node oldRoot = conditionTree.root!.deepCopy();
+    oldRoot.right!.invertOperator();
+    conditionTree.root = oldRoot;
   }
 
   Node _buildIfNode(Expression condition) {
@@ -62,10 +77,17 @@ class IfElementStrategy extends SimpleAstVisitor {
     Node node = Node(condition.operator.lexeme);
     node.left = _buildIfNode(condition.leftOperand);
     node.right = _buildIfNode(condition.rightOperand);
+
     return node;
   }
 
-  bool _isElseElement() {
-    return _ElseElement != null;
+  _IfType _getIfType(IfElement node, CollectionElement? element) {
+    if (element == null) {
+      return _IfType.ifT;
+    } else if (element is IfElement && node == element) {
+      return _IfType.elseifT;
+    } else {
+      throw "IfType not supported";
+    }
   }
 }

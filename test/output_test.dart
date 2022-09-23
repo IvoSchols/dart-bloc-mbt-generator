@@ -31,7 +31,7 @@ void main() {
       File example =
           File('lib/examples/cubit_examples/simple_ab/test/SimpleAb.dart');
 
-      expect(generated.readAsStringSync(), example.readAsStringSync());
+      expect(example.readAsStringSync(), generated.readAsStringSync());
     });
   });
 }

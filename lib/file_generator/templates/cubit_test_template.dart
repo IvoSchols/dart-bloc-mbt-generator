@@ -57,10 +57,10 @@ String _test(String name, Path path) {
   }
   return '''
     blocTest<${_pascalCase(name)}Cubit, ${_pascalCase(name)}State>(
-      'emits [${_states(path)}]',
+      'emits [${_states(path, '')}]',
       build: () => ${_camelCase(name)}Cubit,
       act: (cubit) => [${_actions(path)}],
-      expect: () => [${_states(path)}],
+      expect: () => [${_states(path, '()')}],
     );
   ''';
 
@@ -72,8 +72,8 @@ String _test(String name, Path path) {
   //   );''';
 }
 
-String _states(Path path) =>
-    path.transitions.map((t) => _pascalCase(t.to.name)).join(', ');
+String _states(Path path, String postfix) =>
+    path.transitions.map((t) => _pascalCase(t.to.name) + postfix).join(', ');
 
 String _actions(Path path) {
   List<String> actions = [];

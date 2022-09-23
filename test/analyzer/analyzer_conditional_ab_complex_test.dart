@@ -18,6 +18,7 @@ void main() {
       expect(
           result.states.map((s) => s.name),
           equals({
+            'ConditionalA',
             'Conditional0',
             'Conditional3',
             'ConditionalMinus12',
@@ -189,24 +190,24 @@ void main() {
       expect(goToInt.conditions!['inputTypes']!.length, equals(1));
       expect(goToInt.conditions!['inputTypes']!['value'], equals('int'));
 
-      // expect(goToInt.conditions!['conditionTree'], isNotNull);
-      // BinaryExpressionTree conditionTree =
-      //     goToInt.conditions!['conditionTree']!;
-      // expect(conditionTree.root, isNotNull);
-      // expect(conditionTree.root!.value, equals('&&'));
+      expect(goToInt.conditions!['conditionTree'], isNotNull);
+      BinaryExpressionTree conditionTree =
+          goToInt.conditions!['conditionTree']!;
+      expect(conditionTree.root, isNotNull);
+      expect(conditionTree.root!.value, equals('&&'));
 
-      // expect(conditionTree.root!.left!.value, equals('&&'));
-      // expect(conditionTree.root!.left!.right!.value, equals('<='));
+      expect(conditionTree.root!.left!.value, equals('&&'));
+      expect(conditionTree.root!.left!.right!.value, equals('<='));
 
-      // expect(conditionTree.root!.left!.left!.value, equals('&&'));
-      // expect(conditionTree.root!.left!.left!.right!.value, equals('>'));
+      expect(conditionTree.root!.left!.left!.value, equals('&&'));
+      expect(conditionTree.root!.left!.left!.right!.value, equals('>'));
 
-      // expect(conditionTree.root!.left!.left!.left!.value, equals('&&'));
+      expect(conditionTree.root!.left!.left!.left!.value, equals('&&'));
 
-      // expect(conditionTree.root!.left!.left!.left!.left!.value, equals('!='));
-      // expect(conditionTree.root!.left!.left!.left!.right!.value, equals('<'));
+      expect(conditionTree.root!.left!.left!.left!.left!.value, equals('!='));
+      expect(conditionTree.root!.left!.left!.left!.right!.value, equals('<'));
 
-      // expect(conditionTree.root!.right!.value, equals('<'));
+      expect(conditionTree.root!.right!.value, equals('>='));
     });
   });
 }

@@ -20,7 +20,7 @@ void main() {
         cubit.goToA(),
         cubit.goToB()
       ],
-      expect: () => [SimpleB, SimpleA, SimpleB, SimpleA, SimpleB],
+      expect: () => [SimpleB(), SimpleA(), SimpleB(), SimpleA(), SimpleB()],
     );
   });
 }
