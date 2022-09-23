@@ -65,12 +65,20 @@ class MethodDeclarationStrategy extends RecursiveAstVisitor {
 
     _elseElement = node.elseElement;
 
-    if (_elseElement != null && _elseElement is! IfElement) {
-      strategy = IfElementStrategy(_currentTrace!, _elseElement);
-      strategy.visitElseElement(_elseElement as SetOrMapLiteral);
-    }
-    _currentTraceStack.add(strategy.currentTrace);
+    node.visitChildren(this);
+  }
 
+  @override
+  void visitSetOrMapLiteral(SetOrMapLiteral node) {
+    assert(_currentTrace != null, "No trace found");
+    // Is else statement
+    if (node.parent is IfElement &&
+        (node.parent as IfElement).elseElement == node) {
+      IfElementStrategy strategy =
+          IfElementStrategy(_currentTrace!, _elseElement);
+      strategy.visitElseElement(node);
+      _currentTraceStack.add(strategy.currentTrace);
+    }
     node.visitChildren(this);
   }
 
