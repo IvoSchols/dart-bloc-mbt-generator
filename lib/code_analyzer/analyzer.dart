@@ -94,8 +94,6 @@ class Analyzer {
         }
         //Convert trace trees to transitions
         for (Trace trace in tracesVisitor.traces) {
-          assert(trace.currentNode == null);
-
           Map<dynamic, dynamic>? conditions = {};
           if (trace.inputTypes.isNotEmpty) {
             conditions['inputTypes'] = trace.inputTypes;

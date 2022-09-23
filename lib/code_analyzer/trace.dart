@@ -9,8 +9,6 @@ class Trace {
   final BinaryExpressionTree conditionTree;
   final LinkedHashMap<String, String> inputTypes;
 
-  Node? currentNode;
-
   Trace(
       {required this.functionName,
       required this.conditionTree,
@@ -19,15 +17,6 @@ class Trace {
       toState}) {
     this.illegalFromStates = illegalFromStates ?? {};
     this.toState = toState ?? "";
-  }
-
-  void addNode(Node child) {
-    if (conditionTree.root == null) {
-      conditionTree.root = child;
-    } else {
-      assert(!currentNode!.hasChildren());
-      currentNode!.addChild(child);
-    }
   }
 
   void setInputTypes(LinkedHashMap<String, String> inputTypes) {

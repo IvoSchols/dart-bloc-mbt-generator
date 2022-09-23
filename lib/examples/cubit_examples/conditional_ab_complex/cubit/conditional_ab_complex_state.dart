@@ -13,15 +13,15 @@ class ConditionalBool extends ConditionalAbComplexState {}
 
 class Conditional0 extends ConditionalAbComplexState {}
 
-class Conditional1 extends ConditionalAbComplexState {}
-
-class Conditional2 extends ConditionalAbComplexState {}
-
 class Conditional3 extends ConditionalAbComplexState {}
 
-class Conditional4 extends ConditionalAbComplexState {}
+class ConditionalMinus12 extends ConditionalAbComplexState {}
 
-class Conditional5 extends ConditionalAbComplexState {}
+class ConditionalMinus7 extends ConditionalAbComplexState {}
+
+class ConditionalMinus9 extends ConditionalAbComplexState {}
+
+class ConditionalMinus8 extends ConditionalAbComplexState {}
 
 class ConditionalStringFoo extends ConditionalAbComplexState {}
 

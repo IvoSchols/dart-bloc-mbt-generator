@@ -17,7 +17,7 @@ class SwitchStrategy extends SimpleAstVisitor {
 
   @override
   void visitSwitchCase(SwitchCase node) {
-    dynamic condition;
+    dynamic condition = node.expression;
     if (_currentTrace.inputTypes[_conditionName] == 'String') {
       SimpleStringLiteral stringLiteral =
           node.expression as SimpleStringLiteral;
@@ -38,7 +38,7 @@ class SwitchStrategy extends SimpleAstVisitor {
     if (toState.isNotEmpty) {
       Trace newTrace = _currentTrace.copyWith(
           functionName: _currentTrace.functionName, toState: toState);
-      newTrace.addNode(newNode);
+      newTrace.conditionTree.root = newNode;
 
       traces.add(newTrace);
     }

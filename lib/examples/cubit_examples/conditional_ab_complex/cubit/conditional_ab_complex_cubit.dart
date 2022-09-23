@@ -19,30 +19,30 @@ class ConditionalAbComplexCubit extends Cubit<ConditionalAbComplexState> {
             // 0
             emit(Conditional0())
           }
-        else if (value >= 1)
-          {
-            // 1
-            emit(Conditional1())
-          }
-        else if (value <= 2)
-          {
-            // [...,-1],2
-            emit(Conditional2())
-          }
-        else if (value > 2)
+        else if (value >= 3)
           {
             // 3
             emit(Conditional3())
           }
-        else if (value < 5)
+        else if (value <= -12)
           {
-            // 4
-            emit(Conditional4())
+            // [...,-12]
+            emit(ConditionalMinus12())
+          }
+        else if (value > -8)
+          {
+            // [-7,...]
+            emit(ConditionalMinus7())
+          }
+        else if (value < -8)
+          {
+            // [-9,...]
+            emit(ConditionalMinus9())
           }
         else
           {
-            // [5,...]
-            emit(Conditional5())
+            // [-10]
+            emit(ConditionalMinus8())
           }
       };
 

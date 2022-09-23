@@ -16,6 +16,8 @@ class MethodDeclarationStrategy extends RecursiveAstVisitor {
   Trace? get _currentTrace =>
       _currentTraceStack.isEmpty ? null : _currentTraceStack.last;
 
+  CollectionElement? _elseElement; // Used for if statements
+
   /// The first entry point for finding transitions.
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
@@ -38,7 +40,6 @@ class MethodDeclarationStrategy extends RecursiveAstVisitor {
   @override
   void visitSimpleFormalParameter(SimpleFormalParameter node) {
     if (_currentTrace == null) return;
-    assert(_currentTrace!.currentNode == null);
 
     String name = node.name.toString();
 
@@ -57,22 +58,28 @@ class MethodDeclarationStrategy extends RecursiveAstVisitor {
   void visitIfElement(IfElement node) {
     assert(_currentTrace != null, "No trace found");
 
-    IfElementStrategy strategy = IfElementStrategy(_currentTrace!);
+    IfElementStrategy strategy =
+        IfElementStrategy(_currentTrace!, _elseElement);
     strategy.visitIfElement(node);
     _currentTraceStack.add(strategy.currentTrace);
 
+    _elseElement = node.elseElement;
     node.visitChildren(this);
   }
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
+    if (_currentTrace == null) return;
     if (node.methodName.toString() == "emit") {
       EmitStrategy strategy = EmitStrategy(_currentTrace!);
       strategy.visitMethodInvocation(node);
 
       traces.add(strategy.currentTrace);
       // Remove method declaration trace (prob not best way)
-      _currentTraceStack.removeLast();
+      if (_elseElement == null) {
+        // _currentTraceStack.clear();
+        _currentTraceStack.removeLast();
+      }
     }
 
     node.visitChildren(this);

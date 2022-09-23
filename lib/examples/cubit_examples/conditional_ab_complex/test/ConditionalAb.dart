@@ -21,11 +21,11 @@ void main() {
         cubit.goToB(true)
       ],
       expect: () => [
-        ConditionalBool(),
+        ConditionalB(),
         ConditionalA(),
-        ConditionalBool(),
+        ConditionalB(),
         ConditionalA(),
-        ConditionalBool()
+        ConditionalB()
       ],
     );
   });

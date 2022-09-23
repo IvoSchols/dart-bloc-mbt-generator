@@ -64,6 +64,7 @@ change CurState to tr’s next state;
         []; // Map of input data for the current path (Variable: Value)
 
     for (int depth = 0; depth < maxDepth; depth++) {
+      //NAIVE IMPLEMENTATION -> SHOULD USE SCOREBOARD
       // Select a transition tr, visits not current, visits an unvisted state and
       // whose predicate can be satisfied under pathCond
       // Call Z3 to check for satisfiability
@@ -130,6 +131,8 @@ change CurState to tr’s next state;
 
   void _buildSolverTree(Solver s, AST ast, Transition t) {
     ListQueue<dynamic> operands = ListQueue<dynamic>();
+    // Store variables and their Z3 expressions
+    Map<String, dynamic> variables = {};
 
     //Solve the path conditions
 
@@ -143,28 +146,34 @@ change CurState to tr’s next state;
       String nodeValue = node.value;
 
       //Check if the condition is an operator
-
       if (node.isOperator()) {
         dynamic left = operands.removeLast();
         dynamic right = nodeValue == '!' ? null : operands.removeLast();
         dynamic result = _combineAst(ast, nodeValue, left, right);
         operands.add(result);
+        s.add(result);
       } else {
         //The condition is an operand
         //Check if the operand is a variable
         if (t.conditions!['inputTypes'][nodeValue] != null) {
-          operands.add(_variableStringToAst(
-              ast, nodeValue, t.conditions!['inputTypes']));
+          dynamic operand;
+          // Check if the variable has already been added to the solver
+          if (variables[nodeValue] == null) {
+            //Add the variable to the solver
+            operand = _variableStringToAst(
+                ast, nodeValue, t.conditions!['inputTypes']);
+            variables[nodeValue] = operand;
+          } else {
+            operand = variables[nodeValue];
+          }
+          operands.add(operand);
           //If not assume operand is a constant (String) SMELLY!
         } else {
+          // is a constant
           operands.add(_constantStringToAst(ast, node));
         }
       }
     });
-
-    for (var o in operands) {
-      s.add(o);
-    }
   }
 
   dynamic _variableStringToAst(
@@ -202,6 +211,8 @@ change CurState to tr’s next state;
         return ast.or([left, right]);
       case '==':
         return ast.eq(left, right);
+      case '!=':
+        return ast.neq(left, right);
       case '>=':
         return ast.ge(left, right);
       case '<=':
