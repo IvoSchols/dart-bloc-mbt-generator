@@ -15,10 +15,10 @@ void main() {
       build: () => conditionalAbComplexCubit,
       act: (cubit) => [
         cubit.goToInt(0),
-        cubit.goToInt((-1)),
+        cubit.goToInt(-1),
         cubit.goToInt(4),
         cubit.goToInt(0),
-        cubit.goToInt((-1))
+        cubit.goToInt(-1)
       ],
       expect: () => [
         Conditional0(),

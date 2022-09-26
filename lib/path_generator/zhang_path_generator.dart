@@ -152,6 +152,7 @@ change CurState to tr’s next state;
         dynamic result = _combineAst(ast, nodeValue, left, right);
         operands.add(result);
         s.add(result);
+        //TODO: check if operands can be added to solver here
       } else {
         //The condition is an operand
         //Check if the operand is a variable
@@ -160,8 +161,8 @@ change CurState to tr’s next state;
           // Check if the variable has already been added to the solver
           if (variables[nodeValue] == null) {
             //Add the variable to the solver
-            operand = _variableStringToAst(
-                ast, nodeValue, t.conditions!['inputTypes']);
+            operand = _stringToAstVariable(
+                ast, nodeValue, t.conditions!['inputTypes'][nodeValue]);
             variables[nodeValue] = operand;
           } else {
             operand = variables[nodeValue];
@@ -170,18 +171,19 @@ change CurState to tr’s next state;
           //If not assume operand is a constant (String) SMELLY!
         } else {
           // is a constant
-          operands.add(_constantStringToAst(ast, node));
+          operands.add(_stringToAstConstant(ast, node.value));
         }
       }
     });
+    for (dynamic operand in operands) {
+      s.add(operand);
+    }
   }
 
-  dynamic _variableStringToAst(
-      AST ast, String variable, Map<String, String> inputTypes) {
-    if (!inputTypes.containsKey(variable)) {
+  dynamic _stringToAstVariable(AST ast, String variable, String? type) {
+    if (type == null) {
       throw Exception('Variable $variable not found in inputTypes');
     }
-    String type = inputTypes[variable]!;
 
     switch (type) {
       case 'int':
@@ -196,11 +198,11 @@ change CurState to tr’s next state;
   }
 
   //Extremely smelly way of discerning types! -> should probably keep map of types
-  dynamic _constantStringToAst(AST ast, Node constant) {
-    if (_isNumeric(constant.value.toString())) {
-      return ast.mkInt(int.tryParse(constant.value.toString())!);
+  dynamic _stringToAstConstant(AST ast, String constant) {
+    if (_isNumeric(constant.toString())) {
+      return ast.mkInt(int.tryParse(constant.toString())!);
     }
-    return ast.mkStringConst(constant.value);
+    return ast.mkStringConst(constant);
   }
 
   dynamic _combineAst(AST ast, String operator, dynamic left, dynamic right) {
@@ -241,6 +243,9 @@ change CurState to tr’s next state;
     for (String line in lines) {
       if (line == "") continue;
       List<String> result = line.split(' -> ');
+      if (result[1][0] == '(') {
+        result[1] = result[1].substring(1, result[1].length - 1);
+      }
       map[result.first] = result.last;
     }
     return map;
