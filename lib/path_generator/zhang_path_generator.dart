@@ -124,7 +124,7 @@ change CurState to tr’s next state;
     var s = Solver(native, context);
     _buildSolverTree(s, ast, t);
     String sResult = s.model();
-    s.delSolver();
+    s.reset();
 
     return _modelToMap(sResult);
   }
@@ -137,7 +137,7 @@ change CurState to tr’s next state;
     //Solve the path conditions
 
     //Check if the transition has a condition
-    if (t.conditions == null || t.conditions!['conditionTree'] == null) {
+    if (t.conditions?['conditionTree'] == null) {
       return;
     }
     //Translate the transition condition into a Z3 expression
@@ -175,9 +175,9 @@ change CurState to tr’s next state;
         }
       }
     });
-    for (dynamic operand in operands) {
-      s.add(operand);
-    }
+    // for (dynamic operand in operands) {
+    //   s.add(operand);
+    // }
   }
 
   dynamic _stringToAstVariable(AST ast, String variable, String? type) {
