@@ -147,8 +147,16 @@ change CurState to tr’s next state;
 
       //Check if the condition is an operator
       if (node.isOperator()) {
-        dynamic left = operands.removeLast();
+        //PROBABLY GOING TO BOMB WHEN ! is hit
+        //WHAT IS HAPPENING HERE? -> ORDER OF OPERANDS IS WRONG -> NEED TO REVERSE -> BUT PRODUCES WRONG RESULT
         dynamic right = nodeValue == '!' ? null : operands.removeLast();
+        dynamic left = operands.removeLast();
+        //swap with right if left is null
+        if (left == null) {
+          left = right;
+          right = null;
+        }
+
         dynamic result = _combineAst(ast, nodeValue, left, right);
         operands.add(result);
         s.add(result);
