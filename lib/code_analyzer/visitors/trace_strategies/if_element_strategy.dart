@@ -60,7 +60,11 @@ class IfElementStrategy extends SimpleAstVisitor {
     if (condition is BinaryExpression) {
       return _buildBinaryExpressionNode(condition);
     } else {
-      return _buildUnaryExpressionNode(condition.toString());
+      if (condition is SimpleStringLiteral) {
+        return _buildUnaryExpressionNode(condition.value);
+      } else {
+        return _buildUnaryExpressionNode(condition.toString());
+      }
     }
   }
 

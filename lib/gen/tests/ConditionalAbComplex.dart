@@ -11,23 +11,31 @@ void main() {
     });
 
     blocTest<ConditionalAbComplexCubit, ConditionalAbComplexState>(
-      'emits [Conditional0, Conditional3, ConditionalMinus12, ConditionalMinus7, ConditionalMinus9, ConditionalMinus8]',
+      'emits [ConditionalStringFoo, ConditionalA, ConditionalStringBar, ConditionalStringFoo, ConditionalA, ConditionalStringBar, ConditionalStringFoo, ConditionalA, ConditionalStringBar, ConditionalStringFoo]',
       build: () => conditionalAbComplexCubit,
       act: (cubit) => [
-        cubit.goToInt(0),
-        cubit.goToInt(3),
-        cubit.goToInt(-12),
-        cubit.goToInt(-1),
-        cubit.goToInt(-11),
-        cubit.goToInt(-8)
+        cubit.goToString("foo"),
+        cubit.goToA(),
+        cubit.goToString("bar"),
+        cubit.goToString("foo"),
+        cubit.goToA(),
+        cubit.goToString("bar"),
+        cubit.goToString("foo"),
+        cubit.goToA(),
+        cubit.goToString("bar"),
+        cubit.goToString("foo")
       ],
       expect: () => [
-        Conditional0(),
-        Conditional3(),
-        ConditionalMinus12(),
-        ConditionalMinus7(),
-        ConditionalMinus9(),
-        ConditionalMinus8()
+        ConditionalStringFoo(),
+        ConditionalA(),
+        ConditionalStringBar(),
+        ConditionalStringFoo(),
+        ConditionalA(),
+        ConditionalStringBar(),
+        ConditionalStringFoo(),
+        ConditionalA(),
+        ConditionalStringBar(),
+        ConditionalStringFoo()
       ],
     );
   });
