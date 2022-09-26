@@ -19,12 +19,15 @@ void main() {
           result.states.map((s) => s.name),
           equals({
             'ConditionalA',
+            'ConditionalBool',
             'Conditional0',
             'Conditional3',
             'ConditionalMinus12',
             'ConditionalMinus7',
             'ConditionalMinus9',
-            'ConditionalMinus8'
+            'ConditionalMinus8',
+            'ConditionalStringFoo',
+            'ConditionalStringBar'
           }));
     });
 
@@ -33,7 +36,16 @@ void main() {
     });
 
     test('transitionLength', () {
-      expect(result.allTransitions.length, equals(6));
+      expect(result.allTransitions.length, equals(11));
+    });
+
+    test('transition_goToA', () {
+      Transition goToA = result.states
+          .firstWhere((s) => s.name == 'ConditionalA')
+          .transitions
+          .firstWhere((Transition t) => t.name == 'goToA');
+      expect(goToA.conditions, isNull);
+      expect(goToA.to.name, equals('ConditionalA'));
     });
 
     test('transition_goToInt0', () {
@@ -208,6 +220,58 @@ void main() {
       expect(conditionTree.root!.left!.left!.left!.right!.value, equals('<'));
 
       expect(conditionTree.root!.right!.value, equals('>='));
+    });
+
+    test('goToStringFoo', () {
+      Transition goToStringFoo = result.states
+          .firstWhere((s) => s.name == 'ConditionalA')
+          .transitions
+          .firstWhere((Transition t) =>
+              t.name == 'goToString' && t.to.name == 'ConditionalStringFoo');
+
+      expect(goToStringFoo.conditions, isNotNull);
+      BinaryExpressionTree conditionTree =
+          goToStringFoo.conditions!['conditionTree']!;
+
+      expect(conditionTree.root, isNotNull);
+      expect(conditionTree.root!.value, equals('=='));
+      expect(conditionTree.root!.left!.value, equals('value'));
+      expect(conditionTree.root!.right!.value, equals('foo'));
+
+      Map<String, String> inputTypes = goToStringFoo.conditions!['inputTypes'];
+
+      expect(inputTypes, isNotNull);
+      expect(inputTypes["value"], isNotNull);
+      expect(inputTypes["value"], equals('String'));
+    });
+
+    test('goToStringBar', () {
+      Transition goToStringFoo = result.states
+          .firstWhere((s) => s.name == 'ConditionalA')
+          .transitions
+          .firstWhere((Transition t) =>
+              t.name == 'goToString' && t.to.name == 'ConditionalStringBar');
+
+      expect(goToStringFoo.conditions, isNotNull);
+      BinaryExpressionTree conditionTree =
+          goToStringFoo.conditions!['conditionTree']!;
+
+      expect(conditionTree.root, isNotNull);
+      expect(conditionTree.root!.value, equals('&&'));
+      expect(conditionTree.root!.left!.value, equals('!='));
+      expect(conditionTree.root!.right!.value, equals('=='));
+
+      expect(conditionTree.root!.left!.left!.value, equals('value'));
+      expect(conditionTree.root!.left!.right!.value, equals('foo'));
+
+      expect(conditionTree.root!.right!.left!.value, equals('value'));
+      expect(conditionTree.root!.right!.right!.value, equals('bar'));
+
+      Map<String, String> inputTypes = goToStringFoo.conditions!['inputTypes'];
+
+      expect(inputTypes, isNotNull);
+      expect(inputTypes["value"], isNotNull);
+      expect(inputTypes["value"], equals('String'));
     });
   });
 }
