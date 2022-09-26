@@ -32,7 +32,12 @@ class IfElementStrategy extends SimpleAstVisitor {
         Node oldRoot = _currentTrace.conditionTree.root!.deepCopy();
         conditionTree.root!.right = newNode;
 
-        if (conditionTree.root!.value != "&&") {
+        // If is variable
+        if (!conditionTree.root!.isOperator()) {
+          Node temp = oldRoot;
+          oldRoot = Node('!');
+          oldRoot.left = temp;
+        } else if (conditionTree.root!.value != "&&") {
           oldRoot.invertOperator();
         } else {
           oldRoot.right!.invertOperator();

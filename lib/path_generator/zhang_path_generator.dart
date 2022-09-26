@@ -58,7 +58,7 @@ change CurState to tr’s next state;
     throw UnimplementedError();
   }
 
-  Path dfs(StateMachine machine, {int maxDepth = 10}) {
+  Path dfs(StateMachine machine, {int maxDepth = 11}) {
     List<Transition> curPath = [];
     List<Map<String, String>> curPathInputs =
         []; // Map of input data for the current path (Variable: Value)
@@ -183,9 +183,9 @@ change CurState to tr’s next state;
         }
       }
     });
-    // for (dynamic operand in operands) {
-    //   s.add(operand);
-    // }
+    for (dynamic operand in operands) {
+      s.add(operand);
+    }
   }
 
   dynamic _stringToAstVariable(AST ast, String variable, String? type) {
