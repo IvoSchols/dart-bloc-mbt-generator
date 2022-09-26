@@ -58,7 +58,7 @@ change CurState to tr’s next state;
     throw UnimplementedError();
   }
 
-  Path dfs(StateMachine machine, {int maxDepth = 5}) {
+  Path dfs(StateMachine machine, {int maxDepth = 6}) {
     List<Transition> curPath = [];
     List<Map<String, String>> curPathInputs =
         []; // Map of input data for the current path (Variable: Value)

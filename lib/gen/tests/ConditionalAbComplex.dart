@@ -11,21 +11,23 @@ void main() {
     });
 
     blocTest<ConditionalAbComplexCubit, ConditionalAbComplexState>(
-      'emits [Conditional0, Conditional3, ConditionalMinus12, ConditionalMinus7, ConditionalMinus9]',
+      'emits [Conditional0, Conditional3, ConditionalMinus12, ConditionalMinus7, ConditionalMinus9, ConditionalMinus8]',
       build: () => conditionalAbComplexCubit,
       act: (cubit) => [
         cubit.goToInt(0),
         cubit.goToInt(3),
         cubit.goToInt(-12),
         cubit.goToInt(-1),
-        cubit.goToInt(-11)
+        cubit.goToInt(-11),
+        cubit.goToInt(-8)
       ],
       expect: () => [
         Conditional0(),
         Conditional3(),
         ConditionalMinus12(),
         ConditionalMinus7(),
-        ConditionalMinus9()
+        ConditionalMinus9(),
+        ConditionalMinus8()
       ],
     );
   });
