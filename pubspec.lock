@@ -92,7 +92,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b40463bfb0ddf751a6d38609e6d6a564920a7647
+      resolved-ref: bf537e2eb77f992d7339eb7c4d039023859512f1
       url: "https://github.com/IvoSchols/dart-z3"
     source: git
     version: "1.0.4"

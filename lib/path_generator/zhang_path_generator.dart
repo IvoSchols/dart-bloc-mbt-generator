@@ -112,7 +112,7 @@ change CurState to tr’s next state;
     _buildSolverTree(s, ast, t);
 
     String sResult = s.check();
-    s.delSolver();
+    s.reset();
     return (sResult == "true");
   }
 
