@@ -39,6 +39,7 @@ void main() {
         SimpleA(),
         SimpleB()
       ],
+      errors: (() => []),
     );
   });
 }

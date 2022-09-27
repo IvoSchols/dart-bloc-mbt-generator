@@ -31,9 +31,9 @@ class SwitchStrategy extends SimpleAstVisitor {
     newNode.right = Node(condition);
 
     String toState = '';
-    node.statements.whereType<ExpressionStatement>().forEach((e) {
-      toState = visitExpressionStatement(e);
-    });
+    // Is this even needed?
+    toState = visitExpressionStatement(
+        node.statements.whereType<ExpressionStatement>().first);
 
     if (toState.isNotEmpty) {
       Trace newTrace = _currentTrace.copyWith(
@@ -51,10 +51,10 @@ class SwitchStrategy extends SimpleAstVisitor {
 
     if (traces.isNotEmpty) {
       zippedTree = traces.first.conditionTree.copy();
-      zippedTree.negate();
+      zippedTree.root!.invertOperator();
       for (Trace trace in traces.skip(1)) {
         BinaryExpressionTree newTree = trace.conditionTree.copy();
-        newTree.negate();
+        newTree.root!.invertOperator();
         zippedTree = zippedTree.zip(newTree, Node('&&'));
       }
     }

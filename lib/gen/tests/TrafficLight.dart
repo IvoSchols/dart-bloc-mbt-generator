@@ -11,7 +11,7 @@ void main() {
     });
 
     blocTest<TrafficLightCubit, TrafficLightState>(
-      'emits [Green, Red, Yellow, Exception]',
+      'emits [Green, Red, Yellow]',
       build: () => trafficLightCubit,
       act: (cubit) => [
         cubit.changeTrafficLightTo("green"),
@@ -19,7 +19,8 @@ void main() {
         cubit.changeTrafficLightTo("yellow"),
         cubit.changeTrafficLightTo("")
       ],
-      expect: () => [Green, Red, Yellow, Exception],
+      expect: () => [Green(), Red(), Yellow()],
+      errors: (() => [isException]),
     );
   });
 }

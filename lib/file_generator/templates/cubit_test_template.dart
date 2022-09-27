@@ -61,6 +61,7 @@ String _test(String name, Path path) {
       build: () => ${_camelCase(name)}Cubit,
       act: (cubit) => [${_actions(path)}],
       expect: () => [${_states(path, '()')}],
+      ${_errors(path)}
     );
   ''';
 
@@ -72,8 +73,10 @@ String _test(String name, Path path) {
   //   );''';
 }
 
-String _states(Path path, String postfix) =>
-    path.transitions.map((t) => _pascalCase(t.to.name) + postfix).join(', ');
+String _states(Path path, String postfix) => path.transitions
+    .where((t) => t.to.name != "Exception")
+    .map((t) => _pascalCase(t.to.name) + postfix)
+    .join(', ');
 
 String _actions(Path path) {
   List<String> actions = [];
@@ -115,4 +118,15 @@ String _callCubitFunction(
 
   final String functionCall = "$functionName($requiredFunctionParameters)";
   return functionCall;
+}
+
+String _errors(Path path) {
+  // for each transition where to is exception add isA<Exception>() to the list
+  List<String> errors = [];
+  for (int i = 0; i < path.transitions.length; i++) {
+    if (path.transitions[i].to.name == 'Exception') {
+      errors.add("isException");
+    }
+  }
+  return '''errors: (() => $errors),''';
 }

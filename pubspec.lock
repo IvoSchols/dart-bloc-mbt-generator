@@ -34,7 +34,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "11dac3b9e96a5eb4d946813531afd991129d2077"
+      resolved-ref: a1ef5b22ea331498111280505f48d2ae6e0adbe5
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
     version: "1.0.10"
