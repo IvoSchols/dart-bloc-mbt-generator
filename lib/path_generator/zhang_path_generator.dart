@@ -143,7 +143,7 @@ change CurState to tr’s next state;
     //Translate the transition condition into a Z3 expression
     BinaryExpressionTree conditionTree = t.conditions!['conditionTree'];
     conditionTree.callFunctionPostOrder(conditionTree.root, (Node node) {
-      String nodeValue = node.value;
+      dynamic nodeValue = node.value;
 
       //Check if the condition is an operator
       if (node.isOperator()) {
@@ -179,7 +179,7 @@ change CurState to tr’s next state;
           //If not assume operand is a constant (String) SMELLY!
         } else {
           // is a constant
-          operands.add(_stringToAstConstant(ast, node.value));
+          operands.add(_valueToAstConstant(ast, node.value));
         }
       }
     });
@@ -206,11 +206,18 @@ change CurState to tr’s next state;
   }
 
   //Extremely smelly way of discerning types! -> should probably keep map of types
-  dynamic _stringToAstConstant(AST ast, String constant) {
-    if (_isNumeric(constant.toString())) {
+  dynamic _valueToAstConstant(AST ast, dynamic constant) {
+    if (constant is int) {
+      return ast.mkInt(constant);
+    } else if (_isNumeric(constant.toString())) {
       return ast.mkInt(int.tryParse(constant.toString())!);
+    } else if (constant is bool) {
+      return ast.mkBoolConst(constant);
+    } else if (constant is String) {
+      return ast.mkStringConst(constant);
+    } else {
+      throw Exception('Type $constant not supported');
     }
-    return ast.mkStringConst(constant);
   }
 
   dynamic _combineAst(AST ast, String operator, dynamic left, dynamic right) {

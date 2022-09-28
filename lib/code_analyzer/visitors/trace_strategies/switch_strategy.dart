@@ -18,17 +18,31 @@ class SwitchStrategy extends SimpleAstVisitor {
   @override
   void visitSwitchCase(SwitchCase node) {
     dynamic condition = node.expression;
-    if (_currentTrace.inputTypes[_conditionName] == 'String') {
-      SimpleStringLiteral stringLiteral =
-          node.expression as SimpleStringLiteral;
-      condition = stringLiteral.value;
-    } else {
-      throw Exception('Unknown type');
-    }
+    Node newNode;
 
-    Node newNode = Node('==');
-    newNode.left = Node(_conditionName);
-    newNode.right = Node(condition);
+    switch (_currentTrace.inputTypes[_conditionName]) {
+      case 'String':
+        SimpleStringLiteral stringLiteral =
+            node.expression as SimpleStringLiteral;
+        condition = stringLiteral.value;
+        newNode = Node('==');
+        newNode.left = Node(_conditionName);
+        newNode.right = Node(condition);
+
+        break;
+      case 'bool':
+        BooleanLiteral booleanLiteral = node.expression as BooleanLiteral;
+        condition = booleanLiteral.value;
+        if (condition) {
+          newNode = Node(_conditionName);
+        } else {
+          newNode = Node('!');
+          newNode.left = Node(_conditionName);
+        }
+        break;
+      default:
+        throw Exception('Unknown type');
+    }
 
     String toState = '';
     // Is this even needed?
@@ -51,10 +65,10 @@ class SwitchStrategy extends SimpleAstVisitor {
 
     if (traces.isNotEmpty) {
       zippedTree = traces.first.conditionTree.copy();
-      zippedTree.root!.invertOperator();
+      zippedTree.negate();
       for (Trace trace in traces.skip(1)) {
         BinaryExpressionTree newTree = trace.conditionTree.copy();
-        newTree.root!.invertOperator();
+        newTree.negate();
         zippedTree = zippedTree.zip(newTree, Node('&&'));
       }
     }
