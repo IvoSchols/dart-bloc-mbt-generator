@@ -6,7 +6,7 @@ import 'package:dart_bloc_mbt_generator/code_analyzer/trace.dart';
 enum _IfType { ifT, elseifT, elseT }
 
 class IfElementStrategy extends SimpleAstVisitor {
-  IfElementStrategy(Trace currentTrace, this._ElseElement) {
+  IfElementStrategy(Trace currentTrace, this._elseElement) {
     _currentTrace = currentTrace.copyWith();
   }
 
@@ -15,14 +15,14 @@ class IfElementStrategy extends SimpleAstVisitor {
   get currentTrace => _currentTrace;
 
   final CollectionElement?
-      _ElseElement; // Used to check if the current if statement is an else statement
+      _elseElement; // Used to check if the current if statement is an else statement
 
   @override
   void visitIfElement(IfElement node) {
     Node newNode = _buildIfNode(node.condition);
     BinaryExpressionTree conditionTree = _currentTrace.conditionTree;
 
-    _IfType ifType = _getIfType(node, _ElseElement);
+    _IfType ifType = _getIfType(node, _elseElement);
 
     switch (ifType) {
       case _IfType.ifT:

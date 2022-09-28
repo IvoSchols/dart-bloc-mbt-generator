@@ -20,11 +20,14 @@ Future<void> main() async {
   // String relativePath =
   //     'examples/cubit_examples/traffic_light/cubit/traffic_light_cubit.dart';
 
-  String relativePath =
-      'examples/cubit_examples/light_switch_deadcode/cubit/light_switch_deadcode_cubit.dart';
+  // String relativePath =
+  //     'examples/cubit_examples/light_switch_deadcode/cubit/light_switch_deadcode_cubit.dart';
 
   // String relativePath =
   //     'examples/cubit_examples/conditional_ab_complex/cubit/conditional_ab_complex_cubit.dart';
+
+  String relativePath =
+      'examples/cubit_examples/integer_switch/cubit/integer_switch_cubit.dart';
 
   StateMachine stateMachine = Analyzer.analyzeSingleFile(relativePath);
 

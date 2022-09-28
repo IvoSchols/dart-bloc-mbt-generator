@@ -21,15 +21,6 @@ class SwitchStrategy extends SimpleAstVisitor {
     Node newNode;
 
     switch (_currentTrace.inputTypes[_conditionName]) {
-      case 'String':
-        SimpleStringLiteral stringLiteral =
-            node.expression as SimpleStringLiteral;
-        condition = stringLiteral.value;
-        newNode = Node('==');
-        newNode.left = Node(_conditionName);
-        newNode.right = Node(condition);
-
-        break;
       case 'bool':
         BooleanLiteral booleanLiteral = node.expression as BooleanLiteral;
         condition = booleanLiteral.value;
@@ -39,6 +30,20 @@ class SwitchStrategy extends SimpleAstVisitor {
           newNode = Node('!');
           newNode.left = Node(_conditionName);
         }
+        break;
+      case 'int':
+        int condition = num.parse(node.expression.toString()).toInt();
+        newNode = Node('==');
+        newNode.left = Node(_conditionName);
+        newNode.right = Node(condition);
+        break;
+      case 'String':
+        SimpleStringLiteral stringLiteral =
+            node.expression as SimpleStringLiteral;
+        condition = stringLiteral.value;
+        newNode = Node('==');
+        newNode.left = Node(_conditionName);
+        newNode.right = Node(condition);
         break;
       default:
         throw Exception('Unknown type');
