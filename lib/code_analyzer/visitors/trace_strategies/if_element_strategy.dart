@@ -3,7 +3,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/trace.dart';
 
-enum _IfType { ifT, elseifT, elseT }
+enum _IfType { ifT, elseifT }
 
 class IfElementStrategy extends SimpleAstVisitor {
   IfElementStrategy(Trace currentTrace, this._elseElement) {

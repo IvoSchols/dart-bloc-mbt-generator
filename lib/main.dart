@@ -1,5 +1,4 @@
 import 'package:dart_bloc_mbt_generator/file_generator/model_generator.dart';
-import 'package:dart_bloc_mbt_generator/file_generator/templates/state_machine_template.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/test_generator.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/zhang_path_generator.dart';
@@ -31,8 +30,7 @@ Future<void> main() async {
 
   StateMachine stateMachine = Analyzer.analyzeSingleFile(relativePath);
 
-  //TODO: reimplement
-  StateMachineModelGenerator(relativePath).writeModel(stateMachine);
+  StateMachineModelGenerator().writeModel(stateMachine);
   // final StateMachine machine = constructSimpleAbStatemachine();
 
   //Generate tests from finite state machine model DFS walks and write tests to file

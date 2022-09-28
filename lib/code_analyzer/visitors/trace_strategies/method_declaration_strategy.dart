@@ -111,7 +111,6 @@ class MethodDeclarationStrategy extends RecursiveAstVisitor {
     if (switchStrategy.traces.isNotEmpty) {
       _currentTraceStack.removeLast();
     }
-    //TODO: add getter for currentTrace from switchStrategyVisitor
 
     node.visitChildren(this);
   }

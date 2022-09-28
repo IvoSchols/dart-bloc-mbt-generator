@@ -9,8 +9,6 @@ import 'package:test/test.dart';
 
 void main() {
   group('OutputSimpleAbTest', () {
-    //TODO: refactor main so that it can be tested
-    //Test if simple ab test file was created and content equals example test file
     test('simpleAbOutput', () async {
       // Generate finite state machine model from cubit and write to file
       String relativePath =

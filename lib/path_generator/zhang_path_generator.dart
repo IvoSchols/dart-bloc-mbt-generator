@@ -160,7 +160,6 @@ change CurState to tr’s next state;
         dynamic result = _combineAst(ast, nodeValue, left, right);
         operands.add(result);
         s.add(result);
-        //TODO: check if operands can be added to solver here
       } else {
         //The condition is an operand
         //Check if the operand is a variable

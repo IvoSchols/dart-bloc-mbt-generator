@@ -5,10 +5,6 @@ import 'package:dart_bloc_mbt_generator/file_generator/templates/state_machine_t
 import 'package:state_machine/state_machine.dart';
 
 class StateMachineModelGenerator {
-  final String _blocBasePath;
-
-  StateMachineModelGenerator(this._blocBasePath);
-
   void writeModel(StateMachine stateMachine) {
     String machineName = stateMachine.name;
 

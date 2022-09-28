@@ -37,8 +37,6 @@ class CubitGenerator implements TestGenerator {
 
     List<String> imports = ['package:dart_bloc_mbt_generator/$_blocBasePath'];
 
-    //TODO: add cubit import (retrieve from AST)
-
     String cubitTestsStringified = cubitTestTemplate(imports, _machine, paths);
 
     // Write string to file relative to the current directory
