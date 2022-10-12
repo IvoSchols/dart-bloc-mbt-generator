@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/templates/state_machine_template.dart';
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 class StateMachineModelGenerator {
   void writeModel(StateMachine stateMachine) {

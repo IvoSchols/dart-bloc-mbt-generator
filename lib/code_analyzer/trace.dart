@@ -19,12 +19,12 @@ class Trace {
     this.toState = toState ?? "";
   }
 
-  void setInputTypes(LinkedHashMap<String, String> inputTypes) {
-    for (String element in this.inputTypes.keys) {
-      assert(!inputTypes.containsKey(element), "Input name already exists");
-    }
-    this.inputTypes.addAll(inputTypes);
-  }
+  // void setInputTypes(LinkedHashMap<String, String> inputTypes) {
+  //   for (String element in this.inputTypes.keys) {
+  //     assert(!inputTypes.containsKey(element), "Input name already exists");
+  //   }
+  //   this.inputTypes.addAll(inputTypes);
+  // }
 
   // Is a deep copy of binary expression tree needed?
   Trace copyWith({

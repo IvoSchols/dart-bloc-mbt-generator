@@ -34,10 +34,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a1ef5b22ea331498111280505f48d2ae6e0adbe5
+      resolved-ref: "0c3f691dd6438229f8011f49d8f849afa4c0fa40"
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
-    version: "1.0.10"
+    version: "1.1.1"
   bloc:
     dependency: "direct main"
     description:
@@ -72,7 +72,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   coverage:
     dependency: transitive
     description:
@@ -92,10 +92,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: bf537e2eb77f992d7339eb7c4d039023859512f1
+      resolved-ref: "5d61b95c336e5f5e689c67fe66266798d8431190"
       url: "https://github.com/IvoSchols/dart-z3"
     source: git
-    version: "1.0.4"
+    version: "1.0.5"
   diff_match_patch:
     dependency: transitive
     description:
@@ -179,7 +179,7 @@ packages:
       name: logging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.1.0"
   matcher:
     dependency: transitive
     description:
@@ -243,6 +243,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  rxdart:
+    dependency: "direct main"
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.5"
   shelf:
     dependency: transitive
     description:
@@ -271,6 +278,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  simple_state_machine:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "689c6fc533d66b21af620184dbbdffe91591046b"
+      url: "https://github.com/IvoSchols/dart-state-machine"
+    source: git
+    version: "1.0.3"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -299,15 +315,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.0"
-  state_machine:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "38b76aac5c3a525df6638c6b80c4724eb51f918a"
-      url: "https://github.com/IvoSchols/dart-state-machine"
-    source: git
-    version: "1.0.2"
   stream_channel:
     dependency: transitive
     description:

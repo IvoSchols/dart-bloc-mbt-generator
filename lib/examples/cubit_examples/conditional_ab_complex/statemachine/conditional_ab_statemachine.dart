@@ -1,4 +1,4 @@
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 // Construct a statemachine with two states (A, B) and one transition (A->B)
 StateMachine constructCondtionalAbStatemachine() {

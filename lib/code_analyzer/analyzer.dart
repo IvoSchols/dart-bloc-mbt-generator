@@ -5,13 +5,12 @@ import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/trace.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/traces_visitor.dart';
-import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/variables_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/name_visitor.dart';
 import 'package:dart_bloc_mbt_generator/code_analyzer/visitors/states_visitor.dart';
 import 'package:pub_semver/pub_semver.dart';
 
 import 'package:path/path.dart' as p;
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 class Analyzer {
 //Returns state machine for the given file, or null if no state machine is found
@@ -40,11 +39,10 @@ class Analyzer {
           childEntity.extendsClause!.superclass.name.toString() == "Cubit") {
         StatesVisitor statesVisitor = StatesVisitor();
         TracesVisitor tracesVisitor = TracesVisitor();
-        VariablesVisitor variablesVisitor = VariablesVisitor();
         NameVisitor nameVisitor = NameVisitor();
 
-        DelegatingAstVisitor delegatingCubitVisitor = DelegatingAstVisitor(
-            {statesVisitor, tracesVisitor, variablesVisitor, nameVisitor});
+        DelegatingAstVisitor delegatingCubitVisitor =
+            DelegatingAstVisitor({statesVisitor, tracesVisitor, nameVisitor});
 
         delegatingCubitVisitor.visitClassDeclaration(childEntity);
 

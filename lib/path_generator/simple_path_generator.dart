@@ -1,5 +1,5 @@
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 import 'path_generator.dart';
 

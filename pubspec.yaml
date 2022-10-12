@@ -20,7 +20,8 @@ dependencies:
   equatable: ^2.0.3
   path: ^1.8.2
   pub_semver: ^2.1.1
-  state_machine: 
+  rxdart: ^0.27.5
+  simple_state_machine: 
     git: https://github.com/IvoSchols/dart-state-machine
   test: ^1.21.4
   tree_iterator: ^2.0.0

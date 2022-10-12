@@ -1,5 +1,5 @@
 import 'package:binary_expression_tree/binary_expression_tree.dart';
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 String stateMachineTemplate(StateMachine sm) {
   final String name = sm.name;

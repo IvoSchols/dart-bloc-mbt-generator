@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 import '../../path_generator/path_generator.dart';
 

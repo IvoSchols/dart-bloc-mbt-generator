@@ -5,7 +5,7 @@ import 'package:binary_expression_tree/binary_expression_tree.dart';
 import 'package:collection/collection.dart';
 
 import 'package:dart_z3/dart_z3.dart';
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 import 'path_generator.dart';
 

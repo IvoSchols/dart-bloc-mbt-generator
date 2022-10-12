@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dart_bloc_mbt_generator/file_generator/file_generator_helpers.dart';
 import 'package:dart_bloc_mbt_generator/file_generator/templates/cubit_test_template.dart';
 import 'package:dart_bloc_mbt_generator/path_generator/path_generator.dart';
-import 'package:state_machine/state_machine.dart';
+import 'package:simple_state_machine/state_machine.dart';
 
 abstract class TestGenerator {
   factory TestGenerator(String blocBasePath, StateMachine machine) {

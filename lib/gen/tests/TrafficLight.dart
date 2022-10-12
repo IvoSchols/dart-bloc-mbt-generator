@@ -11,16 +11,35 @@ void main() {
     });
 
     blocTest<TrafficLightCubit, TrafficLightState>(
-      'emits [Green, Red, Yellow]',
+      'emits [Green, Red, Yellow, Green, Red, Yellow, Green, Red, Yellow, Green, Red]',
       build: () => trafficLightCubit,
       act: (cubit) => [
         cubit.changeTrafficLightTo("green"),
         cubit.changeTrafficLightTo("red"),
         cubit.changeTrafficLightTo("yellow"),
-        cubit.changeTrafficLightTo("")
+        cubit.changeTrafficLightTo("green"),
+        cubit.changeTrafficLightTo("red"),
+        cubit.changeTrafficLightTo("yellow"),
+        cubit.changeTrafficLightTo("green"),
+        cubit.changeTrafficLightTo("red"),
+        cubit.changeTrafficLightTo("yellow"),
+        cubit.changeTrafficLightTo("green"),
+        cubit.changeTrafficLightTo("red")
       ],
-      expect: () => [Green(), Red(), Yellow()],
-      errors: (() => [isException]),
+      expect: () => [
+        Green(),
+        Red(),
+        Yellow(),
+        Green(),
+        Red(),
+        Yellow(),
+        Green(),
+        Red(),
+        Yellow(),
+        Green(),
+        Red()
+      ],
+      errors: (() => []),
     );
   });
 }
