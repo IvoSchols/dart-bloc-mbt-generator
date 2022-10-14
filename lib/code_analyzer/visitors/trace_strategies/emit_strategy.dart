@@ -17,6 +17,7 @@ class EmitStrategy extends SimpleAstVisitor {
     String toState = (node.argumentList.arguments[0] as MethodInvocation)
         .methodName
         .toString();
+    toState = toState[0].toLowerCase() + toState.substring(1);
 
     _currentTrace.toState = toState;
   }

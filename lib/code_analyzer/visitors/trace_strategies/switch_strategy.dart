@@ -53,6 +53,7 @@ class SwitchStrategy extends SimpleAstVisitor {
     // Is this even needed?
     toState = visitExpressionStatement(
         node.statements.whereType<ExpressionStatement>().first);
+    toState = toState[0].toLowerCase() + toState.substring(1);
 
     if (toState.isNotEmpty) {
       Trace newTrace = _currentTrace.copyWith(
@@ -84,6 +85,8 @@ class SwitchStrategy extends SimpleAstVisitor {
     });
 
     if (toState.isNotEmpty) {
+      toState = toState[0].toLowerCase() + toState.substring(1);
+
       // Add the zippedTree to the currentTrace
       Trace newTrace = _currentTrace.copyWith(
           functionName: _currentTrace.functionName,

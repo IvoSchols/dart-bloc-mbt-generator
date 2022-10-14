@@ -34,16 +34,10 @@ String _states(Set<State> states) => states.map((state) => '''
     final ${state.name} = statemachine.newState('${state.name}');
   ''').join();
 
-// BinaryExpressionTree ${t.name}BinaryExpressionTree = ${_conditionTree(t.conditions?['conditionTree'])}
-String _transitions(Set<Transition> transitions) => transitions.map((t) {
-      String tName = t.name;
-      tName[0].toLowerCase();
-      return '''
-      Transition $tName${t.to.name.toString()} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
-    ''';
-    }).join();
+String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
+      Transition ${t.name}${t.to.name.toString()} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
+    ''').join();
 
-//TODO: implement conditions correctly (and its subfunctions)
 String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
   String conditionString = '';
   bool hasInputTypes = conditions['inputTypes'] != null;
@@ -57,8 +51,6 @@ String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
           "'inputTypes':{${_inputTypes(conditions['inputTypes'])}},";
     }
     if (hasConditionTree) {
-      // conditionString +=
-      //     "'conditionTree': ${transitionName}BinaryExpressionTree";
       conditionString +=
           "'conditionTree':{${_conditionTree(conditions['conditionTree'])}}";
     }
@@ -69,7 +61,6 @@ String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
   return conditionString;
 }
 
-//TODO: is e.value a string?
 String _inputTypes(Map<String, String> inputTypes) =>
     inputTypes.entries.map((e) => '''
         '${e.key}': ${e.value}

@@ -9,6 +9,7 @@ class StatesVisitor extends SimpleAstVisitor {
   void visitMethodInvocation(MethodInvocation node) {
     if (node.methodName.toString() == "emit") return;
     String state = node.methodName.toString();
+    state = state[0].toLowerCase() + state.substring(1);
     states.add(state);
   }
 
@@ -19,5 +20,6 @@ class StatesVisitor extends SimpleAstVisitor {
     }
     initialState =
         node.argumentList.arguments.first.childEntities.first.toString();
+    initialState = initialState[0].toLowerCase() + initialState.substring(1);
   }
 }

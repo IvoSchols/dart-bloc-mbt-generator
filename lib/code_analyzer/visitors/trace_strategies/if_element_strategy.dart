@@ -64,12 +64,10 @@ class IfElementStrategy extends SimpleAstVisitor {
     //TODO: add fail condition if not unary or binary expression
     if (condition is BinaryExpression) {
       return _buildBinaryExpressionNode(condition);
+    } else if (condition is SimpleStringLiteral) {
+      return _buildUnaryExpressionNode(condition.value);
     } else {
-      if (condition is SimpleStringLiteral) {
-        return _buildUnaryExpressionNode(condition.value);
-      } else {
-        return _buildUnaryExpressionNode(condition.toString());
-      }
+      return _buildUnaryExpressionNode(condition.toString());
     }
   }
 

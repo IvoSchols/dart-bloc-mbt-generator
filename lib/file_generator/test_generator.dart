@@ -31,9 +31,13 @@ class CubitGenerator implements TestGenerator {
 
   @override
   Future<void> writeTests(List<Path> paths) async {
-    String machineName = _machine.name;
+    // transform all uppercase letters to lowercase and add an underscore before
+    // each uppercase letter
+    String machineNameSnakeCase = _machine.name[0].toLowerCase() +
+        _machine.name.substring(1).replaceAllMapped(
+            RegExp(r'([A-Z])'), (match) => '_${match.group(0)!.toLowerCase()}');
     String testFolder = "lib/gen/tests";
-    String testFile = "$testFolder/$machineName.dart";
+    String testFile = "$testFolder/$machineNameSnakeCase.dart";
 
     List<String> imports = ['package:dart_bloc_mbt_generator/$_blocBasePath'];
 
