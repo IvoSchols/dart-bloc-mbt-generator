@@ -7,3 +7,6 @@ build/
 
 # Coverage used by lcov.
 coverage/
+
+# Generated files by artifact
+lib/gen
