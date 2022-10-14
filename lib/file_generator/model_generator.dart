@@ -6,10 +6,14 @@ import 'package:simple_state_machine/state_machine.dart';
 
 class StateMachineModelGenerator {
   void writeModel(StateMachine stateMachine) {
-    String machineName = stateMachine.name;
+    // transform all uppercase letters to lowercase and add an underscore before
+    // each uppercase letter
+    String machineNameSnakeCase = stateMachine.name[0].toLowerCase() +
+        stateMachine.name.substring(1).replaceAllMapped(
+            RegExp(r'([A-Z])'), (match) => '_${match.group(0)!.toLowerCase()}');
 
     String modelFolder = "lib/gen/models";
-    String modelFile = "$modelFolder/$machineName.dart";
+    String modelFile = "$modelFolder/$machineNameSnakeCase.dart";
 
     String stateMachineStringified = stateMachineTemplate(stateMachine);
 

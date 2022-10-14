@@ -19,7 +19,7 @@ void main() {
         cubit.goToInt(0),
         cubit.goToBool(false),
         cubit.goToInt(3),
-        cubit.goToInt(4),
+        cubit.goToInt(-12),
         cubit.goToInt(-1),
         cubit.goToInt(-11),
         cubit.goToInt(-8),

@@ -34,7 +34,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0c3f691dd6438229f8011f49d8f849afa4c0fa40"
+      resolved-ref: f8bd1b1cf100654908d539bff8237b9cfa803e77
       url: "https://github.com/IvoSchols/dart-binary-expression-tree"
     source: git
     version: "1.1.1"
@@ -72,7 +72,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   coverage:
     dependency: transitive
     description:

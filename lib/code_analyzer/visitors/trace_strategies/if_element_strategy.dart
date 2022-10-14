@@ -38,9 +38,9 @@ class IfElementStrategy extends SimpleAstVisitor {
           oldRoot = Node('!');
           oldRoot.left = temp;
         } else if (conditionTree.root!.value != "&&") {
-          oldRoot.invertOperator();
+          oldRoot.invert();
         } else {
-          oldRoot.right!.invertOperator();
+          oldRoot.right!.invert();
         }
         conditionTree.root = Node(
           "&&",
@@ -56,7 +56,7 @@ class IfElementStrategy extends SimpleAstVisitor {
   void visitElseElement(SetOrMapLiteral node) {
     BinaryExpressionTree conditionTree = _currentTrace.conditionTree;
     Node oldRoot = conditionTree.root!.deepCopy();
-    oldRoot.right!.invertOperator();
+    oldRoot.right!.invert();
     conditionTree.root = oldRoot;
   }
 

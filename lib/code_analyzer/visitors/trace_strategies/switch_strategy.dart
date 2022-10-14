@@ -70,10 +70,10 @@ class SwitchStrategy extends SimpleAstVisitor {
 
     if (traces.isNotEmpty) {
       zippedTree = traces.first.conditionTree.copy();
-      zippedTree.root?.invertOperator();
+      zippedTree.root?.invert();
       for (Trace trace in traces.skip(1)) {
         BinaryExpressionTree newTree = trace.conditionTree.copy();
-        newTree.root?.invertOperator();
+        newTree.root?.invert();
         zippedTree = zippedTree.zip(newTree, Node('&&'));
       }
     }

@@ -28,7 +28,6 @@ class Analyzer {
   }
 
   static StateMachine _checkCompilationUnit(CompilationUnit unit) {
-    //TODO: update with general visitor that discriminates between cubit & bloc
     StateMachine? stateMachine;
 
     for (dynamic childEntity in unit.childEntities) {

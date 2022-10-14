@@ -11,9 +11,15 @@ void main() {
     });
 
     blocTest<ConditionalAbNegatedCubit, ConditionalAbNegatedState>(
-      'emits [ConditionalB, ConditionalA, ConditionalB, ConditionalA, ConditionalB]',
+      'emits [ConditionalB, ConditionalA, ConditionalB, ConditionalA, ConditionalB, ConditionalA, ConditionalB, ConditionalA, ConditionalB, ConditionalA, ConditionalB]',
       build: () => conditionalAbNegatedCubit,
       act: (cubit) => [
+        cubit.goToB(false),
+        cubit.goToA(),
+        cubit.goToB(false),
+        cubit.goToA(),
+        cubit.goToB(false),
+        cubit.goToA(),
         cubit.goToB(false),
         cubit.goToA(),
         cubit.goToB(false),
@@ -21,12 +27,19 @@ void main() {
         cubit.goToB(false)
       ],
       expect: () => [
-        ConditionalB,
-        ConditionalA,
-        ConditionalB,
-        ConditionalA,
-        ConditionalB
+        ConditionalB(),
+        ConditionalA(),
+        ConditionalB(),
+        ConditionalA(),
+        ConditionalB(),
+        ConditionalA(),
+        ConditionalB(),
+        ConditionalA(),
+        ConditionalB(),
+        ConditionalA(),
+        ConditionalB()
       ],
+      errors: (() => []),
     );
   });
 }

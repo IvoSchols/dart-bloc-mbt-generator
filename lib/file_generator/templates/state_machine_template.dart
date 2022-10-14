@@ -8,6 +8,8 @@ String stateMachineTemplate(StateMachine sm) {
 
   return '''
   import 'package:simple_state_machine/state_machine.dart';
+  import 'package:binary_expression_tree/binary_expression_tree.dart';
+
 
 
   StateMachine construct${name}Statemachine() {
@@ -32,39 +34,73 @@ String _states(Set<State> states) => states.map((state) => '''
     final ${state.name} = statemachine.newState('${state.name}');
   ''').join();
 
-String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
-      ${_conditionTree(t.conditions?['conditionTree'])}
-      Transition ${t.name} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
-    ''').join();
+// BinaryExpressionTree ${t.name}BinaryExpressionTree = ${_conditionTree(t.conditions?['conditionTree'])}
+String _transitions(Set<Transition> transitions) => transitions.map((t) {
+      String tName = t.name;
+      tName[0].toLowerCase();
+      return '''
+      Transition $tName${t.to.name.toString()} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
+    ''';
+    }).join();
 
 //TODO: implement conditions correctly (and its subfunctions)
 String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
   String conditionString = '';
+  bool hasInputTypes = conditions['inputTypes'] != null;
+  bool hasConditionTree = conditions['conditionTree'] != null;
 
-  if (conditions['inputTypes'] != null) {
-    conditionString += 'inputTypes:{${_inputTypes(conditions['inputTypes'])}}';
-  }
-  if (conditions['conditionTree'] != null) {
-    conditionString += 'conditionTree: ${transitionName}BinaryExpressionTree';
-    // conditionString += _conditionTree(conditions['conditionTree']);
+  if (hasInputTypes || hasConditionTree) {
+    conditionString += '{';
+
+    if (hasInputTypes) {
+      conditionString +=
+          "'inputTypes':{${_inputTypes(conditions['inputTypes'])}},";
+    }
+    if (hasConditionTree) {
+      // conditionString +=
+      //     "'conditionTree': ${transitionName}BinaryExpressionTree";
+      conditionString +=
+          "'conditionTree':{${_conditionTree(conditions['conditionTree'])}}";
+    }
+
+    conditionString += '}';
   }
 
   return conditionString;
 }
 
 //TODO: is e.value a string?
-String _inputTypes(Map<String, String> inputTypes) => '''
-    {
-      ${inputTypes.entries.map((e) => '''
+String _inputTypes(Map<String, String> inputTypes) =>
+    inputTypes.entries.map((e) => '''
         '${e.key}': ${e.value}
-      ''').join()}
-    }
-  ''';
+      ''').join();
 
-String _conditionTree(BinaryExpressionTree? conditionTree) {
-  if (conditionTree == null) return '';
+String _conditionTree(BinaryExpressionTree conditionTree) {
+  if (conditionTree.root == null) return '';
+  String ctString = "BinaryExpressionTree(";
 
-  //TODO: implement conditionTree correctly
+  ctString += "root:";
+  // visit all binary expression tree nodes in preorder and add them to the string
+  ctString += _conditionTreeNodes(conditionTree.root!);
 
-  return '';
+  ctString += ')';
+
+  return ctString;
+}
+
+String _conditionTreeNodes(Node node) {
+  String nodeString = "Node('${node.value}'";
+
+  if (node.left != null) {
+    nodeString += ", left: ";
+    nodeString += _conditionTreeNodes(node.left!);
+  }
+  if (node.right != null) {
+    nodeString += ", right: ";
+    nodeString += _conditionTreeNodes(node.right!);
+  }
+
+  nodeString += ')';
+
+  return nodeString;
 }
