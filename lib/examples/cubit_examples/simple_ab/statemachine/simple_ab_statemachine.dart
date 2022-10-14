@@ -1,16 +1,19 @@
 import 'package:simple_state_machine/state_machine.dart';
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 
-// Construct a statemachine with two states (A, B) and one transition (A->B)
 StateMachine constructSimpleAbStatemachine() {
-  final statemachine = StateMachine('simple_ab');
+  final statemachine = StateMachine('SimpleAb');
 
-  final a = statemachine.newState('a');
-  final b = statemachine.newState('b');
+  // Define states
+  final simpleA = statemachine.newState('simpleA');
+  final simpleB = statemachine.newState('simpleB');
 
-  // ignore: unused_local_variable
-  Transition ab = statemachine.newTransition('ab', {a}, b);
+  // Define transitions and their conditions
+  statemachine.newTransition('goToA', {simpleA, simpleB}, simpleA);
+  statemachine.newTransition('goToB', {simpleA, simpleB}, simpleB);
 
-  statemachine.start(a);
+  // Define starting state
+  statemachine.start(simpleA);
 
   return statemachine;
 }
