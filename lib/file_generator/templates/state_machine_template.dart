@@ -7,7 +7,7 @@ String stateMachineTemplate(StateMachine sm) {
   final State startingState = sm.initial;
 
   return '''
-  import 'package:state_machine/state_machine.dart';
+  import 'package:simple_state_machine/state_machine.dart';
 
 
   StateMachine construct${name}Statemachine() {
