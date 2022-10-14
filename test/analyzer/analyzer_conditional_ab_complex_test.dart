@@ -18,21 +18,21 @@ void main() {
       expect(
           result.states.map((s) => s.name),
           equals({
-            'ConditionalA',
-            'ConditionalBool',
-            'Conditional0',
-            'Conditional3',
-            'ConditionalMinus12',
-            'ConditionalMinus7',
-            'ConditionalMinus9',
-            'ConditionalMinus8',
-            'ConditionalStringFoo',
-            'ConditionalStringBar'
+            'conditionalA',
+            'conditionalBool',
+            'conditional0',
+            'conditional3',
+            'conditionalMinus12',
+            'conditionalMinus7',
+            'conditionalMinus9',
+            'conditionalMinus8',
+            'conditionalStringFoo',
+            'conditionalStringBar'
           }));
     });
 
     test('startingState', () {
-      expect(result.initial.name, equals('ConditionalA'));
+      expect(result.initial.name, equals('conditionalA'));
     });
 
     test('transitionLength', () {
@@ -41,19 +41,19 @@ void main() {
 
     test('transition_goToA', () {
       Transition goToA = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) => t.name == 'goToA');
       expect(goToA.conditions, isNull);
-      expect(goToA.to.name, equals('ConditionalA'));
+      expect(goToA.to.name, equals('conditionalA'));
     });
 
     test('transition_goToInt0', () {
       Transition goToInt = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToInt' && t.to.name == 'Conditional0');
+              t.name == 'goToInt' && t.to.name == 'conditional0');
 
       expect(goToInt.conditions, isNotNull);
 
@@ -72,10 +72,10 @@ void main() {
 
     test('transition_goToInt3', () {
       Transition goToInt = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToInt' && t.to.name == 'Conditional3');
+              t.name == 'goToInt' && t.to.name == 'conditional3');
 
       expect(goToInt.conditions, isNotNull);
 
@@ -100,10 +100,10 @@ void main() {
 
     test('transition_goToIntMinus12', () {
       Transition goToInt = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToInt' && t.to.name == 'ConditionalMinus12');
+              t.name == 'goToInt' && t.to.name == 'conditionalMinus12');
 
       expect(goToInt.conditions, isNotNull);
 
@@ -128,10 +128,10 @@ void main() {
 
     test('transition_goToIntMinus7', () {
       Transition goToInt = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToInt' && t.to.name == 'ConditionalMinus7');
+              t.name == 'goToInt' && t.to.name == 'conditionalMinus7');
 
       expect(goToInt.conditions, isNotNull);
 
@@ -158,10 +158,10 @@ void main() {
 
     test('transition_goToIntMinus9', () {
       Transition goToInt = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToInt' && t.to.name == 'ConditionalMinus9');
+              t.name == 'goToInt' && t.to.name == 'conditionalMinus9');
 
       expect(goToInt.conditions, isNotNull);
 
@@ -191,10 +191,10 @@ void main() {
 
     test('transition_goToIntMinus8', () {
       Transition goToInt = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToInt' && t.to.name == 'ConditionalMinus8');
+              t.name == 'goToInt' && t.to.name == 'conditionalMinus8');
 
       expect(goToInt.conditions, isNotNull);
 
@@ -224,10 +224,10 @@ void main() {
 
     test('goToStringFoo', () {
       Transition goToStringFoo = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToString' && t.to.name == 'ConditionalStringFoo');
+              t.name == 'goToString' && t.to.name == 'conditionalStringFoo');
 
       expect(goToStringFoo.conditions, isNotNull);
       BinaryExpressionTree conditionTree =
@@ -247,10 +247,10 @@ void main() {
 
     test('goToStringBar', () {
       Transition goToStringFoo = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'goToString' && t.to.name == 'ConditionalStringBar');
+              t.name == 'goToString' && t.to.name == 'conditionalStringBar');
 
       expect(goToStringFoo.conditions, isNotNull);
       BinaryExpressionTree conditionTree =

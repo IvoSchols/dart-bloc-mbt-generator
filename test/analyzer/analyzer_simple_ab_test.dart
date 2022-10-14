@@ -16,11 +16,11 @@ void main() {
 
     test('states', () {
       expect(result.states.map((s) => s.name).toSet(),
-          equals({'SimpleA', 'SimpleB'}));
+          equals({'simpleA', 'simpleB'}));
     });
 
     test('startingState', () {
-      expect(result.current.name, equals('SimpleA'));
+      expect(result.current.name, equals('simpleA'));
     });
 
     test('transitionLength', () {
@@ -36,9 +36,9 @@ void main() {
 
         expect(t.from, hasLength(2));
         expect(t.from.map((e) => e.name).toList(),
-            containsAll(['SimpleA', 'SimpleB']));
+            containsAll(['simpleA', 'simpleB']));
 
-        expect(t.to.name, equals('SimpleA'));
+        expect(t.to.name, equals('simpleA'));
       }
     });
 
@@ -49,9 +49,9 @@ void main() {
 
         expect(t.from, hasLength(2));
         expect(t.from.map((e) => e.name).toList(),
-            containsAll(['SimpleA', 'SimpleB']));
+            containsAll(['simpleA', 'simpleB']));
 
-        expect(t.to.name, equals('SimpleB'));
+        expect(t.to.name, equals('simpleB'));
       }
     });
   });

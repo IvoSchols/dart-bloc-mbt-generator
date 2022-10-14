@@ -18,15 +18,15 @@ void main() {
       expect(
           result.states.map((s) => s.name),
           equals({
-            'Red',
-            'Green',
-            'Yellow',
-            'Exception',
+            'red',
+            'green',
+            'yellow',
+            'exception',
           }));
     });
 
     test('startingState', () {
-      expect(result.initial.name, equals('Red'));
+      expect(result.initial.name, equals('red'));
     });
 
     test('transitionLength', () {
@@ -35,10 +35,10 @@ void main() {
 
     test('transition_changeTrafficLightToRed', () {
       Transition changeTrafficLightTo = result.states
-          .firstWhere((s) => s.name == 'Green')
+          .firstWhere((s) => s.name == 'green')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'changeTrafficLightTo' && t.to.name == 'Red');
+              t.name == 'changeTrafficLightTo' && t.to.name == 'red');
       expect(changeTrafficLightTo.conditions, isNotNull);
 
       Map<String, String> inputTypes =
@@ -62,10 +62,10 @@ void main() {
 
     test('transition_changeTrafficLightToGreen', () {
       Transition changeTrafficLightTo = result.states
-          .firstWhere((s) => s.name == 'Red')
+          .firstWhere((s) => s.name == 'red')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'changeTrafficLightTo' && t.to.name == 'Green');
+              t.name == 'changeTrafficLightTo' && t.to.name == 'green');
       expect(changeTrafficLightTo.conditions, isNotNull);
 
       Map<String, String> inputTypes =
@@ -89,10 +89,10 @@ void main() {
 
     test('transition_changeTrafficLightToYellow', () {
       Transition changeTrafficLightTo = result.states
-          .firstWhere((s) => s.name == 'Red')
+          .firstWhere((s) => s.name == 'red')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'changeTrafficLightTo' && t.to.name == 'Yellow');
+              t.name == 'changeTrafficLightTo' && t.to.name == 'yellow');
       expect(changeTrafficLightTo.conditions, isNotNull);
 
       Map<String, String> inputTypes =
@@ -116,10 +116,10 @@ void main() {
 
     test('transition_changeTrafficLightToException', () {
       Transition changeTrafficLightTo = result.states
-          .firstWhere((s) => s.name == 'Red')
+          .firstWhere((s) => s.name == 'red')
           .transitions
           .firstWhere((Transition t) =>
-              t.name == 'changeTrafficLightTo' && t.to.name == 'Exception');
+              t.name == 'changeTrafficLightTo' && t.to.name == 'exception');
       expect(changeTrafficLightTo.conditions, isNotNull);
 
       Map<String, String> inputTypes =

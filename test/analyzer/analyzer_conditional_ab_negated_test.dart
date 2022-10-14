@@ -16,11 +16,11 @@ void main() {
 
     test('states', () {
       expect(result.states.map((s) => s.name),
-          equals({'ConditionalA', 'ConditionalB'}));
+          equals({'conditionalA', 'conditionalB'}));
     });
 
     test('startingState', () {
-      expect(result.initial.name, equals('ConditionalA'));
+      expect(result.initial.name, equals('conditionalA'));
     });
 
     test('transitionLength', () {
@@ -34,11 +34,11 @@ void main() {
 
     test('transition_goToA', () {
       Transition goToA = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((t) => t.name == 'goToA');
       Transition goToA2 = result.states
-          .firstWhere((s) => s.name == 'ConditionalB')
+          .firstWhere((s) => s.name == 'conditionalB')
           .transitions
           .firstWhere((t) => t.name == 'goToA');
 
@@ -46,18 +46,18 @@ void main() {
 
       expect(goToA.from, hasLength(2));
       expect(goToA.from.map((e) => e.name).toList(),
-          containsAll(['ConditionalA', 'ConditionalB']));
-      expect(goToA.to.name, equals('ConditionalA'));
+          containsAll(['conditionalA', 'conditionalB']));
+      expect(goToA.to.name, equals('conditionalA'));
       expect(goToA.conditions, isNull);
     });
 
     test('transition_goToB', () {
       Transition goToB = result.states
-          .firstWhere((s) => s.name == 'ConditionalA')
+          .firstWhere((s) => s.name == 'conditionalA')
           .transitions
           .firstWhere((t) => t.name == 'goToB');
       Transition goToB2 = result.states
-          .firstWhere((s) => s.name == 'ConditionalB')
+          .firstWhere((s) => s.name == 'conditionalB')
           .transitions
           .firstWhere((t) => t.name == 'goToB');
 
@@ -65,8 +65,8 @@ void main() {
 
       expect(goToB.from, hasLength(2));
       expect(goToB.from.map((e) => e.name).toList(),
-          containsAll(['ConditionalA', 'ConditionalB']));
-      expect(goToB.to.name, equals('ConditionalB'));
+          containsAll(['conditionalA', 'conditionalB']));
+      expect(goToB.to.name, equals('conditionalB'));
       expect(goToB.conditions, isNotNull);
       Node? root = goToB.conditions!['conditionTree'].root;
       expect(root, isNotNull);
