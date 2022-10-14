@@ -14,10 +14,9 @@ StateMachine constructConditionalAbNegatedStatemachine() {
   statemachine.newTransition(
       'goToB', {conditionalA, conditionalB}, conditionalB,
       conditions: {
-        'inputTypes': {'allowed': bool},
-        'conditionTree': {
-          BinaryExpressionTree(root: Node('!', left: Node('allowed')))
-        }
+        'inputTypes': {'allowed': 'bool'},
+        'conditionTree':
+            BinaryExpressionTree(root: Node('!', left: Node('allowed')))
       });
 
   // Define starting state

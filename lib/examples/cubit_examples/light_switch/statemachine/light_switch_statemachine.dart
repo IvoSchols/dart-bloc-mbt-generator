@@ -11,15 +11,13 @@ StateMachine constructLightSwitchStatemachine() {
   // Define transitions and their conditions
   statemachine.newTransition('lightSwitch', {off, on}, on,
       conditions: {
-        'inputTypes': {'on': bool},
-        'conditionTree': {BinaryExpressionTree(root: Node('on'))}
+        'inputTypes': {'on': 'bool'},
+        'conditionTree': BinaryExpressionTree(root: Node('on'))
       });
   statemachine.newTransition('lightSwitch', {off, on}, off,
       conditions: {
-        'inputTypes': {'on': bool},
-        'conditionTree': {
-          BinaryExpressionTree(root: Node('!', left: Node('on')))
-        }
+        'inputTypes': {'on': 'bool'},
+        'conditionTree': BinaryExpressionTree(root: Node('!', left: Node('on')))
       });
 
   // Define starting state

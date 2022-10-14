@@ -48,8 +48,8 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalBool,
       conditions: {
-        'inputTypes': {'allowed': bool},
-        'conditionTree': {BinaryExpressionTree(root: Node('allowed'))}
+        'inputTypes': {'allowed': 'bool'},
+        'conditionTree': BinaryExpressionTree(root: Node('allowed'))
       });
   statemachine.newTransition(
       'goToBool',
@@ -67,13 +67,11 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalA,
       conditions: {
-        'inputTypes': {'allowed': bool},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('!', left: Node('allowed')),
-                  right: Node('!', left: Node('allowed'))))
-        }
+        'inputTypes': {'allowed': 'bool'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('!', left: Node('allowed')),
+                right: Node('!', left: Node('allowed'))))
       });
   statemachine.newTransition(
       'goToInt',
@@ -91,11 +89,9 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditional0,
       conditions: {
-        'inputTypes': {'value': int},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('==', left: Node('value'), right: Node('0')))
-        }
+        'inputTypes': {'value': 'int'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('==', left: Node('value'), right: Node(0)))
       });
   statemachine.newTransition(
       'goToInt',
@@ -113,13 +109,11 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditional3,
       conditions: {
-        'inputTypes': {'value': int},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('!=', left: Node('value'), right: Node('0')),
-                  right: Node('>=', left: Node('value'), right: Node('3'))))
-        }
+        'inputTypes': {'value': 'int'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('!=', left: Node('value'), right: Node(0)),
+                right: Node('>=', left: Node('value'), right: Node(3))))
       });
   statemachine.newTransition(
       'goToInt',
@@ -137,15 +131,13 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalMinus12,
       conditions: {
-        'inputTypes': {'value': int},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('&&',
-                      left: Node('!=', left: Node('value'), right: Node('0')),
-                      right: Node('<', left: Node('value'), right: Node('3'))),
-                  right: Node('<=', left: Node('value'), right: Node('-12'))))
-        }
+        'inputTypes': {'value': 'int'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('&&',
+                    left: Node('!=', left: Node('value'), right: Node(0)),
+                    right: Node('<', left: Node('value'), right: Node(3))),
+                right: Node('<=', left: Node('value'), right: Node(-12))))
       });
   statemachine.newTransition(
       'goToInt',
@@ -163,20 +155,15 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalMinus7,
       conditions: {
-        'inputTypes': {'value': int},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('&&',
-                      left: Node('&&',
-                          left:
-                              Node('!=', left: Node('value'), right: Node('0')),
-                          right:
-                              Node('<', left: Node('value'), right: Node('3'))),
-                      right:
-                          Node('>', left: Node('value'), right: Node('-12'))),
-                  right: Node('>', left: Node('value'), right: Node('-8'))))
-        }
+        'inputTypes': {'value': 'int'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('&&',
+                    left: Node('&&',
+                        left: Node('!=', left: Node('value'), right: Node(0)),
+                        right: Node('<', left: Node('value'), right: Node(3))),
+                    right: Node('>', left: Node('value'), right: Node(-12))),
+                right: Node('>', left: Node('value'), right: Node(-8))))
       });
   statemachine.newTransition(
       'goToInt',
@@ -194,23 +181,20 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalMinus9,
       conditions: {
-        'inputTypes': {'value': int},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('&&',
-                      left: Node('&&',
-                          left: Node('&&',
-                              left: Node('!=',
-                                  left: Node('value'), right: Node('0')),
-                              right: Node('<',
-                                  left: Node('value'), right: Node('3'))),
-                          right: Node('>',
-                              left: Node('value'), right: Node('-12'))),
-                      right:
-                          Node('<=', left: Node('value'), right: Node('-8'))),
-                  right: Node('<', left: Node('value'), right: Node('-8'))))
-        }
+        'inputTypes': {'value': 'int'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('&&',
+                    left: Node('&&',
+                        left: Node('&&',
+                            left:
+                                Node('!=', left: Node('value'), right: Node(0)),
+                            right:
+                                Node('<', left: Node('value'), right: Node(3))),
+                        right:
+                            Node('>', left: Node('value'), right: Node(-12))),
+                    right: Node('<=', left: Node('value'), right: Node(-8))),
+                right: Node('<', left: Node('value'), right: Node(-8))))
       });
   statemachine.newTransition(
       'goToInt',
@@ -228,23 +212,20 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalMinus8,
       conditions: {
-        'inputTypes': {'value': int},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('&&',
-                      left: Node('&&',
-                          left: Node('&&',
-                              left: Node('!=',
-                                  left: Node('value'), right: Node('0')),
-                              right: Node('<',
-                                  left: Node('value'), right: Node('3'))),
-                          right: Node('>',
-                              left: Node('value'), right: Node('-12'))),
-                      right:
-                          Node('<=', left: Node('value'), right: Node('-8'))),
-                  right: Node('>=', left: Node('value'), right: Node('-8'))))
-        }
+        'inputTypes': {'value': 'int'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('&&',
+                    left: Node('&&',
+                        left: Node('&&',
+                            left:
+                                Node('!=', left: Node('value'), right: Node(0)),
+                            right:
+                                Node('<', left: Node('value'), right: Node(3))),
+                        right:
+                            Node('>', left: Node('value'), right: Node(-12))),
+                    right: Node('<=', left: Node('value'), right: Node(-8))),
+                right: Node('>=', left: Node('value'), right: Node(-8))))
       });
   statemachine.newTransition(
       'goToString',
@@ -262,11 +243,9 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalStringFoo,
       conditions: {
-        'inputTypes': {'value': String},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('==', left: Node('value'), right: Node('foo')))
-        }
+        'inputTypes': {'value': 'String'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('==', left: Node('value'), right: Node('foo')))
       });
   statemachine.newTransition(
       'goToString',
@@ -284,13 +263,11 @@ StateMachine constructConditionalAbComplexStatemachine() {
       },
       conditionalStringBar,
       conditions: {
-        'inputTypes': {'value': String},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('!=', left: Node('value'), right: Node('foo')),
-                  right: Node('==', left: Node('value'), right: Node('bar'))))
-        }
+        'inputTypes': {'value': 'String'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('!=', left: Node('value'), right: Node('foo')),
+                right: Node('==', left: Node('value'), right: Node('bar'))))
       });
 
   // Define starting state

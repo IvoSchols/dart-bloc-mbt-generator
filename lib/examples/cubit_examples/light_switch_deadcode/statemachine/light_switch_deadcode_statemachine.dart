@@ -12,24 +12,20 @@ StateMachine constructLightSwitchDeadcodeStatemachine() {
   // Define transitions and their conditions
   statemachine.newTransition('lightSwitch', {off, on, exception}, on,
       conditions: {
-        'inputTypes': {'on': bool},
-        'conditionTree': {BinaryExpressionTree(root: Node('on'))}
+        'inputTypes': {'on': 'bool'},
+        'conditionTree': BinaryExpressionTree(root: Node('on'))
       });
   statemachine.newTransition('lightSwitch', {off, on, exception}, off,
       conditions: {
-        'inputTypes': {'on': bool},
-        'conditionTree': {
-          BinaryExpressionTree(root: Node('!', left: Node('on')))
-        }
+        'inputTypes': {'on': 'bool'},
+        'conditionTree': BinaryExpressionTree(root: Node('!', left: Node('on')))
       });
   statemachine.newTransition('lightSwitch', {off, on, exception}, exception,
       conditions: {
-        'inputTypes': {'on': bool},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('!', left: Node('on')), right: Node('on')))
-        }
+        'inputTypes': {'on': 'bool'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('!', left: Node('on')), right: Node('on')))
       });
 
   // Define starting state

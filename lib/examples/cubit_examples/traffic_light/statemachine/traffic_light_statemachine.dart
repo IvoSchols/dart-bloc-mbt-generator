@@ -14,44 +14,35 @@ StateMachine constructTrafficLightStatemachine() {
   statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, red,
       conditions: {
-        'inputTypes': {'color': String},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('==', left: Node('color'), right: Node('red')))
-        }
+        'inputTypes': {'color': 'String'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('==', left: Node('color'), right: Node('red')))
       });
   statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, green,
       conditions: {
-        'inputTypes': {'color': String},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('==', left: Node('color'), right: Node('green')))
-        }
+        'inputTypes': {'color': 'String'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('==', left: Node('color'), right: Node('green')))
       });
   statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, yellow,
       conditions: {
-        'inputTypes': {'color': String},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('==', left: Node('color'), right: Node('yellow')))
-        }
+        'inputTypes': {'color': 'String'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('==', left: Node('color'), right: Node('yellow')))
       });
   statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, exception,
       conditions: {
-        'inputTypes': {'color': String},
-        'conditionTree': {
-          BinaryExpressionTree(
-              root: Node('&&',
-                  left: Node('&&',
-                      left: Node('!=', left: Node('color'), right: Node('red')),
-                      right: Node('!=',
-                          left: Node('color'), right: Node('green'))),
-                  right:
-                      Node('!=', left: Node('color'), right: Node('yellow'))))
-        }
+        'inputTypes': {'color': 'String'},
+        'conditionTree': BinaryExpressionTree(
+            root: Node('&&',
+                left: Node('&&',
+                    left: Node('!=', left: Node('color'), right: Node('red')),
+                    right:
+                        Node('!=', left: Node('color'), right: Node('green'))),
+                right: Node('!=', left: Node('color'), right: Node('yellow'))))
       });
 
   // Define starting state

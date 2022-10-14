@@ -52,7 +52,7 @@ String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
     }
     if (hasConditionTree) {
       conditionString +=
-          "'conditionTree':{${_conditionTree(conditions['conditionTree'])}}";
+          "'conditionTree':${_conditionTree(conditions['conditionTree'])}";
     }
 
     conditionString += '}';
@@ -63,7 +63,7 @@ String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
 
 String _inputTypes(Map<String, String> inputTypes) =>
     inputTypes.entries.map((e) => '''
-        '${e.key}': ${e.value}
+        '${e.key}': '${e.value}'
       ''').join();
 
 String _conditionTree(BinaryExpressionTree conditionTree) {
@@ -80,7 +80,17 @@ String _conditionTree(BinaryExpressionTree conditionTree) {
 }
 
 String _conditionTreeNodes(Node node) {
-  String nodeString = "Node('${node.value}'";
+  // Try to parse nodeValue as int
+  // If nodeValue is not an int (== null), it is a string
+  int? nodeValueAsInt = int.tryParse(node.value);
+
+  String nodeString = "Node(";
+
+  if (nodeValueAsInt == null) {
+    nodeString += "'${node.value}'";
+  } else {
+    nodeString += nodeValueAsInt.toString();
+  }
 
   if (node.left != null) {
     nodeString += ", left: ";
