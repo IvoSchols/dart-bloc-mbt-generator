@@ -1,18 +1,27 @@
 import 'package:simple_state_machine/state_machine.dart';
+import 'package:binary_expression_tree/binary_expression_tree.dart';
 
-// Construct a statemachine with two states (A, B) and one transition (A->B)
-StateMachine constructCondtionalAbNegatedStatemachine() {
-  final statemachine = StateMachine('conditional_ab');
+StateMachine constructConditionalAbNegatedStatemachine() {
+  final statemachine = StateMachine('ConditionalAbNegated');
 
-  final a = statemachine.newState('a');
-  final b = statemachine.newState('b');
+  // Define states
+  final conditionalA = statemachine.newState('conditionalA');
+  final conditionalB = statemachine.newState('conditionalB');
 
-  // ignore: unused_local_variable
-  Transition ab = statemachine.newTransition('ab', {a}, b);
-  // ab.cancelIf(
-  // (StateChange stateChange) => stateChange.payload.allowed == false);
+  // Define transitions and their conditions
+  statemachine.newTransition(
+      'goToA', {conditionalA, conditionalB}, conditionalA);
+  statemachine.newTransition(
+      'goToB', {conditionalA, conditionalB}, conditionalB,
+      conditions: {
+        'inputTypes': {'allowed': bool},
+        'conditionTree': {
+          BinaryExpressionTree(root: Node('!', left: Node('allowed')))
+        }
+      });
 
-  statemachine.start(a);
+  // Define starting state
+  statemachine.start(conditionalA);
 
   return statemachine;
 }

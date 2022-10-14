@@ -9,9 +9,9 @@ StateMachine constructConditionalAbNegatedStatemachine() {
   final conditionalB = statemachine.newState('conditionalB');
 
   // Define transitions and their conditions
-  Transition goToAconditionalA = statemachine.newTransition(
+  statemachine.newTransition(
       'goToA', {conditionalA, conditionalB}, conditionalA);
-  Transition goToBconditionalB = statemachine.newTransition(
+  statemachine.newTransition(
       'goToB', {conditionalA, conditionalB}, conditionalB,
       conditions: {
         'inputTypes': {'allowed': bool},

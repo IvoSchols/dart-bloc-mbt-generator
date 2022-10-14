@@ -9,10 +9,8 @@ StateMachine constructSimpleAbStatemachine() {
   final simpleB = statemachine.newState('simpleB');
 
   // Define transitions and their conditions
-  Transition goToAsimpleA =
-      statemachine.newTransition('goToA', {simpleA, simpleB}, simpleA);
-  Transition goToBsimpleB =
-      statemachine.newTransition('goToB', {simpleA, simpleB}, simpleB);
+  statemachine.newTransition('goToA', {simpleA, simpleB}, simpleA);
+  statemachine.newTransition('goToB', {simpleA, simpleB}, simpleB);
 
   // Define starting state
   statemachine.start(simpleA);

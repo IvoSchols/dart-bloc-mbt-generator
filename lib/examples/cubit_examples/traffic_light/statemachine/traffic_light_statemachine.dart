@@ -11,7 +11,7 @@ StateMachine constructTrafficLightStatemachine() {
   final exception = statemachine.newState('exception');
 
   // Define transitions and their conditions
-  Transition changeTrafficLightTored = statemachine.newTransition(
+  statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, red,
       conditions: {
         'inputTypes': {'color': String},
@@ -20,7 +20,7 @@ StateMachine constructTrafficLightStatemachine() {
               root: Node('==', left: Node('color'), right: Node('red')))
         }
       });
-  Transition changeTrafficLightTogreen = statemachine.newTransition(
+  statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, green,
       conditions: {
         'inputTypes': {'color': String},
@@ -29,7 +29,7 @@ StateMachine constructTrafficLightStatemachine() {
               root: Node('==', left: Node('color'), right: Node('green')))
         }
       });
-  Transition changeTrafficLightToyellow = statemachine.newTransition(
+  statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, yellow,
       conditions: {
         'inputTypes': {'color': String},
@@ -38,7 +38,7 @@ StateMachine constructTrafficLightStatemachine() {
               root: Node('==', left: Node('color'), right: Node('yellow')))
         }
       });
-  Transition changeTrafficLightToexception = statemachine.newTransition(
+  statemachine.newTransition(
       'changeTrafficLightTo', {red, green, yellow, exception}, exception,
       conditions: {
         'inputTypes': {'color': String},

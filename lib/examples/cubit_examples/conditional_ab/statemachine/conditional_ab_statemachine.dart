@@ -5,21 +5,21 @@ StateMachine constructConditionalAbStatemachine() {
   final statemachine = StateMachine('ConditionalAb');
 
   // Define states
-  final ConditionalA = statemachine.newState('ConditionalA');
-  final ConditionalB = statemachine.newState('ConditionalB');
+  final conditionalA = statemachine.newState('conditionalA');
+  final conditionalB = statemachine.newState('conditionalB');
 
   // Define transitions and their conditions
-  Transition ConditionalAConditionalBgoToAConditionalA = statemachine
-      .newTransition('goToA', {ConditionalA, ConditionalB}, ConditionalA);
-  Transition ConditionalAConditionalBgoToBConditionalB = statemachine
-      .newTransition('goToB', {ConditionalA, ConditionalB}, ConditionalB,
-          conditions: {
-            'inputTypes': {'allowed': bool},
-            'conditionTree': {BinaryExpressionTree(root: Node('allowed'))}
-          });
+  statemachine.newTransition(
+      'goToA', {conditionalA, conditionalB}, conditionalA);
+  statemachine.newTransition(
+      'goToB', {conditionalA, conditionalB}, conditionalB,
+      conditions: {
+        'inputTypes': {'allowed': bool},
+        'conditionTree': {BinaryExpressionTree(root: Node('allowed'))}
+      });
 
   // Define starting state
-  statemachine.start(ConditionalA);
+  statemachine.start(conditionalA);
 
   return statemachine;
 }

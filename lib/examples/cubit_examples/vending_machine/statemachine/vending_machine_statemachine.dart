@@ -30,22 +30,22 @@ StateMachine constructVendingMachineStateMachine() {
               ]
             }
           });
-  Transition addCoin2 = statemachine.newTransition(
+  statemachine.newTransition(
     'addCoin',
     {inProgress},
     loaded,
   );
-  Transition buy = statemachine.newTransition(
+  statemachine.newTransition(
     'buy',
     {loaded},
     success,
   );
-  Transition fail = statemachine.newTransition(
+  statemachine.newTransition(
     'failure',
     {inProgress, loaded},
     failure,
   );
-  Transition reset = statemachine.newTransition(
+  statemachine.newTransition(
     'reset',
     {inProgress, success, failure},
     initial,

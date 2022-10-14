@@ -35,7 +35,7 @@ String _states(Set<State> states) => states.map((state) => '''
   ''').join();
 
 String _transitions(Set<Transition> transitions) => transitions.map((t) => '''
-      Transition ${t.name}${t.to.name.toString()} = statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
+      statemachine.newTransition('${t.name}', ${t.from.map((f) => f.name).toSet()}, ${t.to.name} ${t.conditions != null ? ', conditions: ${_conditions(t.name, t.conditions!)}' : ''});
     ''').join();
 
 String _conditions(String transitionName, Map<dynamic, dynamic> conditions) {
