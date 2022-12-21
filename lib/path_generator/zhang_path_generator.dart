@@ -92,6 +92,10 @@ change CurState to tr’s next state;
         curPath.add(tr); // Add tr to the end of CurPath
 
         curPathInputs.add(_solve(tr)); // Add tr’s predicate to pathCond
+
+        if (tr.to.name == "exception") {
+          break; // Hit an exception -> test framework stops
+        }
       }
     }
     // Solve the constraints and output the variables’ values

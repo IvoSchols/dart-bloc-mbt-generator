@@ -74,7 +74,7 @@ String _test(String name, Path path) {
 }
 
 String _states(Path path, String postfix) => path.transitions
-    .where((t) => t.to.name != "Exception")
+    .where((t) => t.to.name.toLowerCase() != "exception")
     .map((t) => _pascalCase(t.to.name) + postfix)
     .join(', ');
 
@@ -124,7 +124,7 @@ String _errors(Path path) {
   // for each transition where to is exception add isA<Exception>() to the list
   List<String> errors = [];
   for (int i = 0; i < path.transitions.length; i++) {
-    if (path.transitions[i].to.name == 'Exception') {
+    if (path.transitions[i].to.name.toLowerCase() == 'exception') {
       errors.add("isException");
     }
   }
